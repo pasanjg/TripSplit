@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677037114860",
+    "project_id": "tripsplit-3de4d",
+    "storage_bucket": "tripsplit-3de4d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677037114860:android:25fbee5c126e1748586cc9",
+        "android_client_info": {
+          "package_name": "com.jayg.tripsplit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl-8Zp7e11msg5VeAnotV-8PWlJB99xHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
