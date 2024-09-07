@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tripsplit/routes/route.dart';
 import 'package:tripsplit/widgets/pop_scope.dart';
 
-import '../common/constants.dart';
+import '../common/constants/constants.dart';
 
 class MainTabs extends StatefulWidget {
   const MainTabs({super.key});
@@ -21,9 +21,9 @@ class _MainTabsState extends State<MainTabs> {
 
   final List<Map<String, dynamic>> tabData = [
     {
-      'title': 'Entries',
+      'title': 'Logbook',
       'icon': Icons.home,
-      'route': RouteList.entries,
+      'route': RouteList.logbook,
     },
     {
       'title': 'Stats',

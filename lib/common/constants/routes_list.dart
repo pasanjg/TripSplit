@@ -1,9 +1,12 @@
-part of '../constants.dart';
+part of 'constants.dart';
 
 class RouteList {
+  static const login = 'login';
+  static const register = 'register';
+
   static const String home = 'home';
 
-  static const String entries = 'entries';
+  static const String logbook = 'logbook';
   static const String stats = 'stats';
   static const String settings = 'settings';
 

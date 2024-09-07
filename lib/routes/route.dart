@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/constants.dart';
+import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/layout/main_tabs.dart';
-import 'package:tripsplit/screens/entries.dart';
-import 'package:tripsplit/screens/settings.dart';
-import 'package:tripsplit/screens/stats.dart';
+import 'package:tripsplit/screens/auth/login_screen.dart';
+import 'package:tripsplit/screens/auth/register_screen.dart';
+import 'package:tripsplit/screens/logbook_screen.dart';
+import 'package:tripsplit/screens/settings_screen.dart';
+import 'package:tripsplit/screens/stats_screen.dart';
 import 'package:tripsplit/screens/test.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getAll() => _routes;
 
   static final Map<String, WidgetBuilder> _routes = {
+    RouteList.login: (context) => const LoginScreen(),
+    RouteList.register: (context) => const RegisterScreen(),
     RouteList.home: (context) => const MainTabs(),
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final arguments = settings.arguments;
     switch (settings.name) {
-      case RouteList.entries:
-        return _buildRoute(settings, (_) => const EntriesScreen());
+      case RouteList.logbook:
+        return _buildRoute(settings, (_) => const LogbookScreen());
       case RouteList.stats:
         return _buildRoute(settings, (_) => const StatsScreen());
       case RouteList.settings:

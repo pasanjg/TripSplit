@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/constants.dart';
+import 'package:tripsplit/common/constants/constants.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void navigateToHomeScreen() async {
+    // await Navigator.of(context).pushReplacementNamed(RouteList.login);
     await Navigator.of(context).pushReplacementNamed(RouteList.home);
   }
 

@@ -23,10 +23,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TripSplit',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
+        colorScheme: ColorScheme.fromSeed(primary: Color(0xFF1F44EA), seedColor: Color(0xFF1F44EA)),
         useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark(),
+      darkTheme: ThemeData.dark().copyWith(
+        colorScheme: ColorScheme.fromSeed(primary: Color(0xFF1F44EA), seedColor: Color(0xFF1F44EA)),
+        brightness: Brightness.dark,
+      ),
       themeMode: ThemeMode.system,
       routes: Routes.getAll(),
       onGenerateRoute: Routes.onGenerateRoute,

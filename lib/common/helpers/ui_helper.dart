@@ -1,0 +1,164 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
+
+import '../extensions/extensions.dart';
+
+class UIHelper {
+  final BuildContext _context;
+
+  UIHelper._(this._context);
+
+  static UIHelper of(BuildContext context) => UIHelper._(context);
+
+  static OverlayEntry overlayLoader(context) {
+    OverlayEntry loader = OverlayEntry(builder: (context) {
+      final size = MediaQuery.of(context).size;
+      return Positioned(
+        height: size.height,
+        width: size.width,
+        top: 0,
+        left: 0,
+        child: Material(
+          color: Colors.white.withOpacity(0.85),
+          child: Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          ),
+        ),
+      );
+    });
+    return loader;
+  }
+
+  static hideLoader(OverlayEntry? loader) {
+    Timer(const Duration(milliseconds: 500), () {
+      try {
+        loader?.remove();
+      } catch (e) {
+        //
+      }
+    });
+  }
+
+  showSnackBar(
+      String message, {
+        SnackBarAction? action,
+        Duration? duration,
+        bool error = false,
+      }) {
+    ScaffoldMessenger.of(_context).clearSnackBars();
+    ScaffoldMessenger.of(_context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: duration ?? const Duration(seconds: 3),
+        backgroundColor: error ? Colors.red : Colors.black,
+        action: action,
+      ),
+    );
+  }
+
+  showCustomBottomSheet(Widget content,
+      {double height = 200.0,
+        bool showClose = false,
+        bool isRounded = false,
+        bool hasHandle = true}) {
+    return showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: _context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            showClose
+                ? Positioned(
+              right: 0,
+              child: IconButton(
+                splashRadius: 20.0,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                icon: Icon(
+                  Icons.close_rounded,
+                  color: Theme.of(_context).colorScheme.secondary.darken(0.1),
+                  size: 20.0,
+                ),
+              ),
+            )
+                : const SizedBox(),
+            SizedBox(
+              height: height,
+              child: DraggableScrollableSheet(
+                initialChildSize: 1.0,
+                builder: (
+                    BuildContext context,
+                    ScrollController scrollController,
+                    ) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      hasHandle
+                          ? Container(
+                        margin: const EdgeInsets.only(top: 8.0),
+                        height: 8.0,
+                        width: MediaQuery.of(context).size.width * 0.2,
+                        decoration: BoxDecoration(
+                          color: Theme.of(_context).colorScheme.secondary.darken(0.1),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                      )
+                          : const SizedBox(),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: hasHandle ? 30.0 : 0.0),
+                          child: content,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  showCustomAlertDialog({
+    required String title,
+    required Widget content,
+    required List<TextButton> actions,
+    EdgeInsets contentPadding =
+    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+  }) {
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      contentPadding: contentPadding,
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18.0,
+        ),
+      ),
+      content: SingleChildScrollView(
+        child: content,
+      ),
+      actions: actions,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(10.0),
+        ),
+      ),
+    );
+
+    showDialog(
+      context: _context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+}

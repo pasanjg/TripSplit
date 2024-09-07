@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../common/constants.dart';
+import '../common/constants/constants.dart';
 
 class StatsScreen extends StatefulWidget {
   const StatsScreen({super.key});
