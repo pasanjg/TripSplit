@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import './custom_badge.dart';
+import 'index.dart';
 
 class CustomCard extends StatelessWidget {
   final CustomBadge? badge;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_list_item.dart';
+import '../widgets/custom/custom_list_item.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

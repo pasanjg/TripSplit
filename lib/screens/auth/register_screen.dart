@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../widgets/custom_button.dart';
-import '../../widgets/custom_text_form_field.dart';
 import '../../common/helpers/ui_helper.dart';
+import '../../widgets/custom/index.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

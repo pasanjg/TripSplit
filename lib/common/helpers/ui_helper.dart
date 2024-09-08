@@ -124,8 +124,7 @@ class UIHelper {
                               ),
                             )
                           : const SizedBox(),
-                      if (header != null)
-                        header,
+                      if (header != null) header,
                       Expanded(
                         child: SingleChildScrollView(
                           controller: controller,
@@ -139,7 +138,10 @@ class UIHelper {
                         ),
                       ),
                       if (footer != null)
-                        footer,
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: footer,
+                        ),
                     ],
                   );
                 },

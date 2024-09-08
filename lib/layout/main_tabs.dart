@@ -25,7 +25,7 @@ class _MainTabsState extends State<MainTabs> {
       'route': RouteNames.dashboard,
     },
     {
-      'title': 'Stats',
+      'title': 'Statistics',
       'icon': Icons.pie_chart,
       'route': RouteNames.stats,
     },

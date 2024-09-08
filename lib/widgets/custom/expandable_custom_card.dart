@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/widgets/custom_card.dart';
+import 'index.dart';
 
 class ExpandableCustomCard extends StatefulWidget {
   final Widget child;

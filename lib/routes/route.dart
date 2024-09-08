@@ -6,7 +6,7 @@ import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/settings_screen.dart';
-import '../screens/stats_screen.dart';
+import '../screens/statistics_screen.dart';
 import '../screens/test.dart';
 
 class Routes {
