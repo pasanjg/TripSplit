@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:tripsplit/routes/route.dart';
-import 'package:tripsplit/screens/splash_screen.dart';
 
+import './routes/route.dart';
+import './screens/splash_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -23,13 +23,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'TripSplit',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(primary: Color(0xFF1F44EA), seedColor: Color(0xFF1F44EA)),
+        fontFamily: 'Inter',
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            color: Colors.black,
+            fontSize: 24.0,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
       ),
-      darkTheme: ThemeData.dark().copyWith(
-        colorScheme: ColorScheme.fromSeed(primary: Color(0xFF1F44EA), seedColor: Color(0xFF1F44EA)),
-        brightness: Brightness.dark,
-      ),
+      darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
       routes: Routes.getAll(),
       onGenerateRoute: Routes.onGenerateRoute,

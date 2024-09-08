@@ -42,11 +42,11 @@ class UIHelper {
   }
 
   showSnackBar(
-      String message, {
-        SnackBarAction? action,
-        Duration? duration,
-        bool error = false,
-      }) {
+    String message, {
+    SnackBarAction? action,
+    Duration? duration,
+    bool error = false,
+  }) {
     ScaffoldMessenger.of(_context).clearSnackBars();
     ScaffoldMessenger.of(_context).showSnackBar(
       SnackBar(
@@ -58,69 +58,94 @@ class UIHelper {
     );
   }
 
-  showCustomBottomSheet(Widget content,
-      {double height = 200.0,
-        bool showClose = false,
-        bool isRounded = false,
-        bool hasHandle = true}) {
+  showCustomBottomSheet({
+    required Widget content,
+    bool showClose = false,
+    bool isRounded = false,
+    bool hasHandle = true,
+    double initialChildSize = 0.4,
+    double minChildSize = 0.2,
+    double maxChildSize = 0.9,
+    bool expand = false,
+    Widget? header,
+    Widget? footer,
+  }) {
     return showModalBottomSheet<void>(
       isScrollControlled: true,
       context: _context,
       builder: (BuildContext context) {
-        return Stack(
-          children: [
-            showClose
-                ? Positioned(
-              right: 0,
-              child: IconButton(
-                splashRadius: 20.0,
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: Theme.of(_context).colorScheme.secondary.darken(0.1),
-                  size: 20.0,
-                ),
-              ),
-            )
-                : const SizedBox(),
-            SizedBox(
-              height: height,
-              child: DraggableScrollableSheet(
-                initialChildSize: 1.0,
-                builder: (
-                    BuildContext context,
-                    ScrollController scrollController,
-                    ) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ), // Handle keyboard overlap
+          child: Stack(
+            children: [
+              showClose
+                  ? Positioned(
+                      right: 0,
+                      child: IconButton(
+                        splashRadius: 20.0,
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close_rounded,
+                          color: Theme.of(_context)
+                              .colorScheme
+                              .secondary
+                              .darken(0.1),
+                          size: 20.0,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+              DraggableScrollableSheet(
+                initialChildSize: 0.4,
+                minChildSize: 0.2,
+                maxChildSize: 0.9,
+                expand: false,
+                builder: (BuildContext context, ScrollController controller) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       hasHandle
                           ? Container(
-                        margin: const EdgeInsets.only(top: 8.0),
-                        height: 8.0,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                        decoration: BoxDecoration(
-                          color: Theme.of(_context).colorScheme.secondary.darken(0.1),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(10.0),
+                              margin: const EdgeInsets.only(top: 8.0),
+                              height: 8.0,
+                              width: MediaQuery.of(context).size.width * 0.2,
+                              decoration: BoxDecoration(
+                                color: Theme.of(_context)
+                                    .colorScheme
+                                    .secondary
+                                    .darken(0.1),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                      if (header != null)
+                        header,
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: controller,
+                          scrollDirection: Axis.vertical,
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              top: hasHandle && header == null ? 30.0 : 0.0,
+                            ),
+                            child: content,
                           ),
                         ),
-                      )
-                          : const SizedBox(),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: hasHandle ? 30.0 : 0.0),
-                          child: content,
-                        ),
                       ),
+                      if (footer != null)
+                        footer,
                     ],
                   );
                 },
-              ),
-            ),
-          ],
+              )
+            ],
+          ),
         );
       },
     );
@@ -131,7 +156,7 @@ class UIHelper {
     required Widget content,
     required List<TextButton> actions,
     EdgeInsets contentPadding =
-    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
   }) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(

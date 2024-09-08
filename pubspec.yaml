@@ -68,6 +68,12 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/
+    - assets/fonts/NewAmsterdam/
+    - assets/fonts/Teko/
+    - assets/fonts/Rubik/
+    - assets/fonts/Inter/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -91,6 +97,52 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  fonts:
+    - family: NewAmsterdam
+      fonts:
+        - asset: assets/fonts/NewAmsterdam/NewAmsterdam-Regular.ttf
+
+    - family: Rubik
+      fonts:
+        - asset: assets/fonts/Rubik/Rubik-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Rubik/Rubik-Regular.ttf
+        - asset: assets/fonts/Rubik/Rubik-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Rubik/Rubik-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Rubik/Rubik-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Rubik/Rubik-Bold.ttf
+          weight: 700
+
+    - family: Teko
+      fonts:
+        - asset: assets/fonts/Teko/Teko-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Teko/Teko-Regular.ttf
+        - asset: assets/fonts/Teko/Teko-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Teko/Teko-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Teko/Teko-Bold.ttf
+          weight: 700
+
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter/Inter_18pt-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Inter/Inter_18pt-Regular.ttf
+        - asset: assets/fonts/Inter/Inter_18pt-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Inter/Inter_18pt-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter/Inter_18pt-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter/Inter_18pt-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Inter/Inter_18pt-ExtraBold.ttf
+          weight: 800
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

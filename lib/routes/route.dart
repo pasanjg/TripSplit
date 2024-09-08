@@ -1,32 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/layout/main_tabs.dart';
-import 'package:tripsplit/screens/auth/login_screen.dart';
-import 'package:tripsplit/screens/auth/register_screen.dart';
-import 'package:tripsplit/screens/logbook_screen.dart';
-import 'package:tripsplit/screens/settings_screen.dart';
-import 'package:tripsplit/screens/stats_screen.dart';
-import 'package:tripsplit/screens/test.dart';
+
+import '../common/constants/constants.dart';
+import '../layout/main_tabs.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/auth/register_screen.dart';
+import '../screens/dashboard_screen.dart';
+import '../screens/settings_screen.dart';
+import '../screens/stats_screen.dart';
+import '../screens/test.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getAll() => _routes;
 
   static final Map<String, WidgetBuilder> _routes = {
-    RouteList.login: (context) => const LoginScreen(),
-    RouteList.register: (context) => const RegisterScreen(),
-    RouteList.home: (context) => const MainTabs(),
+    RouteNames.login: (context) => const LoginScreen(),
+    RouteNames.register: (context) => const RegisterScreen(),
+    RouteNames.home: (context) => const MainTabs(),
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final arguments = settings.arguments;
     switch (settings.name) {
-      case RouteList.logbook:
-        return _buildRoute(settings, (_) => const LogbookScreen());
-      case RouteList.stats:
+      case RouteNames.dashboard:
+        return _buildRoute(settings, (_) => const DashboardScreen());
+      case RouteNames.stats:
         return _buildRoute(settings, (_) => const StatsScreen());
-      case RouteList.settings:
+      case RouteNames.settings:
         return _buildRoute(settings, (_) => const SettingsScreen());
-      case RouteList.test:
+      case RouteNames.test:
         return _buildRoute(settings, (_) => const TestScreen());
       default:
         return _errorRoute();

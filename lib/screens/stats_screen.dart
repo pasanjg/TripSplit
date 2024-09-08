@@ -19,7 +19,7 @@ class _StatsScreenState extends State<StatsScreen> {
       body: Center(
         child: InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed(RouteList.test);
+            Navigator.of(context).pushNamed(RouteNames.test);
           },
           child: const Text('Stats'),
         ),

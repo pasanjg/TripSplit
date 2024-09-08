@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/widgets/custom_button.dart';
-import 'package:tripsplit/widgets/custom_text_form_field.dart';
 
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_text_form_field.dart';
 import '../../common/helpers/ui_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -199,12 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         onTap: () {
                           registerUser(context);
                         },
-                        child: const Text(
-                          'Register',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        text: 'Register',
                       ),
                       const SizedBox(height: 30.0),
                       TextButton(

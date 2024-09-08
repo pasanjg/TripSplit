@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/widgets/custom_button.dart';
-import 'package:tripsplit/widgets/custom_text_form_field.dart';
 
+import '../../widgets/custom_button.dart';
+import '../../widgets/custom_text_form_field.dart';
 import '../../common/helpers/ui_helper.dart';
+import '../../common/constants/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
       loginFormKey!.currentState!.save();
       Overlay.of(context).insert(loader!);
 
-      Navigator.of(context).pushReplacementNamed(RouteList.home);
+      Navigator.of(context).pushReplacementNamed(RouteNames.home);
       loader!.remove();
     }
   }
@@ -142,12 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           loginUser(context);
                         },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        text: 'Login',
                       ),
                       const SizedBox(height: 20.0),
                       const Text('or continue with'),
@@ -176,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, RouteList.register);
+                          Navigator.pushNamed(context, RouteNames.register);
                         },
                         child: Text(
                           "I don't have an account",
