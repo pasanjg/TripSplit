@@ -46,7 +46,7 @@ class _StatsScreenState extends State<StatsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PieChartSample2(),
+                    PieChartWidget(),
                   ],
                 ),
               ),

@@ -78,15 +78,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           <PopupMenuEntry<SampleItem>>[
                         const PopupMenuItem<SampleItem>(
                           value: SampleItem.itemOne,
-                          child: Text('Item 1'),
+                          child: Text('Total Spent'),
                         ),
                         const PopupMenuItem<SampleItem>(
                           value: SampleItem.itemTwo,
-                          child: Text('Item 2'),
+                          child: Text('My Spending'),
                         ),
                         const PopupMenuItem<SampleItem>(
                           value: SampleItem.itemThree,
-                          child: Text('Item 3'),
+                          child: Text('Amounts Owed'),
                         ),
                       ],
                     ),

@@ -42,6 +42,7 @@ dependencies:
   firebase_storage: ^12.2.0
   firebase_crashlytics: ^4.1.0
   fl_chart: ^0.69.0
+  responsive_framework: ^1.5.1
 
 dev_dependencies:
   flutter_test:

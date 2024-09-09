@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 import './routes/route.dart';
 import './screens/splash_screen.dart';
@@ -39,6 +40,16 @@ class MyApp extends StatelessWidget {
       routes: Routes.getAll(),
       onGenerateRoute: Routes.onGenerateRoute,
       home: const SplashScreen(),
+      builder: (context, child) {
+        return ResponsiveBreakpoints.builder(
+          breakpoints: [
+            const Breakpoint(start: 0, end: 450, name: MOBILE),
+            const Breakpoint(start: 451, end: 800, name: TABLET),
+            const Breakpoint(start: 801, end: 1920, name: DESKTOP),
+          ],
+          child: child!,
+        );
+      },
     );
   }
 }

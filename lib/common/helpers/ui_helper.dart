@@ -63,8 +63,8 @@ class UIHelper {
     bool showClose = false,
     bool isRounded = false,
     bool hasHandle = true,
-    double initialChildSize = 0.4,
-    double minChildSize = 0.2,
+    double initialChildSize = 0.5,
+    double minChildSize = 0.3,
     double maxChildSize = 0.9,
     bool expand = false,
     Widget? header,
@@ -100,9 +100,9 @@ class UIHelper {
                     )
                   : const SizedBox(),
               DraggableScrollableSheet(
-                initialChildSize: 0.4,
-                minChildSize: 0.2,
-                maxChildSize: 0.9,
+                initialChildSize: initialChildSize,
+                minChildSize: minChildSize,
+                maxChildSize: maxChildSize,
                 expand: false,
                 builder: (BuildContext context, ScrollController controller) {
                   return Column(

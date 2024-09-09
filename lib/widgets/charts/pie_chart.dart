@@ -3,8 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 
 import 'indicator.dart';
 
-class PieChartSample2 extends StatefulWidget {
-  const PieChartSample2({super.key});
+class PieChartWidget extends StatefulWidget {
+  const PieChartWidget({super.key});
 
   @override
   State<StatefulWidget> createState() => PieChart2State();
