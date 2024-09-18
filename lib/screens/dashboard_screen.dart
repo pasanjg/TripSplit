@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/widgets/companion_item.dart';
+import 'package:tripsplit/widgets/splitmate_list_item.dart';
 import 'package:tripsplit/widgets/expense_record.dart';
 import 'package:tripsplit/widgets/trip_selector.dart';
 
@@ -101,7 +101,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    "Companions",
+                    "Splitmates",
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -130,7 +130,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     5,
                     (index) => const Column(
                       children: [
-                        CompanionItem(),
+                        SplitmateListItem(),
                         SizedBox(height: 10.0),
                       ],
                     ),

@@ -5,7 +5,7 @@ import '../entities/user.dart';
 
 class UserModel with ChangeNotifier {
   User? user;
-  final FirebaseService _firebaseService = FirebaseService();
+  final FirebaseService _firebaseService = FirebaseService.instance;
   // final authStateChanges = FirebaseService().authStateChanges;
 
   bool get isLoggedIn => user != null;
