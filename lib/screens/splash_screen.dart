@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../common/constants/constants.dart';
+import 'package:tripsplit/models/user_model.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,21 +11,27 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  late UserModel userModel;
+
   @override
   void initState() {
     super.initState();
     _initializeApp().then((_) {
-      navigateToHomeScreen();
+      navigateToNextScreen();
     });
   }
 
   Future<void> _initializeApp() async {
-    await Future.delayed(const Duration(seconds: 2));
+    userModel = Provider.of<UserModel>(context, listen: false);
+    await userModel.getUser();
   }
 
-  void navigateToHomeScreen() async {
-    // await Navigator.of(context).pushReplacementNamed(RouteList.login);
-    await Navigator.of(context).pushReplacementNamed(RouteNames.home);
+  void navigateToNextScreen() async {
+    if (userModel.user != null) {
+      await Navigator.of(context).pushReplacementNamed(RouteNames.home);
+    } else {
+      await Navigator.of(context).pushReplacementNamed(RouteNames.login);
+    }
   }
 
   @override

@@ -11,6 +11,8 @@ class CustomTextFormField extends StatefulWidget {
   final InputDecoration? decoration;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
+  final void Function(String?)? onChanged;
+  final bool enabled;
 
   const CustomTextFormField({
     super.key,
@@ -22,6 +24,8 @@ class CustomTextFormField extends StatefulWidget {
     this.decoration,
     this.validator,
     this.onSaved,
+    this.onChanged,
+    this.enabled = true,
   });
 
   @override
@@ -96,7 +100,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       textInputAction: widget.textInputAction,
       validator: widget.validator,
       onSaved: widget.onSaved,
+      onChanged: widget.onChanged,
       obscureText: widget.isPassword && _hidePassword,
+      enabled: widget.enabled,
       decoration: CustomTextFormField.buildDecoration(context).copyWith(
         suffixIcon: widget.isPassword
             ? Material(

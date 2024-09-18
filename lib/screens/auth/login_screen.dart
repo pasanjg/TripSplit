@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tripsplit/mixins/validate_mixin.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../common/constants/constants.dart';
+import '../../models/user_model.dart';
 import '../../widgets/custom/index.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,9 +14,11 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
   GlobalKey<FormState>? loginFormKey;
   OverlayEntry? loader;
+
+  String? email, password;
 
   @override
   void initState() {
@@ -28,7 +33,16 @@ class _LoginScreenState extends State<LoginScreen> {
       loginFormKey!.currentState!.save();
       Overlay.of(context).insert(loader!);
 
-      Navigator.of(context).pushReplacementNamed(RouteNames.home);
+      await Provider.of<UserModel>(context, listen: false).login(
+        email: email!,
+        password: password!,
+      );
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteNames.home,
+        (route) => false,
+      );
+
       loader!.remove();
     }
   }
@@ -103,10 +117,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       CustomTextFormField(
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
-                        onSaved: (input) => {},
-                        validator: (input) => !input!.contains('@')
-                            ? "Should be a valid Email"
-                            : null,
+                        onSaved: (input) => email = input,
+                        validator: validateEmail,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(
                           labelText: "Email",
@@ -121,10 +133,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       CustomTextFormField(
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.visiblePassword,
-                        onSaved: (input) => {},
-                        validator: (input) => input!.length < 8
-                            ? "Password cannot be less than 8 characters"
-                            : null,
+                        onSaved: (input) => password = input,
+                        validator: validatePassword,
                         isPassword: true,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(

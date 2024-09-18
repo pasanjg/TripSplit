@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tripsplit/common/constants/constants.dart';
+import 'package:tripsplit/mixins/validate_mixin.dart';
+import 'package:tripsplit/models/user_model.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../widgets/custom/index.dart';
@@ -10,11 +14,11 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
   GlobalKey<FormState>? _registerFormKey;
   OverlayEntry? _loader;
 
-  final TextEditingController _password = TextEditingController();
+  String? firstname, lastname, email, password, confirmPassword;
 
   @override
   void initState() {
@@ -23,13 +27,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _registerFormKey = GlobalKey<FormState>();
   }
 
-  void registerUser(BuildContext context) async {
+  Future<void> registerUser(BuildContext context) async {
     FocusScope.of(context).unfocus();
     if (_registerFormKey!.currentState!.validate()) {
       _registerFormKey!.currentState!.save();
       Overlay.of(context).insert(_loader!);
 
-      Navigator.pop(context);
+      await Provider.of<UserModel>(context, listen: false).createUser(
+        firstname: firstname!,
+        lastname: lastname!,
+        email: email!,
+        password: password!,
+      );
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        RouteNames.home,
+        (route) => false,
+      );
+
       _loader!.remove();
     }
   }
@@ -90,13 +105,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 1.5,
                           ),
                           children: <TextSpan>[
-                            TextSpan(
-                              text: '\n& enjoy all the features.',
-                              style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
+                            // TextSpan(
+                            //   text: '\n& enjoy all the features.',
+                            //   style: TextStyle(
+                            //     fontSize: 14.0,
+                            //     fontWeight: FontWeight.w300,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -105,10 +120,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.words,
-                        onSaved: (input) => {},
-                        validator: (input) => input!.isEmpty
-                            ? "First name cannot be empty"
-                            : null,
+                        onSaved: (input) => firstname = input,
+                        validator: validateText,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(
                           labelText: "First name",
@@ -124,9 +137,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.words,
-                        onSaved: (input) => {},
-                        validator: (input) =>
-                            input!.isEmpty ? "Last name cannot be empty" : null,
+                        onSaved: (input) => lastname = input,
+                        validator: validateText,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(
                           labelText: "Last name",
@@ -141,10 +153,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextFormField(
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.emailAddress,
-                        onSaved: (input) => {},
-                        validator: (input) => !input!.contains('@')
-                            ? "Should be a valid Email"
-                            : null,
+                        onSaved: (input) => email = input,
+                        validator: validateEmail,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(
                           labelText: "Email",
@@ -157,13 +167,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       const SizedBox(height: 15.0),
                       CustomTextFormField(
-                        controller: _password,
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.visiblePassword,
-                        onSaved: (input) => {},
-                        validator: (input) => input!.length < 8
-                            ? "Password cannot be less than 8 characters"
-                            : null,
+                        onSaved: (input) => password = input,
+                        onChanged: (input) => password = input,
+                        validator: validatePassword,
                         isPassword: true,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(
@@ -179,9 +187,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       CustomTextFormField(
                         textInputAction: TextInputAction.done,
                         keyboardType: TextInputType.visiblePassword,
-                        validator: (input) => input != _password.text
-                            ? "Should match the given password"
-                            : null,
+                        validator: (input) =>
+                            validateConfirmPassword(password, input),
                         isPassword: true,
                         decoration: CustomTextFormField.buildDecoration(context)
                             .copyWith(

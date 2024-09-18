@@ -43,6 +43,8 @@ dependencies:
   firebase_crashlytics: ^4.1.0
   fl_chart: ^0.69.0
   responsive_framework: ^1.5.1
+  provider: ^6.1.2
+  firebase_messaging: ^15.1.2
 
 dev_dependencies:
   flutter_test:

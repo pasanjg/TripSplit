@@ -41,6 +41,7 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text('See more', style: TextStyle(fontSize: 12.0),),
             Icon(
               _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
               color: Theme.of(context).dividerColor.darken(0.2),
