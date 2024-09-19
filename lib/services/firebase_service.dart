@@ -49,7 +49,7 @@ class FirebaseService {
     final token = await _messaging.getToken();
     user.deviceToken = token;
     print('token: $token');
-    await _firestore.collection('users').doc(user.id).set(user.toJson());
+    await _firestore.collection(User.collection).doc(user.id).set(user.toJson());
   }
 
   Future<User?> getUserFromFirestore() async {
@@ -59,7 +59,7 @@ class FirebaseService {
     print('uid: ${_auth.currentUser!.uid}');
 
     final user =
-        await _firestore.collection('users').doc(_auth.currentUser!.uid).get();
+        await _firestore.collection(User.collection).doc(_auth.currentUser!.uid).get();
     return User.fromMap(user.data() as Map<String, dynamic>);
   }
 }

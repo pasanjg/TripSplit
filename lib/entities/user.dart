@@ -5,11 +5,12 @@ class User {
   String? firstname;
   String? lastname;
   String? email;
-  String? deviceToken;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-
   String? password;
+  String? deviceToken;
+  DateTime? createdAt = DateTime.now();
+  DateTime? updatedAt = DateTime.now();
+
+  static const String collection = 'users';
 
   User({
     this.id,
@@ -18,10 +19,7 @@ class User {
     this.email,
     this.createdAt,
     this.updatedAt,
-  }) {
-    createdAt = DateTime.now();
-    updatedAt = DateTime.now();
-  }
+  });
 
   String get fullName => '$firstname $lastname';
   String get initials => '${firstname![0]}${lastname![0]}';
