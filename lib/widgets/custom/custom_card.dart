@@ -26,7 +26,7 @@ class CustomCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(10.0),
     this.border,
     this.radius = 10.0,
-    this.hasShadow = false,
+    this.hasShadow = true,
     this.color,
     this.header,
     this.child,

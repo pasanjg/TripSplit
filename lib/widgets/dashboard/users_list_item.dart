@@ -1,28 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:tripsplit/entities/user.dart';
 
-class SplitmateListItem extends StatelessWidget {
-  const SplitmateListItem({super.key});
+class UsersListItem extends StatelessWidget {
+  final User user;
+
+  const UsersListItem({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
         CircleAvatar(
           radius: 20.0,
+          child: Text(
+            user.initials,
+          ),
         ),
-        SizedBox(width: 10.0),
+        const SizedBox(width: 10.0),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'John Doe',
-              style: TextStyle(
+              user.fullName,
+              style: const TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              'LKR 5,000.00',
+            const Text(
+              'LKR XXXX.XX',
               style: TextStyle(
                 fontSize: 14.0,
                 color: Colors.grey,
@@ -30,8 +36,8 @@ class SplitmateListItem extends StatelessWidget {
             ),
           ],
         ),
-        Spacer(),
-        Icon(
+        const Spacer(),
+        const Icon(
           Icons.chevron_right_rounded,
           color: Colors.grey,
         ),
@@ -39,4 +45,3 @@ class SplitmateListItem extends StatelessWidget {
     );
   }
 }
-

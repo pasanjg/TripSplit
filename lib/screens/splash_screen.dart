@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tripsplit/models/trip_model.dart';
 import '../common/constants/constants.dart';
 import 'package:tripsplit/models/user_model.dart';
 
@@ -12,6 +13,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late UserModel userModel;
+  late TripModel tripModel;
 
   @override
   void initState() {
@@ -24,6 +26,9 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeApp() async {
     userModel = Provider.of<UserModel>(context, listen: false);
     await userModel.getUser();
+
+    tripModel = Provider.of<TripModel>(context, listen: false);
+    await tripModel.getUserTrips();
   }
 
   void navigateToNextScreen() async {

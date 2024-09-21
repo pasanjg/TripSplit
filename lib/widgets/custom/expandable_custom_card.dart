@@ -3,22 +3,22 @@ import 'package:tripsplit/common/extensions/extensions.dart';
 import 'index.dart';
 
 class ExpandableCustomCard extends StatefulWidget {
-  final Widget child;
+  final List<Widget> children;
+  final double itemHeight;
   final double? width;
-  final double initialHeight;
-  final double expandedHeight;
+  final int visibleItems;
   final EdgeInsets padding;
   final bool hasShadow;
 
   const ExpandableCustomCard({
     super.key,
-    required this.child,
+    required this.children,
+    required this.itemHeight,
     this.width,
-    required this.initialHeight,
-    required this.expandedHeight,
+    this.visibleItems = 1,
     this.padding = const EdgeInsets.all(10.0),
-    this.hasShadow = false,
-  });
+    this.hasShadow = true,
+  }) : assert(visibleItems > 0);
 
   @override
   State<ExpandableCustomCard> createState() => _ExpandableCustomCardState();
@@ -26,41 +26,56 @@ class ExpandableCustomCard extends StatefulWidget {
 
 class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
   bool _isExpanded = false;
+  late double _initialHeight;
+  late double _expandedHeight;
   Duration animationDuration = const Duration(milliseconds: 300);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initialHeight = widget.itemHeight * widget.visibleItems;
+    _expandedHeight = widget.itemHeight * widget.children.length;
+  }
 
   @override
   Widget build(BuildContext context) {
     return CustomCard(
       hasShadow: widget.hasShadow,
-      footer: GestureDetector(
-        onTap: () {
-          setState(() {
-            _isExpanded = !_isExpanded;
-          });
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('See more', style: TextStyle(fontSize: 12.0),),
-            Icon(
-              _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-              color: Theme.of(context).dividerColor.darken(0.2),
-            ),
-          ],
-        ),
-      ),
+      footer: widget.children.length > widget.visibleItems
+          ? GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'See more',
+                    style: TextStyle(fontSize: 12.0),
+                  ),
+                  Icon(
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
+                    color: Theme.of(context).dividerColor.darken(0.2),
+                  ),
+                ],
+              ),
+            )
+          : null,
       child: AnimatedContainer(
         duration: animationDuration,
         curve: Curves.easeInOut,
-        height: _isExpanded ? widget.expandedHeight : widget.initialHeight,
+        height: _isExpanded ? _expandedHeight : _initialHeight,
         child: SingleChildScrollView(
           physics: _isExpanded
               ? const AlwaysScrollableScrollPhysics()
               : const NeverScrollableScrollPhysics(),
           child: Wrap(
-            children: [
-              widget.child,
-            ],
+            children: widget.children,
           ),
         ),
       ),

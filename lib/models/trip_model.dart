@@ -1,5 +1,168 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:tripsplit/entities/user.dart';
+import 'package:tripsplit/services/firebase_service.dart';
+
+import '../entities/trip.dart';
 
 class TripModel with ChangeNotifier {
+  Trip? selectedTrip;
 
+  // List<Trip> trips = [];
+
+  final FirebaseService _firebaseService = FirebaseService.instance;
+
+  bool get canAddUser =>
+      selectedTrip != null &&
+      selectedTrip!.createdBy == _firebaseService.auth.currentUser!.uid;
+
+  bool get canAddExpense =>
+      selectedTrip != null &&
+      selectedTrip!.users.any((user) => user.id == _firebaseService.auth.currentUser!.uid);
+
+  Stream<List<Trip>> get userTripsStream {
+    Stream<List<Trip>> stream;
+    try {
+      stream = FirebaseFirestore.instance
+          .collection(User.collection)
+          .doc(_firebaseService.auth.currentUser!.uid)
+          .snapshots()
+          .asyncMap((snapshot) async {
+        final data = snapshot.data() as Map<String, dynamic>;
+        final tripRefs = (data[User.fieldTripRefs] as List<dynamic>)
+            .map((ref) => ref as DocumentReference)
+            .toList();
+
+        final trips = await Future.wait(tripRefs.map((tripRef) async {
+          final tripSnapshot = await tripRef.get();
+          return Trip.fromMap(
+            tripSnapshot.id,
+            tripSnapshot.data() as Map<String, dynamic>,
+          );
+        }));
+        trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
+        return trips;
+      });
+    } catch (err) {
+      print(err);
+      stream = const Stream.empty();
+    }
+
+    return stream;
+  }
+
+  Stream<List<User>> get usersStream {
+    Stream<List<User>> stream;
+    try {
+      stream = FirebaseFirestore.instance
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id)
+          .snapshots()
+          .asyncMap((snapshot) async {
+        final data = snapshot.data() as Map<String, dynamic>;
+        final userRefs = (data[Trip.fieldUserRefs] as List<dynamic>)
+            .map((ref) => ref as DocumentReference)
+            .toList();
+
+        final users = await Future.wait(userRefs.map((userRef) async {
+          final userSnapshot = await userRef.get();
+          return User.fromMap(
+            userSnapshot.id,
+            userSnapshot.data() as Map<String, dynamic>,
+          );
+        }));
+        return users;
+      });
+    } catch (err) {
+      print(err);
+      stream = const Stream.empty();
+    }
+
+    return stream;
+  }
+
+  Future<void> createTrip({
+    required String title,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    try {
+      final trip = Trip(
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      trip.createdBy = _firebaseService.auth.currentUser!.uid;
+
+      DocumentReference tripRef = await _firebaseService.firestore
+          .collection(Trip.collection)
+          .add(trip.toMap());
+      String userId = _firebaseService.auth.currentUser!.uid;
+
+      await addUserToTripWithReference(tripRef.id, userId);
+      await getUserTrips();
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> getUserTrips() async {
+    try {
+      final user = await _firebaseService.firestore
+          .collection(User.collection)
+          .doc(_firebaseService.auth.currentUser!.uid)
+          .get();
+
+      final trips = await Future.wait(
+          user.data()![User.fieldTripRefs].map<Future<Trip>>((tripRef) async {
+        DocumentSnapshot tripSnapshot = await tripRef.get();
+        return Trip.fromMap(
+          tripSnapshot.id,
+          tripSnapshot.data() as Map<String, dynamic>,
+        );
+      }));
+      trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
+      print("TRIPS: $trips");
+
+      await selectTrip(trips.first);
+      print("SELECTED TRIP: ${selectedTrip!.title}");
+    } catch (err) {
+      print(err);
+    }
+  }
+
+  Future<void> selectTrip(Trip t) async {
+    if (selectedTrip != t) {
+      selectedTrip = t;
+
+      if (selectedTrip != null) {
+        selectedTrip!.loadExpenses();
+        selectedTrip!.loadUsers();
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> addUserToTripWithReference(String tripId, String userId) async {
+    print("Adding user to trip | Trip ID: $tripId | User ID: $userId");
+    DocumentReference userRef =
+        _firebaseService.firestore.collection(User.collection).doc(userId);
+    DocumentReference tripRef =
+        _firebaseService.firestore.collection(Trip.collection).doc(tripId);
+
+    await _firebaseService.firestore.runTransaction((transaction) async {
+      // Add the trip reference to the user
+      transaction.update(userRef, {
+        User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
+      });
+
+      // Add the user reference to the trip
+      transaction.update(tripRef, {
+        Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
+      });
+    });
+  }
 }

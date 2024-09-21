@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tripsplit/widgets/charts/pie_chart.dart';
-import 'package:tripsplit/widgets/trip_selector.dart';
+import 'package:tripsplit/widgets/trips/trip_selector.dart';
 
 import '../widgets/custom/index.dart';
 
@@ -42,7 +42,6 @@ class _StatsScreenState extends State<StatsScreen> {
               child: CustomCard(
                 width: double.infinity,
                 padding: EdgeInsets.all(15.0),
-                hasShadow: true,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

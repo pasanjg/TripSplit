@@ -19,9 +19,8 @@ class CustomListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
         alignment: Alignment.centerLeft,
-        height: 55.0,
         width: double.infinity,
         decoration: BoxDecoration(
           border: Border(

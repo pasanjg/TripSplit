@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:tripsplit/entities/trip.dart';
 
 class User {
   String? id;
@@ -7,44 +9,61 @@ class User {
   String? email;
   String? password;
   String? deviceToken;
+  List<DocumentReference> tripRefs = [];
+  List<Trip> trips = [];
   DateTime? createdAt = DateTime.now();
   DateTime? updatedAt = DateTime.now();
 
   static const String collection = 'users';
+  static const String fieldTripRefs = 'tripRefs';
+
+  String get fullName => '$firstname $lastname';
+
+  String get initials => '${firstname![0]}${lastname![0]}'.toUpperCase();
+
+  Stream<List<Trip>> get tripStreams {
+    List<Stream<DocumentSnapshot>> tripSnapshots = tripRefs.map((tripRef) {
+      return tripRef.snapshots();
+    }).toList();
+
+    return CombineLatestStream.list(tripSnapshots).map((snapshots) {
+      return snapshots.map((snapshot) {
+        return Trip.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
 
   User({
     this.id,
     this.firstname,
     this.lastname,
     this.email,
-    this.createdAt,
-    this.updatedAt,
   });
 
-  String get fullName => '$firstname $lastname';
-  String get initials => '${firstname![0]}${lastname![0]}';
-
   User.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data() as Map<String, dynamic>);
+      : this.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
 
-  User.fromMap(Map<String, dynamic> data) {
-    id = data['id'];
+  User.fromMap(String this.id, Map<String, dynamic> data) {
     firstname = data['firstname'];
     lastname = data['lastname'];
     email = data['email'];
     deviceToken = data['deviceToken'];
+    tripRefs = data['tripRefs'] != null
+        ? List<DocumentReference>.from(data['tripRefs'])
+        : [];
     createdAt = data['createdAt'].toDate();
     updatedAt = data['updatedAt'].toDate();
   }
 
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstname = json['firstname'];
-    lastname = json['lastname'];
-    email = json['email'];
-    deviceToken = json['deviceToken'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+  Map<String, dynamic> toMap() {
+    return {
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': email,
+      'deviceToken': deviceToken,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
   }
 
   Map<String, dynamic> toJson() {
@@ -57,6 +76,15 @@ class User {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;
+  }
+
+  Future<void> loadTrips() async {
+    if (tripRefs.isNotEmpty) {
+      trips = await Future.wait(tripRefs.map((tripRef) async {
+        final tripSnapshot = await tripRef.get();
+        return Trip.fromMap(tripSnapshot.id, tripSnapshot.data() as Map<String, dynamic>);
+      }));
+    }
   }
 
   @override

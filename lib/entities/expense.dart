@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:tripsplit/entities/user.dart';
 
 class Expense {
   String? id;
@@ -6,7 +7,8 @@ class Expense {
   String? category;
   double? amount;
   DateTime? date;
-  DocumentReference? user;
+  DocumentReference? userRef;
+  User? user;
   DateTime? createdAt = DateTime.now();
   DateTime? updatedAt = DateTime.now();
 
@@ -18,7 +20,7 @@ class Expense {
     this.category,
     this.amount,
     this.date,
-    this.user,
+    this.userRef,
   });
 
   Expense.fromSnapshot(DocumentSnapshot snapshot)
@@ -30,20 +32,24 @@ class Expense {
     category = data['category'];
     amount = data['amount'];
     date = data['date'].toDate();
-    user = data['user'];
+    userRef = data['userRef'] != null
+        ? data['userRef'] as DocumentReference
+        : null;
     createdAt = data['createdAt'].toDate();
     updatedAt = data['updatedAt'].toDate();
   }
 
-  Expense.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    title = json['title'];
-    category = json['category'];
-    amount = json['amount'];
-    date = json['date'];
-    user = json['user'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'category': category,
+      'amount': amount,
+      'date': date,
+      'userRef': userRef,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
   }
 
   Map<String, dynamic> toJson() {
@@ -53,10 +59,17 @@ class Expense {
     data['category'] = category;
     data['amount'] = amount;
     data['date'] = date;
-    data['user'] = user;
+    data['userRef'] = userRef;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;
+  }
+
+  Future<void> loadUser() async {
+    if (userRef != null) {
+      final userSnapshot = await userRef!.get();
+      user = User.fromMap(userSnapshot.id, userSnapshot.data() as Map<String, dynamic>);
+    }
   }
 
   @override

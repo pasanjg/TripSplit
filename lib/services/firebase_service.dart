@@ -19,47 +19,55 @@ class FirebaseService {
 
   FirebaseMessaging get messaging => _messaging;
 
-  // Stream<auth.User?> get authStateChanges => _auth.authStateChanges();
+  // Stream<auth.User?> get authStateChanges => auth.authStateChanges();
 
   Future<firebase_auth.UserCredential> createUserWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    return await _auth.createUserWithEmailAndPassword(
+    return await auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
   }
 
-  Future<void> loginFirebaseEmail({
+  Future<firebase_auth.UserCredential> loginFirebaseEmail({
     required String email,
     required String password,
   }) async {
-    await _auth.signInWithEmailAndPassword(
+    return await auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
   }
 
   Future<void> logout() async {
-    await _auth.signOut();
+    await auth.signOut();
   }
 
   Future<void> saveUserToFirestore(User user) async {
-    final token = await _messaging.getToken();
+    final token = await messaging.getToken();
     user.deviceToken = token;
     print('token: $token');
-    await _firestore.collection(User.collection).doc(user.id).set(user.toJson());
+    await firestore
+        .collection(User.collection)
+        .doc(user.id)
+        .set(user.toMap());
   }
 
   Future<User?> getUserFromFirestore() async {
-    if (_auth.currentUser == null) {
+    if (auth.currentUser == null) {
       return null;
     }
-    print('uid: ${_auth.currentUser!.uid}');
 
-    final user =
-        await _firestore.collection(User.collection).doc(_auth.currentUser!.uid).get();
-    return User.fromMap(user.data() as Map<String, dynamic>);
+    final userSnapshot = await firestore
+        .collection(User.collection)
+        .doc(auth.currentUser!.uid)
+        .get();
+
+    return User.fromMap(
+      userSnapshot.id,
+      userSnapshot.data() as Map<String, dynamic>,
+    );
   }
 }

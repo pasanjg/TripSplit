@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/models/user_model.dart';
 
 import './routes/route.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final _userModel = UserModel();
+  final _tripModel = TripModel();
 
   // This widget is the root of your application.
   @override
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>.value(value: _userModel),
+        ChangeNotifierProvider<TripModel>.value(value: _tripModel),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

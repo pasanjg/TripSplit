@@ -33,15 +33,17 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
       loginFormKey!.currentState!.save();
       Overlay.of(context).insert(loader!);
 
-      await Provider.of<UserModel>(context, listen: false).login(
-        email: email!,
-        password: password!,
-      );
+      final userModel = Provider.of<UserModel>(context, listen: false);
+      await userModel.login(email: email!, password: password!);
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteNames.home,
-        (route) => false,
-      );
+      if (userModel.errorMessage != null) {
+        UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
+      } else {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          RouteNames.home,
+          (route) => false,
+        );
+      }
 
       loader!.remove();
     }
