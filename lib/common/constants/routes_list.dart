@@ -10,5 +10,7 @@ class RouteNames {
   static const String stats = 'stats';
   static const String settings = 'settings';
 
+  static const String addUser = 'add-user';
+
   static const String test = 'test';
 }

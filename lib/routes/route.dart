@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tripsplit/screens/add_user_screen.dart';
 
 import '../common/constants/constants.dart';
 import '../layout/main_tabs.dart';
@@ -29,6 +30,8 @@ class Routes {
         return _buildRoute(settings, (_) => const SettingsScreen());
       case RouteNames.test:
         return _buildRoute(settings, (_) => const TestScreen());
+      case RouteNames.addUser:
+        return _buildRoute(settings, (_) => const AddUserScreen());
       default:
         return _errorRoute();
     }
