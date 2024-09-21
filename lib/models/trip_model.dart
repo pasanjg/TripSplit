@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
@@ -8,8 +7,6 @@ import '../entities/trip.dart';
 
 class TripModel with ChangeNotifier {
   Trip? selectedTrip;
-
-  // List<Trip> trips = [];
 
   final FirebaseService _firebaseService = FirebaseService.instance;
 
@@ -19,7 +16,8 @@ class TripModel with ChangeNotifier {
 
   bool get canAddExpense =>
       selectedTrip != null &&
-      selectedTrip!.users.any((user) => user.id == _firebaseService.auth.currentUser!.uid);
+      selectedTrip!.users
+          .any((user) => user.id == _firebaseService.auth.currentUser!.uid);
 
   Stream<List<Trip>> get userTripsStream {
     Stream<List<Trip>> stream;
@@ -99,12 +97,12 @@ class TripModel with ChangeNotifier {
       DocumentReference tripRef = await _firebaseService.firestore
           .collection(Trip.collection)
           .add(trip.toMap());
-      String userId = _firebaseService.auth.currentUser!.uid;
 
+      String userId = _firebaseService.auth.currentUser!.uid;
       await addUserToTripWithReference(tripRef.id, userId);
       await getUserTrips();
     } catch (err) {
-      print(err);
+      print("Error creating trip: $err");
     }
   }
 
@@ -116,18 +114,18 @@ class TripModel with ChangeNotifier {
           .get();
 
       final trips = await Future.wait(
-          user.data()![User.fieldTripRefs].map<Future<Trip>>((tripRef) async {
-        DocumentSnapshot tripSnapshot = await tripRef.get();
-        return Trip.fromMap(
-          tripSnapshot.id,
-          tripSnapshot.data() as Map<String, dynamic>,
-        );
-      }));
+        user.get(User.fieldTripRefs).map<Future<Trip>>((tripRef) async {
+          DocumentSnapshot tripSnapshot = await tripRef.get();
+          return Trip.fromMap(
+            tripSnapshot.id,
+            tripSnapshot.data() as Map<String, dynamic>,
+          );
+        }),
+      );
+
       trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
-      print("TRIPS: $trips");
 
       await selectTrip(trips.first);
-      print("SELECTED TRIP: ${selectedTrip!.title}");
     } catch (err) {
       print(err);
     }
@@ -147,7 +145,6 @@ class TripModel with ChangeNotifier {
   }
 
   Future<void> addUserToTripWithReference(String tripId, String userId) async {
-    print("Adding user to trip | Trip ID: $tripId | User ID: $userId");
     DocumentReference userRef =
         _firebaseService.firestore.collection(User.collection).doc(userId);
     DocumentReference tripRef =

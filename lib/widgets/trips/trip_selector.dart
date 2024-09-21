@@ -67,31 +67,34 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
 
           return Column(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(snapshot.data!.length, (index) {
-              final Trip trip = snapshot.data![index];
-              return CustomListItem(
-                  onTap: () {
-                    tripModel.selectTrip(trip);
-                    Navigator.of(context).pop();
-                  },
-                  leading: const Icon(Icons.route_rounded),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(trip.title!),
-                      Text(
-                        '${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}',
-                        style: TextStyle(
-                          fontSize: 12.0,
-                          color: Theme.of(context).dividerColor.darken(0.2),
+            children: List.generate(
+              snapshot.data!.length,
+              (index) {
+                final Trip trip = snapshot.data![index];
+                return CustomListItem(
+                    onTap: () {
+                      tripModel.selectTrip(trip);
+                      Navigator.of(context).pop();
+                    },
+                    leading: const Icon(Icons.route_rounded),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(trip.title!),
+                        Text(
+                          '${DateFormat.yMMMd().format(trip.startDate!)} - ${DateFormat.yMMMd().format(trip.endDate!)}',
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            color: Theme.of(context).dividerColor.darken(0.2),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  trailing: tripModel.selectedTrip!.id == trip.id
-                      ? const Icon(Icons.check_rounded)
-                      : const SizedBox.shrink());
-            }),
+                      ],
+                    ),
+                    trailing: tripModel.selectedTrip!.id == trip.id
+                        ? const Icon(Icons.check_rounded)
+                        : const SizedBox.shrink());
+              },
+            ),
           );
         },
       ),
@@ -112,7 +115,6 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
     return StreamBuilder(
       stream: tripModel.userTripsStream,
       builder: (context, snapshot) {
-        print("TRIP SELECTOR DATA: ${snapshot.data}");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading...");
         }

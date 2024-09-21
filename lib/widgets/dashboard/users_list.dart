@@ -39,7 +39,6 @@ class UsersList extends StatelessWidget {
       return StreamBuilder(
         stream: tripModel.usersStream,
         builder: (context, snapshot) {
-          print("USER SNAPSHOT ERROR: ${snapshot.error}");
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CustomCard(
               child: Center(

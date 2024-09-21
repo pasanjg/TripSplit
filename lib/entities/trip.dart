@@ -63,6 +63,7 @@ class Trip {
         ? List<DocumentReference>.from(data['userRefs'])
         : [];
     inviteCode = data['inviteCode'];
+    createdBy = data['createdBy'];
     createdAt = data['createdAt'].toDate();
     updatedAt = data['updatedAt'].toDate();
   }
@@ -74,6 +75,7 @@ class Trip {
       'endDate': endDate,
       'userRefs': userRefs,
       'inviteCode': inviteCode,
+      'createdBy': createdBy,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -87,6 +89,7 @@ class Trip {
     data['endDate'] = endDate;
     data['userRefs'] = userRefs;
     data['inviteCode'] = inviteCode;
+    data['createdBy'] = createdBy;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;
