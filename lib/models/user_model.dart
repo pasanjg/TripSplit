@@ -7,6 +7,7 @@ import '../entities/user.dart';
 
 class UserModel with ChangeNotifier {
   User? user;
+  String? successMessage;
   String? errorMessage;
 
   final FirebaseService _firebaseService = FirebaseService.instance;
@@ -21,6 +22,7 @@ class UserModel with ChangeNotifier {
     required String email,
     required String password,
   }) async {
+    clearMessages();
     try {
       final credential = await _firebaseService.createUserWithEmailAndPassword(
         email: email,
@@ -35,6 +37,7 @@ class UserModel with ChangeNotifier {
       );
 
       await saveUser(user!);
+      successMessage = 'Registration successful';
       notifyListeners();
     } catch (err) {
       switch (err.toString()) {
@@ -61,7 +64,17 @@ class UserModel with ChangeNotifier {
       await getUser();
       await saveUser(user!);
     } catch (err) {
-      errorMessage = err.toString();
+      switch (err.toString()) {
+        case 'user-not-found':
+          errorMessage = 'User not found';
+          break;
+        case 'wrong-password':
+          errorMessage = 'Wrong password';
+          break;
+        default:
+          errorMessage = 'An error occurred';
+          break;
+      }
       print(err);
     } finally {
       notifyListeners();
@@ -121,4 +134,10 @@ class UserModel with ChangeNotifier {
   //     return trips;
   //   });
   // }
+
+  void clearMessages() {
+    successMessage = null;
+    errorMessage = null;
+    notifyListeners();
+  }
 }

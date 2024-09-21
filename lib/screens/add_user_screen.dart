@@ -45,8 +45,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     children: [
                       Container(
                         // height: 150.0,
-                        padding:
-                            const EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 30.0),
+                        padding: const EdgeInsets.fromLTRB(
+                          15.0,
+                          15.0,
+                          15.0,
+                          30.0,
+                        ),
                         width: double.infinity,
                         color: Theme.of(context).primaryColor,
                         child: Column(
@@ -67,17 +71,15 @@ class _AddUserScreenState extends State<AddUserScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: List.generate(
-                                tripModel.selectedTrip!.id!
-                                    .substring(0, 6)
-                                    .length,
+                                tripModel.selectedTrip!.inviteCode!.length,
                                 (index) => CustomCard(
                                   width: 50.0,
                                   height: 50.0,
                                   hasShadow: false,
                                   child: Center(
                                     child: Text(
-                                      tripModel.selectedTrip!.id![index]
-                                          .toUpperCase(),
+                                      tripModel
+                                          .selectedTrip!.inviteCode![index],
                                       style: const TextStyle(
                                         fontFamily: 'Rubik',
                                         fontSize: 24.0,

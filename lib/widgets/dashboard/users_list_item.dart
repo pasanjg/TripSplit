@@ -3,8 +3,13 @@ import 'package:tripsplit/entities/user.dart';
 
 class UsersListItem extends StatelessWidget {
   final User user;
+  final bool isOwner;
 
-  const UsersListItem({super.key, required this.user});
+  const UsersListItem({
+    super.key,
+    required this.user,
+    this.isOwner = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +25,23 @@ class UsersListItem extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              user.fullName,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Text(
+                  user.fullName,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 5.0),
+                if (isOwner)
+                  const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                    size: 16.0,
+                  ),
+              ],
             ),
             const Text(
               'LKR XXXX.XX',

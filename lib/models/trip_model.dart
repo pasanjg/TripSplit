@@ -7,6 +7,8 @@ import '../entities/trip.dart';
 
 class TripModel with ChangeNotifier {
   Trip? selectedTrip;
+  String? successMessage;
+  String? errorMessage;
 
   final FirebaseService _firebaseService = FirebaseService.instance;
 
@@ -14,10 +16,7 @@ class TripModel with ChangeNotifier {
       selectedTrip != null &&
       selectedTrip!.createdBy == _firebaseService.auth.currentUser!.uid;
 
-  bool get canAddExpense =>
-      selectedTrip != null &&
-      selectedTrip!.users
-          .any((user) => user.id == _firebaseService.auth.currentUser!.uid);
+  bool get canAddExpense => selectedTrip != null;
 
   Stream<List<Trip>> get userTripsStream {
     Stream<List<Trip>> stream;
@@ -98,6 +97,8 @@ class TripModel with ChangeNotifier {
           .collection(Trip.collection)
           .add(trip.toMap());
 
+      await tripRef.update({Trip.fieldInviteCode: tripRef.id.substring(0, 6)});
+
       String userId = _firebaseService.auth.currentUser!.uid;
       await addUserToTripWithReference(tripRef.id, userId);
       await getUserTrips();
@@ -106,7 +107,7 @@ class TripModel with ChangeNotifier {
     }
   }
 
-  Future<void> getUserTrips() async {
+  Future<void> getUserTrips({Trip? selected}) async {
     try {
       final user = await _firebaseService.firestore
           .collection(User.collection)
@@ -125,7 +126,11 @@ class TripModel with ChangeNotifier {
 
       trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
 
-      await selectTrip(trips.first);
+      if (selected != null) {
+        await selectTrip(selected);
+      } else {
+        await selectTrip(trips.first);
+      }
     } catch (err) {
       print(err);
     }
@@ -134,11 +139,37 @@ class TripModel with ChangeNotifier {
   Future<void> selectTrip(Trip t) async {
     if (selectedTrip != t) {
       selectedTrip = t;
+      selectedTrip!.loadExpenses();
+      selectedTrip!.loadUsers();
+    } else {
+      selectedTrip = null;
+    }
 
-      if (selectedTrip != null) {
-        selectedTrip!.loadExpenses();
-        selectedTrip!.loadUsers();
-      }
+    notifyListeners();
+  }
+
+  Future<void> joinTrip(String inviteCode) async {
+    clearMessages();
+    final tripQuerySnapshot = await _firebaseService.firestore
+        .collection(Trip.collection)
+        .where(Trip.fieldInviteCode, isEqualTo: inviteCode)
+        .get();
+
+    if (tripQuerySnapshot.docs.isNotEmpty) {
+      final tripSnapshot = await tripQuerySnapshot.docs.first.reference.get();
+      final trip = Trip.fromMap(
+        tripSnapshot.id,
+        tripSnapshot.data() as Map<String, dynamic>,
+      );
+      print("SELECTED TRIP: $trip");
+
+      await addUserToTripWithReference(
+          trip.id!, _firebaseService.auth.currentUser!.uid);
+      await getUserTrips();
+      await selectTrip(trip);
+      successMessage = 'Trip joined successfully';
+    } else {
+      errorMessage = 'Trip not found';
     }
 
     notifyListeners();
@@ -161,5 +192,11 @@ class TripModel with ChangeNotifier {
         Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
       });
     });
+  }
+
+  void clearMessages() {
+    successMessage = null;
+    errorMessage = null;
+    notifyListeners();
   }
 }

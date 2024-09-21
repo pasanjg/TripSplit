@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../common/extensions/extensions.dart';
 
@@ -9,12 +10,13 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final InputDecoration? decoration;
+  List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final void Function(String?)? onChanged;
   final bool enabled;
 
-  const CustomTextFormField({
+  CustomTextFormField({
     super.key,
     this.isPassword = false,
     this.focusNode,
@@ -22,6 +24,7 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType,
     this.textInputAction,
     this.decoration,
+    this.inputFormatters = const [],
     this.validator,
     this.onSaved,
     this.onChanged,
@@ -98,6 +101,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
+      inputFormatters: widget.inputFormatters,
       validator: widget.validator,
       onSaved: widget.onSaved,
       onChanged: widget.onChanged,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/constants/constants.dart';
+import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
 import 'package:tripsplit/models/user_model.dart';
 
@@ -33,17 +34,23 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
       _registerFormKey!.currentState!.save();
       Overlay.of(context).insert(_loader!);
 
-      await Provider.of<UserModel>(context, listen: false).createUser(
+      final userModel = Provider.of<UserModel>(context, listen: false);
+      await userModel.createUser(
         firstname: firstname!,
         lastname: lastname!,
         email: email!,
         password: password!,
       );
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        RouteNames.home,
-        (route) => false,
-      );
+      if (userModel.errorMessage != null) {
+        UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
+      } else {
+        UIHelper.of(context).showSnackBar(userModel.successMessage!);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          RouteNames.home,
+          (route) => false,
+        );
+      }
 
       _loader!.remove();
     }
@@ -52,32 +59,27 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Create your account'),
+        titleTextStyle: const TextStyle(
+          fontSize: 30.0,
+          fontWeight: FontWeight.w800,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Column(
         children: [
-          Hero(
-            tag: 'auth-banner',
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 40.0),
-              width: double.infinity,
-              color: Theme.of(context).primaryColor,
-              child: RichText(
-                text: const TextSpan(
-                  text: "Create your account.",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                    height: 1.5,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '\nSubmit your details to create a new account.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
+            width: double.infinity,
+            color: Theme.of(context).primaryColor,
+            child: Text(
+              "Submit your details to create a new account",
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.w300,
+                color: Theme.of(context).primaryColor.computedLuminance(),
               ),
             ),
           ),

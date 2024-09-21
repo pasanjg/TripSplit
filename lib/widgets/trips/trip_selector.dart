@@ -193,18 +193,15 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 15.0),
-      child: Consumer<TripModel>(builder: (context, tripModel, _) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          child: _buildSelector(tripModel),
-        );
-      }),
-    );
+    return Consumer<TripModel>(builder: (context, tripModel, _) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: _buildSelector(tripModel),
+      );
+    });
   }
 }

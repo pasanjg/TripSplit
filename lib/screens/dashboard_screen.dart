@@ -10,6 +10,7 @@ import 'package:tripsplit/widgets/dashboard/expense_record.dart';
 import 'package:tripsplit/widgets/trips/trip_selector.dart';
 
 import '../widgets/custom/index.dart';
+import '../widgets/trips/join_trip.dart';
 
 enum SampleItem { itemOne, itemTwo, itemThree }
 
@@ -30,6 +31,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('Dashboard'),
         actions: const [
           TripSelector(),
+          SizedBox(width: 10.0),
+          JoinTrip(
+            child: Icon(
+              Icons.add_location_rounded,
+            ),
+          ),
+          SizedBox(width: 15.0),
         ],
       ),
       body: SingleChildScrollView(
@@ -151,8 +159,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }),
       ),
       floatingActionButton: FloatingActionButton(
+        mini: true,
         onPressed: () {},
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_rounded),
       ),
     );
   }

@@ -19,6 +19,7 @@ class _StatsScreenState extends State<StatsScreen> {
         title: const Text('Statistics'),
         actions: const [
           TripSelector(),
+          SizedBox(width: 15.0),
         ],
       ),
       body: const SingleChildScrollView(

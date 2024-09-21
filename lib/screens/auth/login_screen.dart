@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
 
 import '../../common/helpers/ui_helper.dart';
@@ -39,6 +40,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
       if (userModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
       } else {
+        UIHelper.of(context).showSnackBar(userModel.successMessage!);
         Navigator.of(context).pushNamedAndRemoveUntil(
           RouteNames.home,
           (route) => false,
@@ -52,32 +54,25 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Login to your account.'),
+        titleTextStyle: const TextStyle(
+          fontSize: 30.0,
+          fontWeight: FontWeight.w800,
+        ),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       body: Column(
         children: [
-          Hero(
-            tag: 'auth-banner',
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20.0, 60.0, 20.0, 40.0),
-              width: double.infinity,
-              color: Theme.of(context).primaryColor,
-              child: RichText(
-                text: const TextSpan(
-                  text: "Login to your account.",
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    fontWeight: FontWeight.bold,
-                    height: 1.5,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: '\nChoose a sign in method to access your account.',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 40.0),
+            width: double.infinity,
+            color: Theme.of(context).primaryColor,
+            child: Text(
+              'Choose a sign in method to access your account.',
+              style: TextStyle(
+                fontSize: 16.0,
+                color: Theme.of(context).primaryColor.computedLuminance(),
               ),
             ),
           ),
@@ -155,10 +150,10 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
                         },
                         text: 'Login',
                       ),
-                      const SizedBox(height: 20.0),
-                      const Text('or continue with'),
-                      const SizedBox(height: 20.0),
                       // TODO: Add social login buttons
+                      // const SizedBox(height: 20.0),
+                      // const Text('or continue with'),
+                      // const SizedBox(height: 20.0),
                       const SizedBox(height: 15.0),
                       TextButton(
                         style: ButtonStyle(

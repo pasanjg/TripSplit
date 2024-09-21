@@ -28,13 +28,16 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
   bool _isExpanded = false;
   late double _initialHeight;
   late double _expandedHeight;
+  late int _visibleItems;
   Duration animationDuration = const Duration(milliseconds: 300);
 
   @override
   void initState() {
     super.initState();
-
-    _initialHeight = widget.itemHeight * widget.visibleItems;
+    _visibleItems = widget.visibleItems > widget.children.length
+        ? widget.children.length
+        : widget.visibleItems;
+    _initialHeight = widget.itemHeight * _visibleItems;
     _expandedHeight = widget.itemHeight * widget.children.length;
   }
 
@@ -42,7 +45,7 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
   Widget build(BuildContext context) {
     return CustomCard(
       hasShadow: widget.hasShadow,
-      footer: widget.children.length > widget.visibleItems
+      footer: widget.children.length > _visibleItems
           ? GestureDetector(
               onTap: () {
                 setState(() {
