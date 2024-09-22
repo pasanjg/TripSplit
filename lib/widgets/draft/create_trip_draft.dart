@@ -9,21 +9,21 @@ import '../custom/custom_button.dart';
 import '../custom/custom_datepicker.dart';
 import '../custom/custom_text_form_field.dart';
 
-class CreateTrip extends StatefulWidget {
+class CreateTripDraft extends StatefulWidget {
   final TripModel tripModel;
   final Widget child;
 
-  const CreateTrip({
+  const CreateTripDraft({
     super.key,
     required this.child,
     required this.tripModel,
   });
 
   @override
-  State<CreateTrip> createState() => _CreateTripState();
+  State<CreateTripDraft> createState() => _CreateTripDraftState();
 }
 
-class _CreateTripState extends State<CreateTrip> with ValidateMixin {
+class _CreateTripDraftState extends State<CreateTripDraft> with ValidateMixin {
   String? title;
   DateTime? startDate = DateTime.now(), endDate;
 

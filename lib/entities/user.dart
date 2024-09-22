@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tripsplit/entities/trip.dart';
 
+import '../services/firebase_service.dart';
+
 class User {
   String? id;
   String? firstname;
@@ -20,6 +22,8 @@ class User {
   String get fullName => '$firstname $lastname';
 
   String get initials => '${firstname![0]}${lastname![0]}'.toUpperCase();
+
+  bool get mySelf => id == FirebaseService.instance.auth.currentUser!.uid;
 
   Stream<List<Trip>> get tripStreams {
     List<Stream<DocumentSnapshot>> tripSnapshots = tripRefs.map((tripRef) {

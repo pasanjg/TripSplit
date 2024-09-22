@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'TripSplit',
         theme: ThemeData(
           fontFamily: 'Inter',
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
           useMaterial3: true,
           appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(

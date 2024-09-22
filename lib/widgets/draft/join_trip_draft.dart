@@ -8,19 +8,19 @@ import '../../models/trip_model.dart';
 import '../custom/custom_button.dart';
 import '../custom/custom_text_form_field.dart';
 
-class JoinTrip extends StatefulWidget {
+class JoinTripDraft extends StatefulWidget {
   final Widget child;
 
-  const JoinTrip({
+  const JoinTripDraft({
     super.key,
     required this.child,
   });
 
   @override
-  State<JoinTrip> createState() => _JoinTripState();
+  State<JoinTripDraft> createState() => _JoinTripDraftState();
 }
 
-class _JoinTripState extends State<JoinTrip> with ValidateMixin {
+class _JoinTripDraftState extends State<JoinTripDraft> with ValidateMixin {
   String? inviteCode;
 
   GlobalKey<FormState>? tripFormKey;
@@ -33,7 +33,7 @@ class _JoinTripState extends State<JoinTrip> with ValidateMixin {
     tripFormKey = GlobalKey<FormState>();
   }
 
-  void createTrip(BuildContext context, TripModel tripModel) async {
+  void joinTrip(BuildContext context, TripModel tripModel) async {
     FocusScope.of(context).unfocus();
     if (tripFormKey!.currentState!.validate()) {
       tripFormKey!.currentState!.save();
@@ -107,7 +107,7 @@ class _JoinTripState extends State<JoinTrip> with ValidateMixin {
         padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
         width: double.infinity,
         child: CustomButton(
-          onTap: () => createTrip(context, tripModel),
+          onTap: () => joinTrip(context, tripModel),
           text: 'Submit',
         ),
       ),

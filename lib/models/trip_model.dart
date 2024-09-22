@@ -161,7 +161,16 @@ class TripModel with ChangeNotifier {
         tripSnapshot.id,
         tripSnapshot.data() as Map<String, dynamic>,
       );
-      print("SELECTED TRIP: $trip");
+
+      final userRef = _firebaseService.firestore
+          .collection(User.collection)
+          .doc(_firebaseService.auth.currentUser!.uid);
+
+      if (trip.userRefs.contains(userRef)) {
+        errorMessage = 'You are already part of this trip';
+        notifyListeners();
+        return;
+      }
 
       await addUserToTripWithReference(
           trip.id!, _firebaseService.auth.currentUser!.uid);
@@ -173,6 +182,29 @@ class TripModel with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> assignGuestUser({
+    required String firstname,
+    required String lastname,
+  }) async {
+    clearMessages();
+    try {
+      final user = User(
+        firstname: firstname,
+        lastname: lastname,
+      );
+
+      DocumentReference userRef = await _firebaseService.firestore
+          .collection(User.collection)
+          .add(user.toMap());
+
+      await addUserToTripWithReference(selectedTrip!.id!, userRef.id);
+      successMessage = "${user.fullName} added successfully";
+    } catch (err) {
+      errorMessage = 'Error adding user';
+      print(err);
+    }
   }
 
   Future<void> addUserToTripWithReference(String tripId, String userId) async {
@@ -197,6 +229,6 @@ class TripModel with ChangeNotifier {
   void clearMessages() {
     successMessage = null;
     errorMessage = null;
-    notifyListeners();
+    // notifyListeners();
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
 import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/trips/create_trip.dart';
+import 'package:tripsplit/widgets/draft/create_trip_draft.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../entities/trip.dart';
@@ -99,14 +100,15 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
           );
         },
       ),
-      footer: CreateTrip(
-        tripModel: tripModel,
-        child: Container(
-          padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
-          width: double.infinity,
-          child: const CustomButton(
-            text: 'Add New Trip',
-          ),
+      footer: Container(
+        padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
+        width: double.infinity,
+        child: CustomButton(
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed(RouteNames.createTrip);
+          },
+          text: 'Add New Trip',
         ),
       ),
     );
@@ -121,8 +123,10 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
         }
 
         if (snapshot.data == null) {
-          return CreateTrip(
-            tripModel: tripModel,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteNames.createTrip);
+            },
             child: Row(
               children: [
                 const Icon(
@@ -167,8 +171,10 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             ),
           );
         } else {
-          return CreateTrip(
-            tripModel: tripModel,
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).pushNamed(RouteNames.createTrip);
+            },
             child: Row(
               children: [
                 const Icon(
@@ -193,15 +199,17 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TripModel>(builder: (context, tripModel, _) {
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-        decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: _buildSelector(tripModel),
-      );
-    });
+    return Consumer<TripModel>(
+      builder: (context, tripModel, _) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          child: _buildSelector(tripModel),
+        );
+      },
+    );
   }
 }

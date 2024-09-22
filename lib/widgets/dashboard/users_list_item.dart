@@ -28,7 +28,7 @@ class UsersListItem extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  user.fullName,
+                  "${user.fullName} ${user.mySelf ? '(You)' : ''}",
                   style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,

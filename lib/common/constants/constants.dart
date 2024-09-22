@@ -1,3 +1,3 @@
-part 'routes_list.dart';
+part 'routes_names.dart';
 
 

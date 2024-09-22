@@ -11,6 +11,8 @@ class RouteNames {
   static const String settings = 'settings';
 
   static const String addUser = 'add-user';
+  static const String createTrip = 'create-trip';
+  static const String joinTrip = 'join-trip';
 
   static const String test = 'test';
 }

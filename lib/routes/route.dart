@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tripsplit/screens/add_user_screen.dart';
+import 'package:tripsplit/screens/join_trip_screen.dart';
 
 import '../common/constants/constants.dart';
 import '../layout/main_tabs.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
+import '../screens/create_trip_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/statistics_screen.dart';
@@ -32,6 +34,10 @@ class Routes {
         return _buildRoute(settings, (_) => const TestScreen());
       case RouteNames.addUser:
         return _buildRoute(settings, (_) => const AddUserScreen());
+      case RouteNames.createTrip:
+        return _buildRoute(settings, (_) => const CreateTripScreen());
+      case RouteNames.joinTrip:
+        return _buildRoute(settings, (_) => const JoinTripScreen());
       default:
         return _errorRoute();
     }

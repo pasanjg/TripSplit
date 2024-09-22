@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
+import 'package:tripsplit/mixins/validate_mixin.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/widgets/custom/custom_card.dart';
 import 'package:tripsplit/widgets/custom/custom_text_form_field.dart';
 
+import '../common/helpers/ui_helper.dart';
 import '../widgets/custom/custom_button.dart';
 
 class AddUserScreen extends StatefulWidget {
@@ -15,7 +17,42 @@ class AddUserScreen extends StatefulWidget {
   State<AddUserScreen> createState() => _AddUserScreenState();
 }
 
-class _AddUserScreenState extends State<AddUserScreen> {
+class _AddUserScreenState extends State<AddUserScreen> with ValidateMixin {
+  String? firstname, lastname;
+
+  GlobalKey<FormState>? guestFormKey;
+  OverlayEntry? loader;
+
+  @override
+  void initState() {
+    super.initState();
+    loader = UIHelper.overlayLoader(context);
+    guestFormKey = GlobalKey<FormState>();
+  }
+
+  void assignGuestUser(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+    if (guestFormKey!.currentState!.validate()) {
+      guestFormKey!.currentState!.save();
+      Overlay.of(context).insert(loader!);
+
+      final tripModel = Provider.of<TripModel>(context, listen: false);
+      await tripModel.assignGuestUser(
+        firstname: firstname!,
+        lastname: lastname!,
+      );
+
+      if (tripModel.errorMessage != null) {
+        UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
+      } else {
+        UIHelper.of(context).showSnackBar(tripModel.successMessage!);
+        Navigator.of(context).pop();
+      }
+
+      loader!.remove();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +64,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
             color: Theme.of(context).primaryColor.computedLuminance(),
           ),
         ),
-        title: const Text('Add User'),
+        title: const Text('Assign User'),
         titleTextStyle: TextStyle(
           color: Theme.of(context).primaryColor.computedLuminance(),
           fontSize: 24.0,
@@ -41,116 +78,131 @@ class _AddUserScreenState extends State<AddUserScreen> {
             children: [
               Expanded(
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        // height: 150.0,
-                        padding: const EdgeInsets.fromLTRB(
-                          15.0,
-                          15.0,
-                          15.0,
-                          30.0,
-                        ),
-                        width: double.infinity,
-                        color: Theme.of(context).primaryColor,
-                        child: Column(
-                          children: [
-                            Center(
-                              child: Text(
-                                "Share this code with the user to add them to the trip.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context)
-                                      .primaryColor
-                                      .computedLuminance(),
+                  child: Form(
+                    key: guestFormKey,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(
+                            15.0,
+                            15.0,
+                            15.0,
+                            30.0
+                          ),
+                          width: double.infinity,
+                          color: Theme.of(context).primaryColor,
+                          child: Column(
+                            children: [
+                              Center(
+                                child: Text(
+                                  "Share this code with the user to add them to this trip",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Theme.of(context)
+                                        .primaryColor
+                                        .computedLuminance(),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 25.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: List.generate(
-                                tripModel.selectedTrip!.inviteCode!.length,
-                                (index) => CustomCard(
-                                  width: 50.0,
-                                  height: 50.0,
-                                  hasShadow: false,
-                                  child: Center(
-                                    child: Text(
-                                      tripModel
-                                          .selectedTrip!.inviteCode![index],
-                                      style: const TextStyle(
-                                        fontFamily: 'Rubik',
-                                        fontSize: 24.0,
-                                        fontWeight: FontWeight.w800,
+                              const SizedBox(height: 25.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: List.generate(
+                                  tripModel.selectedTrip!.inviteCode!.length,
+                                  (index) => CustomCard(
+                                    width: 50.0,
+                                    height: 50.0,
+                                    hasShadow: false,
+                                    child: Center(
+                                      child: Text(
+                                        tripModel
+                                            .selectedTrip!.inviteCode![index],
+                                        style: const TextStyle(
+                                          fontFamily: 'Rubik',
+                                          fontSize: 24.0,
+                                          fontWeight: FontWeight.w800,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 20.0),
-                            const Center(
-                              child: Text(
-                                'Create a Guest Account',
+                              const SizedBox(height: 25.0),
+                              Text(
+                                'or create a guest account below',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.w800,
+                                  fontSize: 12.0,
+                                  color: Theme.of(context).primaryColor.computedLuminance(),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 10.0),
-                            const Center(
-                              child: Text(
-                                "Enter the user's details to add them to the trip.",
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            const SizedBox(height: 20.0),
-                            CustomTextFormField(
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.name,
-                              decoration: InputDecoration(
-                                labelText: 'First Name',
-                                hintText: 'John',
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15.0),
-                            CustomTextFormField(
-                              textInputAction: TextInputAction.done,
-                              keyboardType: TextInputType.name,
-                              decoration: InputDecoration(
-                                labelText: 'Last Name',
-                                hintText: 'Doe',
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 25.0),
-                            CustomButton(
-                              text: 'Add Guest User',
-                              onTap: () {},
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(height: 30.0),
+                              const Center(
+                                child: Text(
+                                  'Create a Guest Account',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10.0),
+                              const Center(
+                                child: Text(
+                                  "Enter the user's details to add them to the trip",
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              const SizedBox(height: 20.0),
+                              CustomTextFormField(
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.name,
+                                onSaved: (input) => firstname = input,
+                                validator: validateText,
+                                decoration: InputDecoration(
+                                  labelText: 'First Name',
+                                  hintText: 'John',
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 15.0),
+                              CustomTextFormField(
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.name,
+                                onSaved: (input) => lastname = input,
+                                validator: validateText,
+                                decoration: InputDecoration(
+                                  labelText: 'Last Name',
+                                  hintText: 'Doe',
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 25.0),
+                              CustomButton(
+                                text: 'Add Guest User',
+                                onTap: () => assignGuestUser(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
