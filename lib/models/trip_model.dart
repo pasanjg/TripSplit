@@ -84,6 +84,7 @@ class TripModel with ChangeNotifier {
     required DateTime startDate,
     required DateTime endDate,
   }) async {
+    clearMessages();
     try {
       final trip = Trip(
         title: title,
@@ -102,7 +103,10 @@ class TripModel with ChangeNotifier {
       String userId = _firebaseService.auth.currentUser!.uid;
       await addUserToTripWithReference(tripRef.id, userId);
       await getUserTrips();
+
+      successMessage = 'Trip created successfully';
     } catch (err) {
+      errorMessage = 'Error creating trip';
       print("Error creating trip: $err");
     }
   }

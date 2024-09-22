@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
-import '../entities/trip.dart';
 import '../entities/user.dart';
 
 class UserModel with ChangeNotifier {
