@@ -153,12 +153,14 @@ class UIHelper {
     );
   }
 
-  showCustomAlertDialog({
+  Future<dynamic> showCustomAlertDialog({
     required String title,
     required Widget content,
-    required List<TextButton> actions,
-    EdgeInsets contentPadding =
-        const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+    required List<Widget> actions,
+    EdgeInsets contentPadding = const EdgeInsets.symmetric(
+      horizontal: 20.0,
+      vertical: 20.0,
+    ),
   }) {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
@@ -181,7 +183,7 @@ class UIHelper {
       ),
     );
 
-    showDialog(
+    return showDialog(
       context: _context,
       builder: (BuildContext context) {
         return alert;

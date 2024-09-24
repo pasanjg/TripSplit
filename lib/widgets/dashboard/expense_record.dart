@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/models/trip_model.dart';
 
 import '../custom/custom_card.dart';
 
 class ExpenseRecord extends StatelessWidget {
-  final TripModel tripModel;
-
-  const ExpenseRecord({super.key, required this.tripModel});
+  const ExpenseRecord({super.key});
 
   @override
   Widget build(BuildContext context) {

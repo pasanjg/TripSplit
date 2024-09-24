@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 
@@ -7,7 +6,6 @@ import '../common/helpers/ui_helper.dart';
 import '../mixins/validate_mixin.dart';
 import '../models/trip_model.dart';
 import '../widgets/custom/custom_button.dart';
-import '../widgets/custom/custom_card.dart';
 import '../widgets/custom/custom_text_form_field.dart';
 
 class JoinTripScreen extends StatefulWidget {
@@ -38,6 +36,8 @@ class _JoinTripScreenState extends State<JoinTripScreen> with ValidateMixin {
 
       final tripModel = Provider.of<TripModel>(context, listen: false);
       await tripModel.joinTrip(inviteCode!);
+
+      if (!context.mounted) return;
 
       if (tripModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);

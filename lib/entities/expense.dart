@@ -7,6 +7,7 @@ class Expense {
   String? category;
   double? amount;
   DateTime? date;
+  String? receiptUrl;
   DocumentReference? userRef;
   User? user;
   DateTime? createdAt = DateTime.now();
@@ -20,18 +21,19 @@ class Expense {
     this.category,
     this.amount,
     this.date,
+    this.receiptUrl,
     this.userRef,
   });
 
   Expense.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data() as Map<String, dynamic>);
+      : this.fromMap(snapshot.id, snapshot.data() as Map<String, dynamic>);
 
-  Expense.fromMap(Map<String, dynamic> data) {
-    id = data['id'];
+  Expense.fromMap(String this.id, Map<String, dynamic> data) {
     title = data['title'];
     category = data['category'];
     amount = data['amount'];
     date = data['date'].toDate();
+    receiptUrl = data['receiptUrl'];
     userRef = data['userRef'] != null
         ? data['userRef'] as DocumentReference
         : null;
@@ -41,11 +43,11 @@ class Expense {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'category': category,
       'amount': amount,
       'date': date,
+      'receiptUrl': receiptUrl,
       'userRef': userRef,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
@@ -59,6 +61,7 @@ class Expense {
     data['category'] = category;
     data['amount'] = amount;
     data['date'] = date;
+    data['receiptUrl'] = receiptUrl;
     data['userRef'] = userRef;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;

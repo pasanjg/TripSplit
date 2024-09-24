@@ -10,13 +10,13 @@ class CustomTextFormField extends StatefulWidget {
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final InputDecoration? decoration;
-  List<TextInputFormatter>? inputFormatters;
+  final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final void Function(String?)? onSaved;
   final void Function(String?)? onChanged;
   final bool enabled;
 
-  CustomTextFormField({
+  const CustomTextFormField({
     super.key,
     this.isPassword = false,
     this.focusNode,
@@ -61,7 +61,7 @@ class CustomTextFormField extends StatefulWidget {
       ),
       enabledBorder: OutlineInputBorder(
         borderSide: BorderSide(
-          color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4),
+          color: Theme.of(context).primaryColor.withOpacity(0.4),
           width: 2.0,
         ),
         borderRadius: const BorderRadius.all(Radius.circular(8.0)),

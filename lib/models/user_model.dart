@@ -46,7 +46,7 @@ class UserModel with ChangeNotifier {
           errorMessage = 'An error occurred';
           break;
       }
-      print(err);
+      debugPrint(err.toString());
     } finally {
       notifyListeners();
     }
@@ -60,7 +60,7 @@ class UserModel with ChangeNotifier {
       );
 
       await getUser();
-      await saveUser(user!);
+      await saveDeviceToken();
     } catch (err) {
       switch (err.toString()) {
         case 'user-not-found':
@@ -73,7 +73,7 @@ class UserModel with ChangeNotifier {
           errorMessage = 'An error occurred';
           break;
       }
-      print(err);
+      debugPrint(err.toString());
     } finally {
       notifyListeners();
     }
@@ -85,7 +85,7 @@ class UserModel with ChangeNotifier {
       user = null;
       notifyListeners();
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
     }
   }
 
@@ -94,7 +94,7 @@ class UserModel with ChangeNotifier {
       final user = await _firebaseService.getUserFromFirestore();
       setUser(user);
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
     }
   }
 
@@ -111,7 +111,15 @@ class UserModel with ChangeNotifier {
 
       // TODO: Save user to Box
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
+    }
+  }
+
+  Future<void> saveDeviceToken() async {
+    try {
+      await _firebaseService.saveDeviceTokenToFirestore();
+    } catch (err) {
+      debugPrint(err.toString());
     }
   }
 

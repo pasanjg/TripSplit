@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/widgets/custom/custom_card.dart';
+import '../models/trip_model.dart';
 import '../models/user_model.dart';
 import '../widgets/custom/custom_list_item.dart';
 
@@ -95,12 +96,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Consumer<UserModel>(builder: (context, userModel, _) {
                 return CustomListItem(
                   onTap: () async {
+                    final tripModel = Provider.of<TripModel>(context, listen: false);
+
+                    if (tripModel.selectedTrip != null) {
+                      tripModel.clearSelectedTrip();
+                    }
+
                     if (userModel.isLoggedIn) {
                       userModel.logout();
                     }
 
-                    Navigator.of(context, rootNavigator: true)
-                        .pushNamedAndRemoveUntil(
+                    Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
                       RouteNames.login,
                       (route) => false,
                     );

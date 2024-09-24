@@ -42,6 +42,8 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
         password: password!,
       );
 
+      if (!context.mounted) return;
+
       if (userModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
       } else {

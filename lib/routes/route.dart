@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/screens/add_user_screen.dart';
+import 'package:tripsplit/screens/assign_user_screen.dart';
 import 'package:tripsplit/screens/join_trip_screen.dart';
 
 import '../common/constants/constants.dart';
+import '../entities/user.dart';
 import '../layout/main_tabs.dart';
+import '../screens/add_expense_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/create_trip_screen.dart';
 import '../screens/dashboard_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/statistics_screen.dart';
-import '../screens/test.dart';
+import '../screens/user_expenses.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> getAll() => _routes;
@@ -30,14 +32,16 @@ class Routes {
         return _buildRoute(settings, (_) => const StatsScreen());
       case RouteNames.settings:
         return _buildRoute(settings, (_) => const SettingsScreen());
-      case RouteNames.test:
-        return _buildRoute(settings, (_) => const TestScreen());
       case RouteNames.addUser:
-        return _buildRoute(settings, (_) => const AddUserScreen());
+        return _buildRoute(settings, (_) => const AssignUserScreen());
       case RouteNames.createTrip:
         return _buildRoute(settings, (_) => const CreateTripScreen());
       case RouteNames.joinTrip:
         return _buildRoute(settings, (_) => const JoinTripScreen());
+      case RouteNames.addExpense:
+        return _buildRoute(settings, (_) => const AddExpenseScreen());
+      case RouteNames.userExpenses:
+        return _buildRoute(settings, (_) => UserExpenses(user: arguments as User));
       default:
         return _errorRoute();
     }

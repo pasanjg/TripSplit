@@ -13,10 +13,10 @@ class CustomDatePicker extends StatefulWidget {
   });
 
   @override
-  _CustomDatePickerState createState() => _CustomDatePickerState();
+  CustomDatePickerState createState() => CustomDatePickerState();
 }
 
-class _CustomDatePickerState extends State<CustomDatePicker> {
+class CustomDatePickerState extends State<CustomDatePicker> {
   DateTime? _date;
 
   Future<void> _selectDate(BuildContext context) async {

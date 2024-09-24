@@ -5,7 +5,6 @@ import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
 import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/draft/create_trip_draft.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../entities/trip.dart';

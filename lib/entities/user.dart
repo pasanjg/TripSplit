@@ -18,6 +18,7 @@ class User {
 
   static const String collection = 'users';
   static const String fieldTripRefs = 'tripRefs';
+  static const String fieldDeviceToken = 'deviceToken';
 
   String get fullName => '$firstname $lastname';
 

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/models/user_model.dart';
 
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // final materialTheme = MaterialTheme(ThemeData.light().textTheme);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<UserModel>.value(value: _userModel),
@@ -36,7 +39,15 @@ class MyApp extends StatelessWidget {
         title: 'TripSplit',
         theme: ThemeData(
           fontFamily: 'Inter',
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
+          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
+          // colorScheme: ColorScheme.fromSwatch(
+          //   primarySwatch: const Color(0xff0041d3).toMaterialColor(),
+          //   accentColor: const Color(0xffe9f1fd).withOpacity(0.5),
+          //   brightness: Brightness.light,
+          //   backgroundColor: Colors.red,
+          //   cardColor: const Color(0xFFF0F0F6),
+          //   errorColor: Colors.redAccent,
+          // ),
           useMaterial3: true,
           appBarTheme: const AppBarTheme(
             titleTextStyle: TextStyle(
@@ -47,7 +58,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
         darkTheme: ThemeData.dark(),
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.light,
         routes: Routes.getAll(),
         onGenerateRoute: Routes.onGenerateRoute,
         home: const SplashScreen(),

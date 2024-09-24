@@ -36,7 +36,7 @@ class ExpensesList extends StatelessWidget {
           );
         }
 
-        return ExpenseRecord(tripModel: tripModel);
+        return const ExpenseRecord();
       },
     );
   }

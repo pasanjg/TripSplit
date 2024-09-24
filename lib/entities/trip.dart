@@ -103,7 +103,7 @@ class Trip {
 
     final expenseSnapshots = await expensesCollection.get();
     expenses = expenseSnapshots.docs.map((doc) {
-      return Expense.fromMap(doc.data());
+      return Expense.fromMap(doc.id, doc.data());
     }).toList();
   }
 

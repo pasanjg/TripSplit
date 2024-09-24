@@ -55,9 +55,9 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'See more',
-                    style: TextStyle(fontSize: 12.0),
+                  Text(
+                    "See ${_isExpanded ? 'less' : 'more'}",
+                    style: const TextStyle(fontSize: 12.0),
                   ),
                   Icon(
                     _isExpanded
@@ -74,9 +74,10 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
         curve: Curves.easeInOut,
         height: _isExpanded ? _expandedHeight : _initialHeight,
         child: SingleChildScrollView(
-          physics: _isExpanded
-              ? const AlwaysScrollableScrollPhysics()
-              : const NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
+          // physics: _isExpanded
+          //     ? const AlwaysScrollableScrollPhysics()
+          //     : const NeverScrollableScrollPhysics(),
           child: Wrap(
             children: widget.children,
           ),

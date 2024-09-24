@@ -46,6 +46,8 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
         endDate: endDate!,
       );
 
+      if (!context.mounted) return;
+
       if (tripModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
       } else {

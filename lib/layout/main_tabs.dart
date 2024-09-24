@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:tripsplit/common/helpers/ui_helper.dart';
 
 import '../common/constants/constants.dart';
 import '../routes/route.dart';
@@ -86,25 +87,24 @@ class _MainTabsState extends State<MainTabs> {
       });
       return false;
     } else {
-      final isAllowExit = await showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Are you sure?"),
-          content: const Text("Do you want to exit the app?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: const Text("No"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-              child: const Text("Yes"),
-            ),
-          ],
-        ),
+      bool? isAllowExit = await UIHelper.of(context).showCustomAlertDialog(
+        title: 'Are you sure?',
+        content: const Text('Do you want to exit the app?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text("No"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+            child: const Text("Yes"),
+          ),
+        ],
       );
+
+      isAllowExit ??= false;
 
       if (isAllowExit) {
         Future.delayed(const Duration(milliseconds: 250), () {
@@ -113,7 +113,7 @@ class _MainTabsState extends State<MainTabs> {
       }
 
       return Future.delayed(const Duration(milliseconds: 100), () {
-        return isAllowExit;
+        return isAllowExit ?? false;
       });
     }
   }

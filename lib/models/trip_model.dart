@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
+import '../entities/expense.dart';
 import '../entities/trip.dart';
 
 class TripModel with ChangeNotifier {
@@ -42,7 +43,7 @@ class TripModel with ChangeNotifier {
         return trips;
       });
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
       stream = const Stream.empty();
     }
 
@@ -72,7 +73,7 @@ class TripModel with ChangeNotifier {
         return users;
       });
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
       stream = const Stream.empty();
     }
 
@@ -107,7 +108,7 @@ class TripModel with ChangeNotifier {
       successMessage = 'Trip created successfully';
     } catch (err) {
       errorMessage = 'Error creating trip';
-      print("Error creating trip: $err");
+      debugPrint("Error creating trip: $err");
     }
   }
 
@@ -136,7 +137,7 @@ class TripModel with ChangeNotifier {
         await selectTrip(trips.first);
       }
     } catch (err) {
-      print(err);
+      debugPrint(err.toString());
     }
   }
 
@@ -207,7 +208,7 @@ class TripModel with ChangeNotifier {
       successMessage = "${user.fullName} added successfully";
     } catch (err) {
       errorMessage = 'Error adding user';
-      print(err);
+      debugPrint(err.toString());
     }
   }
 
@@ -228,6 +229,49 @@ class TripModel with ChangeNotifier {
         Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
       });
     });
+  }
+
+  Future<void> addExpense({
+    required String title,
+    required String category,
+    required DateTime date,
+    required double amount,
+    required String userId,
+    ImageProvider? receiptImage,
+  }) async {
+    clearMessages();
+    try {
+      final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
+
+      final expense = Expense(
+        title: title,
+        category: category,
+        date: date,
+        amount: amount,
+        userRef: userRef,
+      );
+
+      // if (receiptImage != null) {
+      //   final url = await _firebaseService.uploadImage(receiptImage);
+      //   expense.receiptUrl = url;
+      // }
+
+      await _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id)
+          .collection(Expense.collection)
+          .add(expense.toMap());
+
+      successMessage = 'Expense added successfully';
+    } catch (err) {
+      errorMessage = 'Error adding expense';
+      debugPrint(err.toString());
+    }
+  }
+
+  void clearSelectedTrip() {
+    selectedTrip = null;
+    notifyListeners();
   }
 
   void clearMessages() {

@@ -24,6 +24,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeApp() async {
+    if (!context.mounted) return;
+
     userModel = Provider.of<UserModel>(context, listen: false);
     await userModel.getUser();
 

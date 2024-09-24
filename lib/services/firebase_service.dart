@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../entities/user.dart';
 
@@ -48,11 +49,16 @@ class FirebaseService {
   Future<void> saveUserToFirestore(User user) async {
     final token = await messaging.getToken();
     user.deviceToken = token;
-    print('token: $token');
+    debugPrint('token: $token');
+    await firestore.collection(User.collection).doc(user.id).set(user.toMap());
+  }
+
+  Future<void> saveDeviceTokenToFirestore() async {
+    final token = await messaging.getToken();
     await firestore
         .collection(User.collection)
-        .doc(user.id)
-        .set(user.toMap());
+        .doc(auth.currentUser!.uid)
+        .update({User.fieldDeviceToken: token});
   }
 
   Future<User?> getUserFromFirestore() async {

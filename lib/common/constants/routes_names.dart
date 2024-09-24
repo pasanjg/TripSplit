@@ -13,6 +13,8 @@ class RouteNames {
   static const String addUser = 'add-user';
   static const String createTrip = 'create-trip';
   static const String joinTrip = 'join-trip';
+  static const String addExpense = 'add-expense';
+  static const String userExpenses = 'user-expenses';
 
   static const String test = 'test';
 }
