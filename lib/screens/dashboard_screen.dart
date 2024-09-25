@@ -110,9 +110,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        "Users",
-                        style: TextStyle(
+                      Text(
+                        "Users ${tripModel.selectedTrip != null ? '(${tripModel.userCount > 1 ? tripModel.userCount : ''})' : ''}",
+                        style: const TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),

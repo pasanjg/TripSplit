@@ -19,6 +19,8 @@ class TripModel with ChangeNotifier {
 
   bool get canAddExpense => selectedTrip != null;
 
+  int get userCount => selectedTrip?.userRefs.length ?? 0;
+
   Stream<List<Trip>> get userTripsStream {
     Stream<List<Trip>> stream;
     try {

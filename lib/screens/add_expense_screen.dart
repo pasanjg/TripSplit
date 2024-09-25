@@ -63,11 +63,6 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
 
   void addExpense(BuildContext context, TripModel tripModel) async {
     FocusScope.of(context).unfocus();
-    if (_amountController.text.isEmpty) {
-      UIHelper.of(context).showSnackBar('Please enter the amount', error: true);
-      return;
-    }
-
     if (expenseFormKey!.currentState!.validate()) {
       expenseFormKey!.currentState!.save();
       Overlay.of(context).insert(loader!);
@@ -299,7 +294,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                                       items: tripModel.selectedTrip!.users.map((User user) {
                                         return DropdownMenuItem<String>(
                                           value: user.id,
-                                          child: Text(user.fullName),
+                                          child: Text("${user.fullName} ${user.mySelf ? '(You)' : ''}"),
                                         );
                                       }).toList(),
                                     ),
@@ -326,7 +321,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.upload_file_rounded, color: Theme.of(context).primaryColor),
+                                Icon(Icons.receipt_rounded, color: Theme.of(context).primaryColor),
                                 const SizedBox(width: 8.0),
                                 Text(
                                   'Upload Receipt',
