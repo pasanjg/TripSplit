@@ -50,6 +50,7 @@ class MyApp extends StatelessWidget {
           // ),
           useMaterial3: true,
           appBarTheme: const AppBarTheme(
+            centerTitle: false,
             titleTextStyle: TextStyle(
               color: Colors.black,
               fontSize: 24.0,

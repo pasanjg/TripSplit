@@ -84,14 +84,14 @@ class UsersList extends StatelessWidget {
           }
 
           return ExpandableCustomCard(
-            itemHeight: 50.0,
-            visibleItems: 3,
+            itemHeight: 47.0,
+            visibleItems: 2,
             width: double.infinity,
             padding: const EdgeInsets.all(15.0),
             children: List.generate(
               snapshot.data!.length,
               (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 2.0),
                 child: UsersListItem(
                   user: snapshot.data![index],
                   isOwner: tripModel.selectedTrip!.createdBy ==

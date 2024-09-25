@@ -34,6 +34,16 @@ class _ExpandableCustomCardState extends State<ExpandableCustomCard> {
   @override
   void initState() {
     super.initState();
+    _calculateHeights();
+  }
+
+  @override
+  void didUpdateWidget(covariant ExpandableCustomCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _calculateHeights();
+  }
+
+  void _calculateHeights() {
     _visibleItems = widget.visibleItems > widget.children.length
         ? widget.children.length
         : widget.visibleItems;

@@ -104,8 +104,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
 
               if (text != null) {
                 Clipboard.setData(ClipboardData(text: text));
-                UIHelper.of(context)
-                    .showSnackBar('Invite code copied to clipboard');
+                UIHelper.of(context).showSnackBar('Invite code copied to clipboard');
               }
             },
             icon: Icon(
@@ -140,19 +139,18 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                     color: Theme.of(context).primaryColor,
                     child: Column(
                       children: [
-                        Center(
-                          child: Text(
-                            "Share this code with the user to add them to this trip",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Theme.of(context)
-                                  .primaryColor
-                                  .computedLuminance(),
-                            ),
+                        Text(
+                          "Share this code with the user to add them to the trip",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context)
+                                .primaryColor
+                                .computedLuminance(),
                           ),
                         ),
-                        const SizedBox(height: 25.0),
+                        const SizedBox(height: 20.0),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: List.generate(
@@ -174,7 +172,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                             ),
                           ),
                         ),
-                        const SizedBox(height: 25.0),
+                        const SizedBox(height: 20.0),
                         Text(
                           'or create a guest account below',
                           textAlign: TextAlign.center,

@@ -178,7 +178,9 @@ class TripModel with ChangeNotifier {
       }
 
       await addUserToTripWithReference(
-          trip.id!, _firebaseService.auth.currentUser!.uid);
+        trip.id!,
+        _firebaseService.auth.currentUser!.uid,
+      );
       await getUserTrips();
       await selectTrip(trip);
       successMessage = 'Trip joined successfully';
@@ -205,10 +207,15 @@ class TripModel with ChangeNotifier {
           .add(user.toMap());
 
       await addUserToTripWithReference(selectedTrip!.id!, userRef.id);
+      selectedTrip!.userRefs.add(userRef);
+      await selectedTrip!.loadUsers();
+
       successMessage = "${user.fullName} added successfully";
     } catch (err) {
       errorMessage = 'Error adding user';
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -241,7 +248,8 @@ class TripModel with ChangeNotifier {
   }) async {
     clearMessages();
     try {
-      final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
+      final userRef =
+          _firebaseService.firestore.collection(User.collection).doc(userId);
 
       final expense = Expense(
         title: title,

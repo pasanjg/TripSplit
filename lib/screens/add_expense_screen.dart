@@ -31,15 +31,34 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
 
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  final FocusNode _amountFocusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
+    loader = UIHelper.overlayLoader(context);
     payeeId = Provider.of<UserModel>(context, listen: false).user!.id!;
     category = Category.categories.first.name;
     _dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    loader = UIHelper.overlayLoader(context);
     expenseFormKey = GlobalKey<FormState>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadTripUsers();
+    });
+  }
+
+  @override
+  void dispose() {
+    _amountFocusNode.dispose();
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  void loadTripUsers() async {
+    Overlay.of(context).insert(loader!);
+    final tripModel = Provider.of<TripModel>(context, listen: false);
+    await tripModel.selectedTrip!.loadUsers();
+    loader!.remove();
   }
 
   void addExpense(BuildContext context, TripModel tripModel) async {
@@ -54,11 +73,11 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
       Overlay.of(context).insert(loader!);
 
       await tripModel.addExpense(
-        title: title!,
-        category: category!,
+        title: title,
+        category: category,
         date: date,
         amount: amount,
-        userId: payeeId!,
+        userId: payeeId,
       );
 
       if (!context.mounted) return;
@@ -109,53 +128,30 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                   Text(
                     "LKR",
                     style: TextStyle(
-                      color: Theme.of(context)
-                          .primaryColor
-                          .computedLuminance()
-                          .withOpacity(0.7),
+                      color: Theme.of(context).primaryColor.computedLuminance().withOpacity(0.7),
                       fontSize: 28.0,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Expanded(
-                    child: TextField(
-                      controller: _amountController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(
-                          RegExp(r'^\d+\.?\d{0,2}'),
-                        ),
-                      ],
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor.computedLuminance(),
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      cursorColor: Theme.of(context).primaryColor.computedLuminance(),
-                      decoration: InputDecoration(
-                        hintText: '0.00',
-                        hintStyle: TextStyle(
-                          color: Theme.of(context).primaryColor.computedLuminance().withOpacity(0.5),
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        _amountFocusNode.requestFocus();
+                      },
+                      child: Text(
+                        NumberFormat.currency(
+                          symbol: '',
+                          decimalDigits: 2,
+                        ).format(amount),
+                        textAlign: TextAlign.right,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor.computedLuminance().withOpacity(amount == 0.0 ? 0.5 : 1.0),
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
                         ),
-                        labelStyle: TextStyle(
-                          color: Theme.of(context).primaryColor.computedLuminance(),
-                        ),
-                        border: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        focusedBorder: InputBorder.none,
                       ),
-                      onChanged: (String value) {
-                        setState(() {
-                          amount = double.parse(double.parse(_amountController.text).toStringAsFixed(2));
-                          // _amountController.value = TextEditingValue(
-                          //   text: amount.toString(),
-                          //   selection: TextSelection.collapsed(offset: amount.toString().length),
-                          // );
-                        });
-                      },
                     ),
                   ),
                 ],
@@ -189,6 +185,31 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                               color: Theme.of(context).primaryColor,
                             ),
                             labelText: 'Title',
+                          ),
+                        ),
+                        const SizedBox(height: 15.0),
+                        CustomTextFormField(
+                          focusNode: _amountFocusNode,
+                          controller: _amountController,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.number,
+                          validator: validateText,
+                          onChanged: (input) {
+                            setState(() {
+                              if (input == null || input.isEmpty) {
+                                amount = 0.0;
+                              } else {
+                                amount = double.parse(input);
+                              }
+                            });
+                          },
+                          decoration: CustomTextFormField.buildDecoration(context)
+                              .copyWith(
+                            prefixIcon: Icon(
+                              Icons.attach_money,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            labelText: 'Amount',
                           ),
                         ),
                         const SizedBox(height: 15.0),
@@ -302,12 +323,19 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                             borderRadius: BorderRadius.circular(5.0),
                           ),
                           child: Center(
-                            child: Text(
-                              'Upload Receipt',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontWeight: FontWeight.w600,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.upload_file_rounded, color: Theme.of(context).primaryColor),
+                                const SizedBox(width: 8.0),
+                                Text(
+                                  'Upload Receipt',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
