@@ -5,6 +5,7 @@ import 'package:tripsplit/mixins/validate_mixin.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../common/constants/constants.dart';
+import '../../models/trip_model.dart';
 import '../../models/user_model.dart';
 import '../../widgets/custom/index.dart';
 
@@ -42,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
       if (userModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
       } else {
+        final tripModel = Provider.of<TripModel>(context, listen: false);
+        await tripModel.getUserTrips();
+
         Navigator.of(context).pushReplacementNamed(RouteNames.home);
       }
 

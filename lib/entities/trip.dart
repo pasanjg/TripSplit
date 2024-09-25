@@ -88,6 +88,8 @@ class Trip {
     data['startDate'] = startDate;
     data['endDate'] = endDate;
     data['userRefs'] = userRefs;
+    data['users'] = users.map((e) => e.toJson()).toList();
+    data['expenses'] = expenses.map((e) => e.toJson()).toList();
     data['inviteCode'] = inviteCode;
     data['createdBy'] = createdBy;
     data['createdAt'] = createdAt;

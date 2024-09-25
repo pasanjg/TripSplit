@@ -50,7 +50,7 @@ class CustomTextFormField extends StatefulWidget {
         fontSize: 13.0,
       ),
       filled: true,
-      fillColor: Theme.of(context).colorScheme.secondary.lighten(0.5),
+      fillColor: Colors.grey.withOpacity(0.1),
       floatingLabelBehavior: FloatingLabelBehavior.auto,
       border: OutlineInputBorder(
         borderSide: BorderSide(

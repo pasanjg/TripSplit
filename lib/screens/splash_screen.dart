@@ -18,9 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _initializeApp().then((_) {
-      navigateToNextScreen();
-    });
+    _initializeApp();
   }
 
   Future<void> _initializeApp() async {
@@ -29,11 +27,15 @@ class _SplashScreenState extends State<SplashScreen> {
     userModel = Provider.of<UserModel>(context, listen: false);
     await userModel.getUser();
 
-    tripModel = Provider.of<TripModel>(context, listen: false);
-    await tripModel.getUserTrips();
+    if (userModel.user != null) {
+      tripModel = Provider.of<TripModel>(context, listen: false);
+      await tripModel.getUserTrips();
+    }
+
+    await navigateToNextScreen();
   }
 
-  void navigateToNextScreen() async {
+  Future<void> navigateToNextScreen() async {
     if (userModel.user != null) {
       await Navigator.of(context).pushReplacementNamed(RouteNames.home);
     } else {

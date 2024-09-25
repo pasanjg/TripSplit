@@ -90,7 +90,8 @@ class UserExpenses extends StatelessWidget {
                         horizontal: 15.0,
                         vertical: 12.0,
                       ),
-                      child: ExpenseRecord(),
+                      child: Text("Expense Record"),
+                      // child: ExpenseRecord(),
                     );
                   },
                 ),

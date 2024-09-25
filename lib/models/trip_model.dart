@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
@@ -20,6 +21,11 @@ class TripModel with ChangeNotifier {
   bool get canAddExpense => selectedTrip != null;
 
   int get userCount => selectedTrip?.userRefs.length ?? 0;
+
+  double get totalSpent {
+    if (selectedTrip == null) return 0.0;
+    return selectedTrip!.expenses.fold(0.0, (prev, expense) => prev + expense.amount!);
+  }
 
   Stream<List<Trip>> get userTripsStream {
     Stream<List<Trip>> stream;
@@ -82,6 +88,48 @@ class TripModel with ChangeNotifier {
     return stream;
   }
 
+  Stream<Map<String, List<Expense>>> get tripExpensesStream {
+    Stream<Map<String, List<Expense>>> stream;
+    try {
+      stream = FirebaseFirestore.instance
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id)
+          .collection(Expense.collection)
+          .orderBy(Expense.fieldDate, descending: true)
+          .snapshots()
+          .asyncMap((snapshot) async {
+        final expenses = snapshot.docs.map((doc) {
+          return Expense.fromMap(doc.id, doc.data());
+        }).toList();
+
+        // Group expenses by date
+        final groupedExpenses = <String, List<Expense>>{};
+        for (var expense in expenses) {
+          final dateKey = DateFormat.yMMMMd().format(expense.date!);
+          if (groupedExpenses.containsKey(dateKey)) {
+            groupedExpenses[dateKey]!.add(expense);
+          } else {
+            groupedExpenses[dateKey] = [expense];
+          }
+        }
+
+        return groupedExpenses;
+      });
+    } catch (err) {
+      debugPrint(err.toString());
+      stream = const Stream.empty();
+    }
+
+    return stream;
+  }
+
+  double getUserExpenses(String userId) {
+    if (selectedTrip == null) return 0.0;
+    return selectedTrip!.expenses
+        .where((expense) => expense.userRef!.id == userId)
+        .fold(0.0, (prev, expense) => prev + expense.amount!);
+  }
+
   Future<void> createTrip({
     required String title,
     required DateTime startDate,
@@ -140,14 +188,16 @@ class TripModel with ChangeNotifier {
       }
     } catch (err) {
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
   }
 
   Future<void> selectTrip(Trip t) async {
     if (selectedTrip != t) {
       selectedTrip = t;
-      selectedTrip!.loadExpenses();
-      selectedTrip!.loadUsers();
+      await selectedTrip!.loadExpenses();
+      await selectedTrip!.loadUsers();
     } else {
       selectedTrip = null;
     }
@@ -272,10 +322,13 @@ class TripModel with ChangeNotifier {
           .collection(Expense.collection)
           .add(expense.toMap());
 
+      await selectedTrip!.loadExpenses();
       successMessage = 'Expense added successfully';
     } catch (err) {
       errorMessage = 'Error adding expense';
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
   }
 

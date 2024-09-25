@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tripsplit/entities/user.dart';
 
@@ -14,6 +16,7 @@ class Expense {
   DateTime? updatedAt = DateTime.now();
 
   static const String collection = 'expenses';
+  static const String fieldDate = 'date';
 
   Expense({
     this.id,
@@ -31,7 +34,7 @@ class Expense {
   Expense.fromMap(String this.id, Map<String, dynamic> data) {
     title = data['title'];
     category = data['category'];
-    amount = data['amount'];
+    amount = double.parse(data['amount'].toString());
     date = data['date'].toDate();
     receiptUrl = data['receiptUrl'];
     userRef = data['userRef'] != null

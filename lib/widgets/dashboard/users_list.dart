@@ -91,7 +91,7 @@ class UsersList extends StatelessWidget {
             children: List.generate(
               snapshot.data!.length,
               (index) => Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2.0),
+                padding: const EdgeInsets.symmetric(vertical: 3.5),
                 child: UsersListItem(
                   user: snapshot.data![index],
                   isOwner: tripModel.selectedTrip!.createdBy ==

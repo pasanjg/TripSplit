@@ -201,7 +201,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                           decoration: CustomTextFormField.buildDecoration(context)
                               .copyWith(
                             prefixIcon: Icon(
-                              Icons.attach_money,
+                              Icons.money_rounded,
                               color: Theme.of(context).primaryColor,
                             ),
                             labelText: 'Amount',
