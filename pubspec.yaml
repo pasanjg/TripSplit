@@ -47,6 +47,7 @@ dependencies:
   firebase_messaging: ^15.1.2
   rxdart: ^0.28.0
   intl: ^0.19.0
+  rive: ^0.13.13
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/rive/
     - assets/fonts/NewAmsterdam/
     - assets/fonts/Teko/
     - assets/fonts/Rubik/

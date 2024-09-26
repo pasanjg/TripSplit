@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:tripsplit/common/helpers/ui_helper.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import '../common/constants/constants.dart';
@@ -46,13 +47,20 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
+      backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-          ],
+        child: SizedBox(
+          height: MediaQuery.of(context).size.width * 1.5,
+          width: MediaQuery.of(context).size.width * 1.5,
+          child: const RiveAnimation.asset(
+            'assets/rive/hippo.riv',
+            fit: BoxFit.cover,
+            animations: ['bite', 'wave', 'eye'],
+          ),
         ),
       ),
     );
