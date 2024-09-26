@@ -362,6 +362,26 @@ class TripModel with ChangeNotifier {
     }
   }
 
+  Future<void> deleteExpense(String expenseId) async {
+    clearMessages();
+    try {
+      await _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id)
+          .collection(Expense.collection)
+          .doc(expenseId)
+          .delete();
+
+      await selectedTrip!.loadExpenses();
+      successMessage = 'Expense record deleted successfully';
+    } catch (err) {
+      errorMessage = 'Error deleting expense record';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
   void clearSelectedTrip() {
     selectedTrip = null;
     notifyListeners();

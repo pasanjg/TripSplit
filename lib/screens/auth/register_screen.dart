@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
 
       if (userModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(userModel.errorMessage!, error: true);
-      } else {
+      } else if (userModel.successMessage != null) {
         UIHelper.of(context).showSnackBar(userModel.successMessage!);
         Navigator.of(context).pushNamedAndRemoveUntil(
           RouteNames.home,

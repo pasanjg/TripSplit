@@ -41,7 +41,7 @@ class _JoinTripScreenState extends State<JoinTripScreen> with ValidateMixin {
 
       if (tripModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
-      } else {
+      } else if (tripModel.successMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.successMessage!);
         Navigator.of(context).pop();
       }

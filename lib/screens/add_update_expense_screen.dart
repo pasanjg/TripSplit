@@ -105,13 +105,53 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
 
       if (tripModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
-      } else {
+      } else if (tripModel.successMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.successMessage!);
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
 
       loader!.remove();
     }
+  }
+
+  void showDeleteConfirmation() {
+    UIHelper.of(context).showCustomAlertDialog(
+      title: 'Delete Record',
+      content: const Text('Are you sure you want to delete this record?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: deleteExpense,
+          child: const Text('Delete'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> deleteExpense() async {
+    Navigator.of(context, rootNavigator: true).pop();
+
+    Overlay.of(context).insert(loader!);
+    final tripModel = Provider.of<TripModel>(context, listen: false);
+
+    await tripModel.deleteExpense(widget.expense!.id!);
+
+    if (!context.mounted) return;
+
+    if (tripModel.errorMessage != null) {
+      UIHelper.of(context).showSnackBar(
+        tripModel.errorMessage!,
+        error: true,
+      );
+    } else if (tripModel.successMessage != null) {
+      UIHelper.of(context).showSnackBar(tripModel.successMessage!);
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
+
+    loader!.remove();
   }
 
   @override
@@ -126,13 +166,28 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
             color: Theme.of(context).primaryColor.computedLuminance(),
           ),
         ),
-        title: const Text('Add Expense'),
+        title: Text(
+          widget.expense != null ? 'Update Expense' : 'Add Expense',
+          style: TextStyle(
+            color: Theme.of(context).primaryColor.computedLuminance(),
+          ),
+        ),
         titleTextStyle: TextStyle(
           color: Theme.of(context).primaryColor.computedLuminance(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
         backgroundColor: Theme.of(context).primaryColor,
+        actions: [
+          if (widget.expense != null)
+            IconButton(
+              onPressed: showDeleteConfirmation,
+              icon: Icon(
+                Icons.delete_forever_rounded,
+                color: Theme.of(context).primaryColor.computedLuminance(),
+              ),
+            ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

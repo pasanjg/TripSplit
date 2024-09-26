@@ -48,7 +48,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
 
       if (tripModel.errorMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
-      } else {
+      } else if (tripModel.successMessage != null) {
         UIHelper.of(context).showSnackBar(tripModel.successMessage!);
         Navigator.of(context).pop();
       }
@@ -63,7 +63,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
       content: const Text('Are you sure you want to refresh the invite code?'),
       actions: [
         TextButton(
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           child: const Text('Cancel'),
         ),
         TextButton(

@@ -80,15 +80,6 @@ class _UserExpensesState extends State<UserExpenses> {
           fontWeight: FontWeight.w800,
         ),
         backgroundColor: Theme.of(context).primaryColor,
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.edit,
-              color: Theme.of(context).primaryColor.computedLuminance(),
-            ),
-          ),
-        ],
       ),
       body: isLoading
           ? const Center(
