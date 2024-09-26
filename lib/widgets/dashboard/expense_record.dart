@@ -47,33 +47,41 @@ class ExpenseRecordItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Icon(
-          Category.getCategory(expense.category!).icon,
-          size: 16.0,
-          color: Theme.of(context).primaryColor.withOpacity(0.8),
-        ),
-        const SizedBox(width: 5.0),
-        Expanded(
-          child: Text(
-            expense.title!,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        Navigator.of(context).pushNamed(
+          RouteNames.addExpense,
+          arguments: expense,
+        );
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Icon(
+            Category.getCategory(expense.category!).icon,
+            size: 16.0,
+            color: Theme.of(context).primaryColor.withOpacity(0.8),
+          ),
+          const SizedBox(width: 5.0),
+          Expanded(
+            child: Text(
+              expense.title!,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        Text(NumberFormat.currency(
-          symbol: 'LKR ',
-        ).format(expense.amount)),
-        const SizedBox(width: 5.0),
-        Icon(
-          Icons.chevron_right_rounded,
-          color: Theme.of(context).dividerColor,
-        ),
-      ],
+          Text(NumberFormat.currency(
+            symbol: 'LKR ',
+          ).format(expense.amount)),
+          const SizedBox(width: 5.0),
+          Icon(
+            Icons.chevron_right_rounded,
+            color: Theme.of(context).dividerColor,
+          ),
+        ],
+      ),
     );
   }
 }

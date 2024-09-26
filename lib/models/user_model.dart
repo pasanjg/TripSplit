@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:flutter/material.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
@@ -36,7 +37,6 @@ class UserModel with ChangeNotifier {
 
       await saveUser(user!);
       successMessage = 'Registration successful';
-      notifyListeners();
     } catch (err) {
       switch (err.toString()) {
         case 'email-already-in-use':
@@ -53,6 +53,7 @@ class UserModel with ChangeNotifier {
   }
 
   Future<void> login({required String email, required String password}) async {
+    clearMessages();
     try {
       await _firebaseService.loginFirebaseEmail(
         email: email,
@@ -60,19 +61,17 @@ class UserModel with ChangeNotifier {
       );
 
       await getUser();
-      await saveDeviceToken();
-    } catch (err) {
-      switch (err.toString()) {
-        case 'user-not-found':
-          errorMessage = 'User not found';
-          break;
-        case 'wrong-password':
-          errorMessage = 'Wrong password';
-          break;
-        default:
-          errorMessage = 'An error occurred';
-          break;
+
+      if (user != null) {
+        await saveDeviceToken();
+      } else {
+        errorMessage = 'Unable to get user details';
       }
+    } on FirebaseAuthException catch (err) {
+      errorMessage = err.message ?? 'Something went wrong';
+      debugPrint("[Auth] ${err}");
+    } catch (err) {
+      errorMessage = 'Something went wrong';
       debugPrint(err.toString());
     } finally {
       notifyListeners();
@@ -83,9 +82,10 @@ class UserModel with ChangeNotifier {
     try {
       await _firebaseService.logout();
       user = null;
-      notifyListeners();
     } catch (err) {
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
   }
 

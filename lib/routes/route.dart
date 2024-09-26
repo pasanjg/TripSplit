@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tripsplit/entities/expense.dart';
 import 'package:tripsplit/screens/assign_user_screen.dart';
 import 'package:tripsplit/screens/join_trip_screen.dart';
 
 import '../common/constants/constants.dart';
 import '../entities/user.dart';
 import '../layout/main_tabs.dart';
-import '../screens/add_expense_screen.dart';
+import '../screens/add_update_expense_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/create_trip_screen.dart';
@@ -39,9 +40,10 @@ class Routes {
       case RouteNames.joinTrip:
         return _buildRoute(settings, (_) => const JoinTripScreen());
       case RouteNames.addExpense:
-        return _buildRoute(settings, (_) => const AddExpenseScreen());
+        var expense = arguments is Expense ? arguments : null;
+        return _buildRoute(settings, (_) => AddUpdateExpenseScreen(expense: expense ));
       case RouteNames.userExpenses:
-        return _buildRoute(settings, (_) => UserExpenses(user: arguments as User));
+        return _buildRoute(settings, (_) => UserExpenses(userId: arguments as String));
       default:
         return _errorRoute();
     }

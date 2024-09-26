@@ -9,15 +9,17 @@ import 'package:tripsplit/widgets/dashboard/expense_record.dart';
 import '../entities/expense.dart';
 
 class UserExpenses extends StatefulWidget {
-  final User user;
+  final String userId;
 
-  const UserExpenses({super.key, required this.user});
+  const UserExpenses({super.key, required this.userId});
 
   @override
   State<UserExpenses> createState() => _UserExpensesState();
 }
 
 class _UserExpensesState extends State<UserExpenses> {
+  late User user;
+
   bool isLoading = true;
   late double totalExpenses;
   late Map<String, List<Expense>> userExpenses;
@@ -25,14 +27,35 @@ class _UserExpensesState extends State<UserExpenses> {
   @override
   void initState() {
     super.initState();
+    getUser();
     getUserExpenses();
+  }
+
+  @override
+  void didUpdateWidget(covariant UserExpenses oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.userId != oldWidget.userId) {
+      getUser();
+      getUserExpenses();
+    }
+  }
+
+  void getUser() {
+    final tripModel = Provider.of<TripModel>(context, listen: false);
+    final user = tripModel.selectedTrip!.users.firstWhere(
+      (user) => user.id == widget.userId,
+    );
+
+    setState(() {
+      this.user = user;
+    });
   }
 
   void getUserExpenses() {
     final tripModel = Provider.of<TripModel>(context, listen: false);
     setState(() {
-      totalExpenses = tripModel.getUserExpensesTotal(widget.user.id!);
-      userExpenses = tripModel.getUserExpenses(widget.user.id!);
+      totalExpenses = tripModel.getUserExpensesTotal(widget.userId);
+      userExpenses = tripModel.getUserExpenses(widget.userId);
       isLoading = false;
     });
   }
@@ -49,7 +72,8 @@ class _UserExpensesState extends State<UserExpenses> {
           ),
         ),
         title: Text(
-            "${widget.user.fullName} ${widget.user.mySelf ? '(You)' : ''}"),
+          "${user.fullName} ${user.mySelf ? '(You)' : ''}",
+        ),
         titleTextStyle: TextStyle(
           color: Theme.of(context).primaryColor.computedLuminance(),
           fontSize: 24.0,

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../common/extensions/extensions.dart';
 
 class CustomTextFormField extends StatefulWidget {
+  final String? initialValue;
   final bool isPassword;
   final FocusNode? focusNode;
   final TextEditingController? controller;
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatefulWidget {
 
   const CustomTextFormField({
     super.key,
+    this.initialValue,
     this.isPassword = false,
     this.focusNode,
     this.controller,
@@ -97,6 +99,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: widget.initialValue,
       focusNode: widget.focusNode,
       controller: widget.controller,
       keyboardType: widget.keyboardType,

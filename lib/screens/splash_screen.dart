@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:tripsplit/common/helpers/ui_helper.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import '../common/constants/constants.dart';
 import 'package:tripsplit/models/user_model.dart';
@@ -32,10 +33,10 @@ class _SplashScreenState extends State<SplashScreen> {
       await tripModel.getUserTrips();
     }
 
-    await navigateToNextScreen();
+    await _navigateToNextScreen();
   }
 
-  Future<void> navigateToNextScreen() async {
+  Future<void> _navigateToNextScreen() async {
     if (userModel.user != null) {
       await Navigator.of(context).pushReplacementNamed(RouteNames.home);
     } else {

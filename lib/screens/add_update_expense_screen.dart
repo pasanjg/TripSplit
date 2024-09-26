@@ -11,24 +11,28 @@ import 'package:tripsplit/widgets/custom/custom_datepicker.dart';
 import 'package:tripsplit/widgets/custom/custom_text_form_field.dart';
 
 import '../common/helpers/ui_helper.dart';
+import '../entities/expense.dart';
 import '../entities/user.dart';
 import '../models/user_model.dart';
 
-class AddExpenseScreen extends StatefulWidget {
-  const AddExpenseScreen({super.key});
+class AddUpdateExpenseScreen extends StatefulWidget {
+  final Expense? expense;
+
+  const AddUpdateExpenseScreen({super.key, this.expense});
 
   @override
-  State<AddExpenseScreen> createState() => _AddExpenseScreenState();
+  State<AddUpdateExpenseScreen> createState() => _AddUpdateExpenseScreenState();
 }
 
-class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin {
-  late String title, category, payeeId;
+class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with ValidateMixin {
+  String title = '', category = '', payeeId = '';
   double amount = 0.0;
   DateTime date = DateTime.now();
 
   GlobalKey<FormState>? expenseFormKey;
   OverlayEntry? loader;
 
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
   final FocusNode _amountFocusNode = FocusNode();
@@ -44,12 +48,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       loadTripUsers();
+      initExpense();
     });
   }
 
   @override
   void dispose() {
     _amountFocusNode.dispose();
+    _titleController.dispose();
+    _dateController.dispose();
     _amountController.dispose();
     super.dispose();
   }
@@ -61,13 +68,32 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
     loader!.remove();
   }
 
-  void addExpense(BuildContext context, TripModel tripModel) async {
+  void initExpense() {
+    if (widget.expense != null) {
+      final expense = widget.expense!;
+
+      title = expense.title!;
+      category = expense.category!;
+      amount = expense.amount!;
+      date = expense.date!;
+      payeeId = expense.userRef!.id;
+
+      _titleController.text = title;
+      _amountController.text = amount.toString();
+      _dateController.text = DateFormat('yyyy-MM-dd').format(date);
+
+      setState(() {});
+    }
+  }
+
+  void addOrUpdateExpense(BuildContext context, TripModel tripModel) async {
     FocusScope.of(context).unfocus();
     if (expenseFormKey!.currentState!.validate()) {
       expenseFormKey!.currentState!.save();
       Overlay.of(context).insert(loader!);
 
-      await tripModel.addExpense(
+      await tripModel.addOrUpdateExpense(
+        id: widget.expense?.id,
         title: title,
         category: category,
         date: date,
@@ -81,7 +107,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
         UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
       } else {
         UIHelper.of(context).showSnackBar(tripModel.successMessage!);
-        Navigator.of(context).pop();
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
 
       loader!.remove();
@@ -169,6 +195,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 25.0),
                         CustomTextFormField(
+                          controller: _titleController,
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.text,
                           onSaved: (input) => title = input!,
@@ -205,6 +232,20 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                               color: Theme.of(context).primaryColor,
                             ),
                             labelText: 'Amount',
+                            suffixIcon: _amountController.text != ""
+                                ? IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        amount = 0.0;
+                                        _amountController.clear();
+                                      });
+                                    },
+                                    icon: Icon(
+                                      Icons.clear_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                  )
+                                : null,
                           ),
                         ),
                         const SizedBox(height: 15.0),
@@ -213,7 +254,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                             return InputDecorator(
                               decoration: CustomTextFormField.buildDecoration(context).copyWith(
                                 prefixIcon: Icon(
-                                  Icons.category_rounded,
+                                  Category.getCategory(category).icon,
                                   color: Theme.of(context).primaryColor,
                                 ),
                                 labelText: 'Category',
@@ -336,8 +377,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 25.0),
                         CustomButton(
-                          onTap: () => addExpense(context, tripModel),
-                          text: 'Add Expense',
+                          onTap: () => addOrUpdateExpense(context, tripModel),
+                          text: widget.expense != null
+                              ? 'Update Expense'
+                              : 'Add Expense',
                         ),
                         const SizedBox(height: 15.0),
                       ],

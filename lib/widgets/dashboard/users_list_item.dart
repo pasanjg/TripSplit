@@ -22,7 +22,7 @@ class UsersListItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           RouteNames.userExpenses,
-          arguments: user,
+          arguments: user.id,
         );
       },
       child: Consumer<TripModel>(builder: (context, tripModel, _) {

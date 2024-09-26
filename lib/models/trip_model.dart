@@ -241,7 +241,7 @@ class TripModel with ChangeNotifier {
             .doc(_firebaseService.auth.currentUser!.uid);
 
         if (trip.userRefs.contains(userRef)) {
-          errorMessage = 'You are already part of this trip';
+          errorMessage = 'You are already a member of this trip';
           notifyListeners();
           return;
         }
@@ -315,18 +315,18 @@ class TripModel with ChangeNotifier {
     }
   }
 
-  Future<void> addExpense({
+  Future<void> addOrUpdateExpense({
+    String? id,
     required String title,
     required String category,
     required DateTime date,
     required double amount,
     required String userId,
-    ImageProvider? receiptImage,
+    String? receiptUrl,
   }) async {
     clearMessages();
     try {
-      final userRef =
-          _firebaseService.firestore.collection(User.collection).doc(userId);
+      final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
 
       final expense = Expense(
         title: title,
@@ -334,23 +334,28 @@ class TripModel with ChangeNotifier {
         date: date,
         amount: amount,
         userRef: userRef,
+        receiptUrl: receiptUrl,
       );
 
-      // if (receiptImage != null) {
-      //   final url = await _firebaseService.uploadImage(receiptImage);
-      //   expense.receiptUrl = url;
-      // }
-
-      await _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id)
-          .collection(Expense.collection)
-          .add(expense.toMap());
+      if (id != null) {
+        await _firebaseService.firestore
+            .collection(Trip.collection)
+            .doc(selectedTrip!.id)
+            .collection(Expense.collection)
+            .doc(id)
+            .update(expense.toMap());
+      } else {
+        await _firebaseService.firestore
+            .collection(Trip.collection)
+            .doc(selectedTrip!.id)
+            .collection(Expense.collection)
+            .add(expense.toMap());
+      }
 
       await selectedTrip!.loadExpenses();
-      successMessage = 'Expense added successfully';
+      successMessage = 'Expense record ${id != null ? 'updated' : 'added'} successfully';
     } catch (err) {
-      errorMessage = 'Error adding expense';
+      errorMessage = 'Error ${id != null ? 'updating' : 'adding'} expense record';
       debugPrint(err.toString());
     } finally {
       notifyListeners();
