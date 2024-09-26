@@ -24,7 +24,8 @@ class TripModel with ChangeNotifier {
 
   double get totalSpent {
     if (selectedTrip == null) return 0.0;
-    return selectedTrip!.expenses.fold(0.0, (prev, expense) => prev + expense.amount!);
+    return selectedTrip!.expenses
+        .fold(0.0, (prev, expense) => prev + expense.amount!);
   }
 
   Stream<List<Trip>> get userTripsStream {
@@ -102,7 +103,6 @@ class TripModel with ChangeNotifier {
           return Expense.fromMap(doc.id, doc.data());
         }).toList();
 
-        // Group expenses by date
         final groupedExpenses = <String, List<Expense>>{};
         for (var expense in expenses) {
           final dateKey = DateFormat.yMMMMd().format(expense.date!);
@@ -123,11 +123,27 @@ class TripModel with ChangeNotifier {
     return stream;
   }
 
-  double getUserExpenses(String userId) {
+  double getUserExpensesTotal(String userId) {
     if (selectedTrip == null) return 0.0;
     return selectedTrip!.expenses
         .where((expense) => expense.userRef!.id == userId)
         .fold(0.0, (prev, expense) => prev + expense.amount!);
+  }
+
+  Map<String, List<Expense>> getUserExpenses(String userId) {
+    if (selectedTrip == null) return {};
+    return selectedTrip!.expenses
+        .where((expense) => expense.userRef!.id == userId)
+        .fold(<String, List<Expense>>{}, (prev, expense) {
+      final dateKey = DateFormat.yMMMMd().format(expense.date!);
+      if (prev.containsKey(dateKey)) {
+        prev[dateKey]!.add(expense);
+      } else {
+        prev[dateKey] = [expense];
+      }
+
+      return prev;
+    });
   }
 
   Future<void> createTrip({
@@ -207,40 +223,45 @@ class TripModel with ChangeNotifier {
 
   Future<void> joinTrip(String inviteCode) async {
     clearMessages();
-    final tripQuerySnapshot = await _firebaseService.firestore
-        .collection(Trip.collection)
-        .where(Trip.fieldInviteCode, isEqualTo: inviteCode)
-        .get();
+    try {
+      final tripQuerySnapshot = await _firebaseService.firestore
+          .collection(Trip.collection)
+          .where(Trip.fieldInviteCode, isEqualTo: inviteCode)
+          .get();
 
-    if (tripQuerySnapshot.docs.isNotEmpty) {
-      final tripSnapshot = await tripQuerySnapshot.docs.first.reference.get();
-      final trip = Trip.fromMap(
-        tripSnapshot.id,
-        tripSnapshot.data() as Map<String, dynamic>,
-      );
+      if (tripQuerySnapshot.docs.isNotEmpty) {
+        final tripSnapshot = await tripQuerySnapshot.docs.first.reference.get();
+        final trip = Trip.fromMap(
+          tripSnapshot.id,
+          tripSnapshot.data() as Map<String, dynamic>,
+        );
 
-      final userRef = _firebaseService.firestore
-          .collection(User.collection)
-          .doc(_firebaseService.auth.currentUser!.uid);
+        final userRef = _firebaseService.firestore
+            .collection(User.collection)
+            .doc(_firebaseService.auth.currentUser!.uid);
 
-      if (trip.userRefs.contains(userRef)) {
-        errorMessage = 'You are already part of this trip';
-        notifyListeners();
-        return;
+        if (trip.userRefs.contains(userRef)) {
+          errorMessage = 'You are already part of this trip';
+          notifyListeners();
+          return;
+        }
+
+        await addUserToTripWithReference(
+          trip.id!,
+          _firebaseService.auth.currentUser!.uid,
+        );
+        await getUserTrips();
+        await selectTrip(trip);
+        successMessage = 'Trip joined successfully';
+      } else {
+        errorMessage = 'Trip not found';
       }
-
-      await addUserToTripWithReference(
-        trip.id!,
-        _firebaseService.auth.currentUser!.uid,
-      );
-      await getUserTrips();
-      await selectTrip(trip);
-      successMessage = 'Trip joined successfully';
-    } else {
-      errorMessage = 'Trip not found';
+    } catch (err) {
+      errorMessage = 'Error joining trip';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   Future<void> assignGuestUser({
@@ -272,22 +293,26 @@ class TripModel with ChangeNotifier {
   }
 
   Future<void> addUserToTripWithReference(String tripId, String userId) async {
-    DocumentReference userRef =
-        _firebaseService.firestore.collection(User.collection).doc(userId);
-    DocumentReference tripRef =
-        _firebaseService.firestore.collection(Trip.collection).doc(tripId);
+    try {
+      DocumentReference userRef =
+          _firebaseService.firestore.collection(User.collection).doc(userId);
+      DocumentReference tripRef =
+          _firebaseService.firestore.collection(Trip.collection).doc(tripId);
 
-    await _firebaseService.firestore.runTransaction((transaction) async {
-      // Add the trip reference to the user
-      transaction.update(userRef, {
-        User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
-      });
+      await _firebaseService.firestore.runTransaction((transaction) async {
+        // Add the trip reference to the user
+        transaction.update(userRef, {
+          User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
+        });
 
-      // Add the user reference to the trip
-      transaction.update(tripRef, {
-        Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
+        // Add the user reference to the trip
+        transaction.update(tripRef, {
+          Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
+        });
       });
-    });
+    } catch (err) {
+      debugPrint(err.toString());
+    }
   }
 
   Future<void> addExpense({

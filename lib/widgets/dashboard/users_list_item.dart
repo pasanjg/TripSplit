@@ -26,7 +26,7 @@ class UsersListItem extends StatelessWidget {
         );
       },
       child: Consumer<TripModel>(builder: (context, tripModel, _) {
-        final userTotal = tripModel.getUserExpenses(user.id!);
+        final userTotal = tripModel.getUserExpensesTotal(user.id!);
 
         return Row(
           children: [

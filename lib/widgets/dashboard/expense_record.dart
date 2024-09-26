@@ -52,7 +52,7 @@ class ExpenseRecordItem extends StatelessWidget {
       children: [
         Icon(
           Category.getCategory(expense.category!).icon,
-          size: 14.0,
+          size: 16.0,
           color: Theme.of(context).primaryColor.withOpacity(0.8),
         ),
         const SizedBox(width: 5.0),
@@ -61,7 +61,6 @@ class ExpenseRecordItem extends StatelessWidget {
             expense.title!,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),

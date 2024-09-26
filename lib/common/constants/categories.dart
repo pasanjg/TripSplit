@@ -18,10 +18,10 @@ class Category {
     Category(name: 'drinks', icon: Icons.wine_bar_rounded),
     Category(name: 'transport', icon: Icons.directions_bus_rounded),
     Category(name: 'fuel', icon: Icons.local_gas_station_rounded),
-    Category(name: 'accommodation', icon: CupertinoIcons.bed_double),
-    Category(name: 'entertainment', icon: CupertinoIcons.game_controller),
-    Category(name: 'shopping', icon: CupertinoIcons.shopping_cart),
-    Category(name: 'other', icon: CupertinoIcons.square_stack_3d_up_slash),
+    Category(name: 'accommodation', icon: Icons.hotel_rounded),
+    Category(name: 'entertainment', icon: Icons.gamepad_rounded),
+    Category(name: 'shopping', icon: Icons.shopping_cart_rounded),
+    Category(name: 'other', icon: Icons.square),
   ];
 
   static Category getCategory(String name) {

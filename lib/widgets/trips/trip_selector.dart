@@ -49,7 +49,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: LinearProgressIndicator(),
             );
           }
 
@@ -91,7 +91,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
                     ],
                   ),
                   trailing: tripModel.selectedTrip!.id == trip.id
-                      ? const Icon(Icons.check_rounded)
+                      ? const Icon(Icons.check_circle_rounded)
                       : const SizedBox.shrink(),
                 );
               },
