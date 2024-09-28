@@ -96,7 +96,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
     loader!.remove();
   }
 
-  void refreshInviteCode() {
+  void showRefreshInviteCode() {
     UIHelper.of(context).showCustomAlertDialog(
       title: 'Refresh Invite Code',
       content: const Text('Are you sure you want to refresh the invite code?'),
@@ -106,13 +106,29 @@ class _AssignUserScreenState extends State<AssignUserScreen>
           child: const Text('Cancel'),
         ),
         TextButton(
-          onPressed: () {
-            // Navigator.of(context).pop();
-          },
+          onPressed: refreshInviteCode,
           child: const Text('Refresh'),
         ),
       ],
     );
+  }
+
+  void refreshInviteCode() async {
+    Navigator.of(context, rootNavigator: true).pop();
+    Overlay.of(context).insert(loader!);
+
+    final tripModel = Provider.of<TripModel>(context, listen: false);
+    await tripModel.refreshInviteCode();
+
+    if (!context.mounted) return;
+
+    if (tripModel.errorMessage != null) {
+      UIHelper.of(context).showSnackBar(tripModel.errorMessage!, error: true);
+    } else if (tripModel.successMessage != null) {
+      UIHelper.of(context).showSnackBar(tripModel.successMessage!);
+    }
+
+    loader!.remove();
   }
 
   Widget _buildModeSelector() {
@@ -361,10 +377,8 @@ class _AssignUserScreenState extends State<AssignUserScreen>
         actions: [
           IconButton(
             onPressed: () {
-              final String? text =
-                  Provider.of<TripModel>(context, listen: false)
-                      .selectedTrip!
-                      .inviteCode;
+              final tripModel = Provider.of<TripModel>(context, listen: false);
+              final String? text = tripModel.selectedTrip!.inviteCode;
 
               if (text != null) {
                 Clipboard.setData(ClipboardData(text: text));
@@ -377,7 +391,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
             ),
           ),
           IconButton(
-            onPressed: refreshInviteCode,
+            onPressed: showRefreshInviteCode,
             icon: Icon(
               Icons.refresh_rounded,
               color: Theme.of(context).primaryColor.contrastColor(),
@@ -409,9 +423,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                           style: TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w500,
-                            color: Theme.of(context)
-                                .primaryColor
-                                .contrastColor(),
+                            color: Theme.of(context).primaryColor.contrastColor(),
                           ),
                         ),
                         const SizedBox(height: 20.0),
@@ -442,9 +454,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 12.0,
-                            color: Theme.of(context)
-                                .primaryColor
-                                .contrastColor(),
+                            color: Theme.of(context).primaryColor.contrastColor(),
                           ),
                         ),
                       ],

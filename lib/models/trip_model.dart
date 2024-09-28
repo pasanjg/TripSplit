@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:tripsplit/common/helpers/helpers.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 
@@ -239,6 +240,24 @@ class TripModel with ChangeNotifier {
       await selectedTrip!.loadExpenses();
       await selectedTrip!.loadUsers();
     } catch (err) {
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshInviteCode() async {
+    try {
+      final randomCode = generateRandomCode(6);
+      await _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id)
+          .update({Trip.fieldInviteCode: randomCode});
+
+      selectedTrip!.inviteCode = randomCode;
+      successMessage = 'Invite code refreshed successfully';
+    } catch (err) {
+      errorMessage = 'Error refreshing invite code';
       debugPrint(err.toString());
     } finally {
       notifyListeners();
