@@ -59,7 +59,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Bone.text(words: 2),
-                        const SizedBox(height: 5.0),
+                        SizedBox(height: 5.0),
                         Bone.text(),
                       ],
                     ),

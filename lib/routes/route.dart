@@ -4,7 +4,6 @@ import 'package:tripsplit/screens/assign_user_screen.dart';
 import 'package:tripsplit/screens/join_trip_screen.dart';
 
 import '../common/constants/constants.dart';
-import '../entities/user.dart';
 import '../layout/main_tabs.dart';
 import '../screens/add_update_expense_screen.dart';
 import '../screens/auth/login_screen.dart';

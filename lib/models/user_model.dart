@@ -69,7 +69,7 @@ class UserModel with ChangeNotifier {
       }
     } on FirebaseAuthException catch (err) {
       errorMessage = err.message ?? 'Something went wrong';
-      debugPrint("[Auth] ${err}");
+      debugPrint("[Auth] $err");
     } catch (err) {
       errorMessage = 'Something went wrong';
       debugPrint(err.toString());

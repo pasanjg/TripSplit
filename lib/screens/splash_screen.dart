@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import 'package:tripsplit/common/helpers/ui_helper.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import '../common/constants/constants.dart';
 import 'package:tripsplit/models/user_model.dart';

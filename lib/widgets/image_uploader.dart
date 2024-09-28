@@ -93,27 +93,11 @@ class _ImageUploaderState extends State<ImageUploader> {
       widget.onUpload(imageUrl!);
     } else {
       if (imageUrl == null) {
-        UIHelper.of(context)
-            .showSnackBar('Failed to upload image', error: true);
+        UIHelper.of(context).showSnackBar('Failed to upload image', error: true);
       }
     }
 
     loader!.remove();
-  }
-
-  void _previewImage() {
-    UIHelper.of(context).showCustomAlertDialog(
-      title: 'Preview Image',
-      content: Image.network(imageUrl!),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context, rootNavigator: true).pop();
-          },
-          child: const Text('Close'),
-        ),
-      ],
-    );
   }
 
   void _deleteImage() {
