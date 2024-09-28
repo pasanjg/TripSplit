@@ -63,20 +63,13 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).primaryColor.contrastColor(),
-          ),
-        ),
         title: const Text('Create a new trip'),
         titleTextStyle: TextStyle(
           color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Consumer<TripModel>(
         builder: (context, tripModel, _) {

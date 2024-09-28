@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tripsplit/models/trip_model.dart';
 
+import '../../entities/expense.dart';
 import '../custom/custom_card.dart';
 import 'expense_record.dart';
 
@@ -40,11 +42,26 @@ class ExpensesList extends StatelessWidget {
           stream: tripModel.tripExpensesStream,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CustomCard(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: CircularProgressIndicator(),
+              return Skeletonizer(
+                child: Column(
+                  children: List.generate(
+                    3,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 15.0),
+                      child: ExpenseRecord(
+                        date: '2021-09-01 00:00:00.000',
+                        expenses: List.generate(
+                          2,
+                          (index) => Expense(
+                            id: '1',
+                            title: 'Sample expense',
+                            category: 'food',
+                            amount: 100.0,
+                            date: DateTime.now(),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               );

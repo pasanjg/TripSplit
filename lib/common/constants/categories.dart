@@ -25,6 +25,6 @@ class Category {
   ];
 
   static Category getCategory(String name) {
-    return categories.firstWhere((category) => category.name == name);
+    return categories.firstWhere((category) => category.name == name.toLowerCase());
   }
 }

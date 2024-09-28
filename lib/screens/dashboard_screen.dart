@@ -35,15 +35,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: Scaffold(
             appBar: AppBar(
               title: const Text('Dashboard'),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               actions: [
                 const TripSelector(),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(RouteNames.joinTrip);
                   },
-                  icon: const Icon(
-                    Icons.add_location_rounded,
-                  ),
+                  icon: const Icon(Icons.add_circle),
                 ),
                 const SizedBox(width: 15.0),
               ],

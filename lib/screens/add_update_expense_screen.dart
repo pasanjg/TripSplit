@@ -163,13 +163,6 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).primaryColor.contrastColor(),
-          ),
-        ),
         title: Text(
           widget.expense != null ? 'Update Expense' : 'Add Expense',
           style: TextStyle(
@@ -181,15 +174,12 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           if (widget.expense != null)
             IconButton(
               onPressed: showDeleteConfirmation,
-              icon: Icon(
-                Icons.delete_forever_rounded,
-                color: Theme.of(context).primaryColor.contrastColor(),
-              ),
+              icon: const Icon(Icons.delete_forever_rounded),
             ),
         ],
       ),

@@ -50,6 +50,7 @@ dependencies:
   rive: ^0.13.13
   image_picker: ^1.1.2
   photo_view: ^0.15.0
+  skeletonizer: ^1.4.2
 
 dev_dependencies:
   flutter_test:

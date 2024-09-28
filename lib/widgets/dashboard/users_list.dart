@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/widgets/custom/custom_card.dart';
 import 'package:tripsplit/widgets/dashboard/users_list_item.dart';
@@ -40,11 +41,33 @@ class UsersList extends StatelessWidget {
         stream: tripModel.usersStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CustomCard(
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
+            return CustomCard(
+              child: Skeletonizer(
+                child: Column(
+                  children: List.generate(
+                    2,
+                    (index) => const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 3.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 20.0,
+                          ),
+                          SizedBox(width: 10.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Bone.text(),
+                              SizedBox(height: 5.0),
+                              Bone.text(words: 2),
+                            ],
+                          ),
+                          Spacer(),
+                          Bone.icon()
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             );

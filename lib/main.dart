@@ -49,9 +49,10 @@ class MyApp extends StatelessWidget {
           //   errorColor: Colors.redAccent,
           // ),
           useMaterial3: true,
-          appBarTheme: const AppBarTheme(
+          appBarTheme: AppBarTheme(
+            backgroundColor: Theme.of(context).primaryColor,
             centerTitle: false,
-            titleTextStyle: TextStyle(
+            titleTextStyle: const TextStyle(
               color: Colors.black,
               fontSize: 24.0,
               fontWeight: FontWeight.w800,

@@ -17,6 +17,7 @@ class _StatsScreenState extends State<StatsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Statistics'),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: const [
           TripSelector(),
           SizedBox(width: 15.0),

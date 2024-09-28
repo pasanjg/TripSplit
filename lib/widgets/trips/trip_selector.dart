@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
@@ -48,8 +49,24 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
         stream: tripModel.userTripsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: LinearProgressIndicator(),
+            return Skeletonizer(
+              child: Column(
+                children: List.generate(
+                  3,
+                  (index) => const CustomListItem(
+                    leading: Icon(Icons.route_rounded),
+                    content: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Bone.text(words: 2),
+                        const SizedBox(height: 5.0),
+                        Bone.text(),
+                      ],
+                    ),
+                    trailing: SizedBox.shrink(),
+                  ),
+                ),
+              ),
             );
           }
 
@@ -118,7 +135,14 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
       stream: tripModel.userTripsStream,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text("Loading...");
+          return Skeletonizer(
+            effect: ShimmerEffect(
+              baseColor: Theme.of(context).primaryColor.withOpacity(0.3),
+              highlightColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              duration: const Duration(seconds: 1),
+            ),
+            child: const Text("Loading..."),
+          );
         }
 
         if (snapshot.data == null) {
@@ -154,9 +178,10 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             onTap: () => showTrips(context, tripModel),
             child: Row(
               children: [
-                const Icon(
-                  Icons.route_rounded,
+                Icon(
                   size: 20.0,
+                  Icons.route_rounded,
+                  color: Theme.of(context).primaryColor,
                 ),
                 const SizedBox(width: 5.0),
                 Container(

@@ -62,7 +62,6 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
           fontSize: 30.0,
           fontWeight: FontWeight.w800,
         ),
-        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
         children: [

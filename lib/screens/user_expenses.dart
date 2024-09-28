@@ -64,13 +64,6 @@ class _UserExpensesState extends State<UserExpenses> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).primaryColor.contrastColor(),
-          ),
-        ),
         title: Text(
           "${user.fullName} ${user.mySelf ? '(You)' : ''}",
         ),
@@ -79,7 +72,7 @@ class _UserExpensesState extends State<UserExpenses> {
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
-        backgroundColor: Theme.of(context).primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: isLoading
           ? const Center(
