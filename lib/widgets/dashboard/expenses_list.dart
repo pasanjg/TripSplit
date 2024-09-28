@@ -76,7 +76,7 @@ class ExpensesList extends StatelessWidget {
               );
             }
 
-            if (snapshot.data == null) {
+            if (snapshot.data == null || snapshot.data!.isEmpty) {
               return const CustomCard(
                 padding: EdgeInsets.symmetric(
                   horizontal: 15.0,

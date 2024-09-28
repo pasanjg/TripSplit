@@ -213,6 +213,26 @@ class TripModel with ChangeNotifier {
     }
   }
 
+  Future<void> getTrip(String tripId) async {
+    try {
+      final tripSnapshot = await _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(tripId)
+          .get();
+
+      selectedTrip = Trip.fromMap(
+        tripSnapshot.id,
+        tripSnapshot.data() as Map<String, dynamic>,
+      );
+      await selectedTrip!.loadExpenses();
+      await selectedTrip!.loadUsers();
+    } catch (err) {
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
   Future<void> selectTrip(Trip t) async {
     if (selectedTrip != t) {
       selectedTrip = t;
@@ -277,6 +297,7 @@ class TripModel with ChangeNotifier {
       final user = User(
         firstname: firstname,
         lastname: lastname,
+        createdBy: _firebaseService.auth.currentUser!.uid,
       );
 
       DocumentReference userRef = await _firebaseService.firestore
@@ -294,6 +315,59 @@ class TripModel with ChangeNotifier {
     } finally {
       notifyListeners();
     }
+  }
+
+  Future<void> assignMultipleGuests(List<String> guestIds) async {
+    clearMessages();
+    try {
+      final tripRef = _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id);
+
+      final userRefs = guestIds
+          .map((userId) => _firebaseService.firestore
+              .collection(User.collection)
+              .doc(userId))
+          .toList();
+
+      await _firebaseService.firestore.runTransaction((transaction) async {
+        for (var userRef in userRefs) {
+          // Add the trip reference to the user
+          transaction.update(userRef, {
+            User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
+          });
+
+          // Add the user reference to the trip
+          transaction.update(tripRef, {
+            Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
+          });
+        }
+      });
+
+      selectedTrip!.userRefs.addAll(userRefs);
+      await selectedTrip!.loadUsers();
+
+      successMessage = '${guestIds.length} user(s) added successfully';
+    } catch (err) {
+      errorMessage = 'Error adding users';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<List<User>> getUserGuests() async {
+    try {
+      final tripRef = _firebaseService.firestore
+          .collection(Trip.collection)
+          .doc(selectedTrip!.id);
+
+      return await _firebaseService.getUserGuestsFromFirestore(tripRef);
+    } catch (err) {
+      debugPrint(err.toString());
+    }
+
+    return [];
   }
 
   Future<void> addUserToTripWithReference(String tripId, String userId) async {
@@ -405,9 +479,10 @@ class TripModel with ChangeNotifier {
           'picked-file-user': _firebaseService.auth.currentUser!.uid
         },
       );
-      final uploadTask = ref.putFile(file, metadata);
 
+      final uploadTask = ref.putFile(file, metadata);
       await uploadTask.whenComplete(() {});
+
       successMessage = 'Image uploaded successfully';
       return await ref.getDownloadURL();
     } catch (err) {

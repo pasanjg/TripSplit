@@ -16,31 +16,36 @@ class ImagePreview extends StatefulWidget {
 class _ImagePreviewState extends State<ImagePreview> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: PhotoView(
-              imageProvider: widget.imageProvider,
-              backgroundDecoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            children: [
+              Center(
+                child: PhotoView(
+                  imageProvider: widget.imageProvider,
+                  backgroundDecoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Positioned(
-            top: 40,
-            left: 20,
-            child: IconButton(
-              icon: const Icon(
-                Icons.close,
-                color: Colors.black,
+              Positioned(
+                top: 0,
+                left: 0,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

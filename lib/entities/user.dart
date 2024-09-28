@@ -13,12 +13,14 @@ class User {
   String? deviceToken;
   List<DocumentReference> tripRefs = [];
   List<Trip> trips = [];
+  String? createdBy;
   DateTime? createdAt = DateTime.now();
   DateTime? updatedAt = DateTime.now();
 
   static const String collection = 'users';
   static const String fieldTripRefs = 'tripRefs';
   static const String fieldDeviceToken = 'deviceToken';
+  static const String fieldCreatedBy = 'createdBy';
 
   String get fullName => '$firstname $lastname';
 
@@ -43,6 +45,7 @@ class User {
     this.firstname,
     this.lastname,
     this.email,
+    this.createdBy,
   });
 
   User.fromSnapshot(DocumentSnapshot snapshot)
@@ -56,6 +59,7 @@ class User {
     tripRefs = data['tripRefs'] != null
         ? List<DocumentReference>.from(data['tripRefs'])
         : [];
+    createdBy = data['createdBy'];
     createdAt = data['createdAt'].toDate();
     updatedAt = data['updatedAt'].toDate();
   }
@@ -66,6 +70,8 @@ class User {
       'lastname': lastname,
       'email': email,
       'deviceToken': deviceToken,
+      'tripRefs': tripRefs,
+      'createdBy': createdBy,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -78,6 +84,8 @@ class User {
     data['lastname'] = lastname;
     data['email'] = email;
     data['deviceToken'] = deviceToken;
+    data['tripRefs'] = tripRefs;
+    data['createdBy'] = createdBy;
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     return data;

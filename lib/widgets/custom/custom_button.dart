@@ -11,6 +11,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback? onTap;
   final bool block;
   final bool loading;
+  final bool disabled;
 
   const CustomButton({
     super.key,
@@ -23,6 +24,7 @@ class CustomButton extends StatelessWidget {
     this.onTap,
     this.block = false,
     this.loading = false,
+    this.disabled = false,
   });
 
   Widget _buildButtonChild(BuildContext context) {
@@ -56,7 +58,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: loading ? null : onTap,
+      onTap: disabled || loading ? null : onTap,
       child: ClipRRect(
         borderRadius: BorderRadius.all(
           Radius.circular(borderRadius),
@@ -65,7 +67,9 @@ class CustomButton extends StatelessWidget {
           padding: padding,
           width: block ? double.infinity : width,
           decoration: BoxDecoration(
-            color: backgroundColor ?? Theme.of(context).primaryColor,
+            color: disabled
+                ? Colors.grey
+                : backgroundColor ?? Theme.of(context).primaryColor,
             borderRadius: BorderRadius.all(
               Radius.circular(borderRadius),
             ),

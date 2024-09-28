@@ -4,14 +4,20 @@ class CustomListItem extends StatelessWidget {
   final Widget leading;
   final Widget content;
   final Widget trailing;
+  final EdgeInsets padding;
   final VoidCallback? onTap;
+  final bool hideDivider;
+  final Color color;
 
   const CustomListItem({
     super.key,
     this.leading = const SizedBox.shrink(),
     this.content = const SizedBox.shrink(),
     this.trailing = const SizedBox.shrink(),
+    this.padding = const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
     this.onTap,
+    this.hideDivider = false,
+    this.color = Colors.transparent,
   });
 
   @override
@@ -19,16 +25,19 @@ class CustomListItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+        padding: padding,
         alignment: Alignment.centerLeft,
         width: double.infinity,
         decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).dividerColor,
-              width: 0.3,
-            ),
-          ),
+          color: color,
+          border: !hideDivider
+              ? Border(
+                  bottom: BorderSide(
+                    color: Theme.of(context).dividerColor,
+                    width: 0.3,
+                  ),
+                )
+              : null,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

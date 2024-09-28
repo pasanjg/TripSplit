@@ -79,4 +79,17 @@ class FirebaseService {
       userSnapshot.data() as Map<String, dynamic>,
     );
   }
+
+  Future<List<User>> getUserGuestsFromFirestore(DocumentReference tripRef) async {
+    final userSnapshot = await firestore
+        .collection(User.collection)
+        .where(User.fieldCreatedBy, isEqualTo: auth.currentUser!.uid)
+        .get();
+
+    final users = userSnapshot.docs.map((doc) {
+      return User.fromMap(doc.id, doc.data());
+    }).toList();
+
+    return users.where((user) => !user.tripRefs.contains(tripRef)).toList();
+  }
 }

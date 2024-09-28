@@ -123,24 +123,6 @@ class UserModel with ChangeNotifier {
     }
   }
 
-  // Stream<List<Trip>> getUserTripStream() {
-  //   return _firebaseService.firestore
-  //       .collection(User.collection)
-  //       .doc(_firebaseService.auth.currentUser!.uid)
-  //       .snapshots()
-  //       .asyncMap((snapshot) async {
-  //     final data = snapshot.data() as Map<String, dynamic>;
-  //     final tripRefs = (data[User.fieldTripRefs] as List<dynamic>)
-  //         .map((ref) => ref as DocumentReference)
-  //         .toList();
-  //     final trips = await Future.wait(tripRefs.map((tripRef) async {
-  //       final tripSnapshot = await tripRef.get();
-  //       return Trip.fromMap(tripSnapshot.id, tripSnapshot.data() as Map<String, dynamic>);
-  //     }));
-  //     return trips;
-  //   });
-  // }
-
   void clearMessages() {
     successMessage = null;
     errorMessage = null;

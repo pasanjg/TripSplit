@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -135,10 +136,10 @@ class _ImageUploaderState extends State<ImageUploader> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
+                    Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(
                         builder: (context) => ImagePreview(
-                          imageProvider: NetworkImage(imageUrl!),
+                          imageProvider: CachedNetworkImageProvider(imageUrl!),
                         ),
                       ),
                     );
@@ -146,8 +147,8 @@ class _ImageUploaderState extends State<ImageUploader> {
                   child: SizedBox(
                     width: double.infinity,
                     height: 200,
-                    child: Image.network(
-                      imageUrl!,
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl!,
                       fit: BoxFit.cover,
                     ),
                   ),
