@@ -475,7 +475,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                         Text(
                           '${tripModel.selectedTrip!.users.length}',
                           style: TextStyle(
-                            fontSize: 12.0,
+                            fontSize: 16.0,
                             color: Theme.of(context).dividerColor,
                           ),
                         ),

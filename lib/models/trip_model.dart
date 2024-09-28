@@ -278,7 +278,7 @@ class TripModel with ChangeNotifier {
         await selectTrip(trip);
         successMessage = 'Trip joined successfully';
       } else {
-        errorMessage = 'Trip not found';
+        errorMessage = 'The invite code is invalid or expired. Please try again with a valid code';
       }
     } catch (err) {
       errorMessage = 'Error joining trip';

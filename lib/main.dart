@@ -62,6 +62,7 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.light,
         routes: Routes.getAll(),
         onGenerateRoute: Routes.onGenerateRoute,
+        scrollBehavior: const ClampingScrollBehavior(),
         home: const SplashScreen(),
         builder: (context, child) {
           return ResponsiveBreakpoints.builder(

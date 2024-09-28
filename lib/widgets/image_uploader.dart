@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/common/helpers/ui_helper.dart';
@@ -44,13 +45,24 @@ class _ImageUploaderState extends State<ImageUploader> {
 
   Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(source: source);
+    PermissionStatus permissionStatus;
 
-    if (image != null) {
-      await _uploadImage(image);
+    if (source == ImageSource.camera) {
+      permissionStatus = await Permission.camera.request();
     } else {
-      UIHelper.of(context)
-          .showSnackBar('Image selection cancelled', error: true);
+      permissionStatus = await Permission.photos.request();
+    }
+
+    if (permissionStatus.isGranted) {
+      final XFile? image = await picker.pickImage(source: source);
+
+      if (image != null) {
+        await _uploadImage(image);
+      } else {
+        UIHelper.of(context).showSnackBar('Image selection cancelled', error: true);
+      }
+    } else {
+      _openSettings();
     }
   }
 
@@ -121,6 +133,28 @@ class _ImageUploaderState extends State<ImageUploader> {
             Navigator.of(context, rootNavigator: true).pop();
           },
           child: const Text('Delete'),
+        ),
+      ],
+    );
+  }
+
+  void _openSettings() {
+    UIHelper.of(context).showCustomAlertDialog(
+      title: 'Permission Required',
+      content: const Text('Please allow the app to access your photos to upload an image.'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () {
+            openAppSettings();
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          child: const Text('Open Settings'),
         ),
       ],
     );
