@@ -16,9 +16,12 @@ class _SplashScreenState extends State<SplashScreen> {
   late UserModel userModel;
   late TripModel tripModel;
 
+  RiveAnimationController? _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = OneShotAnimation('bite', autoplay: false);
     _initializeApp();
   }
 
@@ -38,9 +41,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _navigateToNextScreen() async {
     if (userModel.user != null) {
-      await Navigator.of(context).pushReplacementNamed(RouteNames.home);
+      setState(() {
+        _controller?.isActive = true;
+      });
+      Future.delayed(const Duration(milliseconds: 1500), () {
+        Navigator.of(context).pushReplacementNamed(RouteNames.home);
+      });
     } else {
-      await Navigator.of(context).pushReplacementNamed(RouteNames.login);
+      Navigator.of(context).pushReplacementNamed(RouteNames.login);
     }
   }
 
@@ -55,10 +63,11 @@ class _SplashScreenState extends State<SplashScreen> {
         child: SizedBox(
           height: MediaQuery.of(context).size.width * 1.5,
           width: MediaQuery.of(context).size.width * 1.5,
-          child: const RiveAnimation.asset(
+          child: RiveAnimation.asset(
+            controllers: [_controller!],
             'assets/rive/hippo.riv',
             fit: BoxFit.cover,
-            animations: ['bite', 'wave', 'eye'],
+            animations: const ['wave', 'eye'],
           ),
         ),
       ),
