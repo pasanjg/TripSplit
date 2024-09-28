@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../entities/user.dart';
@@ -19,6 +20,8 @@ class FirebaseService {
   FirebaseFirestore get firestore => _firestore;
 
   FirebaseMessaging get messaging => _messaging;
+
+  FirebaseStorage get storage => FirebaseStorage.instance;
 
   // Stream<auth.User?> get authStateChanges => auth.authStateChanges();
 

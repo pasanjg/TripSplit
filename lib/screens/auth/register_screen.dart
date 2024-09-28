@@ -81,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> with ValidateMixin {
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w300,
-                color: Theme.of(context).primaryColor.computedLuminance(),
+                color: Theme.of(context).primaryColor.contrastColor(),
               ),
             ),
           ),

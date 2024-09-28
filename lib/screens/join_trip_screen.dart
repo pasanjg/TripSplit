@@ -59,12 +59,12 @@ class _JoinTripScreenState extends State<JoinTripScreen> with ValidateMixin {
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         title: const Text('Join Trip'),
         titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.computedLuminance(),
+          color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),

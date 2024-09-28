@@ -9,6 +9,7 @@ import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/widgets/custom/custom_button.dart';
 import 'package:tripsplit/widgets/custom/custom_datepicker.dart';
 import 'package:tripsplit/widgets/custom/custom_text_form_field.dart';
+import 'package:tripsplit/widgets/image_uploader.dart';
 
 import '../common/helpers/ui_helper.dart';
 import '../entities/expense.dart';
@@ -26,6 +27,7 @@ class AddUpdateExpenseScreen extends StatefulWidget {
 
 class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with ValidateMixin {
   String title = '', category = '', payeeId = '';
+  String? receiptUrl;
   double amount = 0.0;
   DateTime date = DateTime.now();
 
@@ -77,6 +79,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
       amount = expense.amount!;
       date = expense.date!;
       payeeId = expense.userRef!.id;
+      receiptUrl = expense.receiptUrl;
 
       _titleController.text = title;
       _amountController.text = amount.toString();
@@ -99,6 +102,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
         date: date,
         amount: amount,
         userId: payeeId,
+        receiptUrl: receiptUrl,
       );
 
       if (!context.mounted) return;
@@ -163,17 +167,17 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         title: Text(
           widget.expense != null ? 'Update Expense' : 'Add Expense',
           style: TextStyle(
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.computedLuminance(),
+          color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
@@ -184,7 +188,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
               onPressed: showDeleteConfirmation,
               icon: Icon(
                 Icons.delete_forever_rounded,
-                color: Theme.of(context).primaryColor.computedLuminance(),
+                color: Theme.of(context).primaryColor.contrastColor(),
               ),
             ),
         ],
@@ -204,7 +208,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                   Text(
                     "LKR",
                     style: TextStyle(
-                      color: Theme.of(context).primaryColor.computedLuminance().withOpacity(0.7),
+                      color: Theme.of(context).primaryColor.contrastColor().withOpacity(0.7),
                       fontSize: 28.0,
                       fontWeight: FontWeight.w700,
                     ),
@@ -223,7 +227,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                         textAlign: TextAlign.right,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor.computedLuminance().withOpacity(amount == 0.0 ? 0.5 : 1.0),
+                          color: Theme.of(context).primaryColor.contrastColor().withOpacity(amount == 0.0 ? 0.5 : 1.0),
                           fontSize: 28.0,
                           fontWeight: FontWeight.w700,
                         ),
@@ -401,32 +405,45 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                           },
                         ),
                         const SizedBox(height: 15.0),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 10.0,
-                          ),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Theme.of(context).primaryColor,
-                              width: 2.0,
+                        ImageUploader(
+                          imageUrl: receiptUrl,
+                          onUpload: (String? imageUrl) {
+                            setState(() {
+                              receiptUrl = imageUrl;
+                            });
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0,
+                              vertical: 10.0,
                             ),
-                            borderRadius: BorderRadius.circular(5.0),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.receipt_rounded, color: Theme.of(context).primaryColor),
-                                const SizedBox(width: 8.0),
-                                Text(
-                                  'Upload Receipt',
-                                  style: TextStyle(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).primaryColor,
+                                width: 2.0,
+                              ),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.receipt_rounded,
                                     color: Theme.of(context).primaryColor,
-                                    fontWeight: FontWeight.w600,
                                   ),
-                                ),
-                              ],
+                                  const SizedBox(width: 8.0),
+                                  Text(
+                                    receiptUrl == null
+                                        ? 'Upload Receipt'
+                                        : 'Replace Receipt',
+                                    style: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

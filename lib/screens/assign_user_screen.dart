@@ -84,12 +84,12 @@ class _AssignUserScreenState extends State<AssignUserScreen>
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         title: const Text('Assign User'),
         titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.computedLuminance(),
+          color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
@@ -109,14 +109,14 @@ class _AssignUserScreenState extends State<AssignUserScreen>
             },
             icon: Icon(
               Icons.copy_rounded,
-              color: Theme.of(context).primaryColor.computedLuminance(),
+              color: Theme.of(context).primaryColor.contrastColor(),
             ),
           ),
           IconButton(
             onPressed: refreshInviteCode,
             icon: Icon(
               Icons.refresh_rounded,
-              color: Theme.of(context).primaryColor.computedLuminance(),
+              color: Theme.of(context).primaryColor.contrastColor(),
             ),
           )
         ],
@@ -147,7 +147,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                             fontWeight: FontWeight.w500,
                             color: Theme.of(context)
                                 .primaryColor
-                                .computedLuminance(),
+                                .contrastColor(),
                           ),
                         ),
                         const SizedBox(height: 20.0),
@@ -180,7 +180,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                             fontSize: 12.0,
                             color: Theme.of(context)
                                 .primaryColor
-                                .computedLuminance(),
+                                .contrastColor(),
                           ),
                         ),
                       ],

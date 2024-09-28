@@ -67,12 +67,12 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         title: const Text('Create a new trip'),
         titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.computedLuminance(),
+          color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),

@@ -33,8 +33,8 @@ class CustomButton extends StatelessWidget {
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
           color: backgroundColor != null
-              ? backgroundColor?.computedLuminance()
-              : Theme.of(context).primaryColor.computedLuminance(),
+              ? backgroundColor?.contrastColor()
+              : Theme.of(context).primaryColor.contrastColor(),
         ),
       );
     }
@@ -44,8 +44,8 @@ class CustomButton extends StatelessWidget {
         text,
         style: TextStyle(
           color: backgroundColor != null
-              ? backgroundColor?.computedLuminance()
-              : Theme.of(context).primaryColor.computedLuminance(),
+              ? backgroundColor?.contrastColor()
+              : Theme.of(context).primaryColor.contrastColor(),
         ),
       );
     }

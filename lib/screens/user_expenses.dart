@@ -68,14 +68,14 @@ class _UserExpensesState extends State<UserExpenses> {
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).primaryColor.computedLuminance(),
+            color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
         title: Text(
           "${user.fullName} ${user.mySelf ? '(You)' : ''}",
         ),
         titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.computedLuminance(),
+          color: Theme.of(context).primaryColor.contrastColor(),
           fontSize: 24.0,
           fontWeight: FontWeight.w800,
         ),
@@ -105,7 +105,7 @@ class _UserExpensesState extends State<UserExpenses> {
                           style: TextStyle(
                             color: Theme.of(context)
                                 .primaryColor
-                                .computedLuminance(),
+                                .contrastColor(),
                           ),
                         ),
                       ),
@@ -121,7 +121,7 @@ class _UserExpensesState extends State<UserExpenses> {
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context)
                                 .primaryColor
-                                .computedLuminance(),
+                                .contrastColor(),
                           ),
                         ),
                       ),

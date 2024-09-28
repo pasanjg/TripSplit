@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
@@ -377,6 +381,39 @@ class TripModel with ChangeNotifier {
     } catch (err) {
       errorMessage = 'Error deleting expense record';
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<String?> uploadImage(XFile image) async {
+    clearMessages();
+    try {
+      final String extension = image.path.split('.').last;
+      final ref = _firebaseService.storage
+          .ref()
+          .child(Trip.collection)
+          .child(selectedTrip!.id!)
+          .child('receipts')
+          .child('receipt_${DateTime.now().millisecondsSinceEpoch}.$extension');
+
+      final File file = File(image.path);
+      final metadata = SettableMetadata(
+        contentType: 'image/$extension',
+        customMetadata: {
+          'picked-file-path': file.path,
+          'picked-file-user': _firebaseService.auth.currentUser!.uid
+        },
+      );
+      final uploadTask = ref.putFile(file, metadata);
+
+      await uploadTask.whenComplete(() {});
+      successMessage = 'Image uploaded successfully';
+      return await ref.getDownloadURL();
+    } catch (err) {
+      errorMessage = 'Error uploading image';
+      debugPrint(err.toString());
+      return null;
     } finally {
       notifyListeners();
     }

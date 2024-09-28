@@ -41,7 +41,7 @@ extension ColorX on Color {
 }
 
 extension ColorLuminanceX on Color {
-  Color computedLuminance({double luminance = 0.5}) {
+  Color contrastColor({double luminance = 0.5}) {
     assert(luminance >= 0 && luminance <= 1);
 
     return Color(value).computeLuminance() > luminance
@@ -49,7 +49,7 @@ extension ColorLuminanceX on Color {
         : Colors.white;
   }
 
-  Brightness computedBrightness({double luminance = 0.5}) {
+  Brightness contrastBrightness({double luminance = 0.5}) {
     assert(luminance >= 0 && luminance <= 1);
 
     return Color(value).computeLuminance() > luminance

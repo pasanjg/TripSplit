@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
               'Choose a sign in method to access your account.',
               style: TextStyle(
                 fontSize: 16.0,
-                color: Theme.of(context).primaryColor.computedLuminance(),
+                color: Theme.of(context).primaryColor.contrastColor(),
               ),
             ),
           ),

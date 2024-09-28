@@ -48,6 +48,8 @@ dependencies:
   rxdart: ^0.28.0
   intl: ^0.19.0
   rive: ^0.13.13
+  image_picker: ^1.1.2
+  photo_view: ^0.15.0
 
 dev_dependencies:
   flutter_test:
