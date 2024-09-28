@@ -233,16 +233,16 @@ class TripModel with ChangeNotifier {
     }
   }
 
-  Future<void> selectTrip(Trip t) async {
-    if (selectedTrip != t) {
-      selectedTrip = t;
+  Future<void> selectTrip(Trip trip) async {
+    try {
+      selectedTrip = trip;
       await selectedTrip!.loadExpenses();
       await selectedTrip!.loadUsers();
-    } else {
-      selectedTrip = null;
+    } catch (err) {
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   Future<void> joinTrip(String inviteCode) async {

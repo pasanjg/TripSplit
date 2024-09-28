@@ -20,9 +20,25 @@ class TripSelector extends StatefulWidget {
 }
 
 class _TripSelectorState extends State<TripSelector> with ValidateMixin {
+  OverlayEntry? loader;
+
+  @override
+  void initState() {
+    super.initState();
+    loader = UIHelper.overlayLoader(context);
+  }
+
+  void _selectTrip(TripModel tripModel, Trip trip) async {
+    Overlay.of(context).insert(loader!);
+    await tripModel.selectTrip(trip);
+    Navigator.of(context).pop();
+    UIHelper.of(context).showSnackBar("Switched to ${trip.title}");
+    loader!.remove();
+  }
+
   void showTrips(BuildContext context, TripModel tripModel) {
     UIHelper.of(context).showCustomBottomSheet(
-      initialChildSize: 0.45,
+      initialChildSize: 0.5,
       header: Container(
         padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
         width: double.infinity,
@@ -89,10 +105,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
               (index) {
                 final Trip trip = snapshot.data![index];
                 return CustomListItem(
-                  onTap: () {
-                    tripModel.selectTrip(trip);
-                    Navigator.of(context).pop();
-                  },
+                  onTap: () => _selectTrip(tripModel, trip),
                   leading: const Icon(Icons.route_rounded),
                   content: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,94 +144,50 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
   }
 
   Widget _buildSelector(TripModel tripModel) {
-    return StreamBuilder(
-      stream: tripModel.userTripsStream,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Skeletonizer(
-            effect: ShimmerEffect(
-              baseColor: Theme.of(context).primaryColor.withOpacity(0.3),
-              highlightColor: Theme.of(context).primaryColor.withOpacity(0.5),
-              duration: const Duration(seconds: 1),
+    if (tripModel.selectedTrip != null) {
+      return GestureDetector(
+        onTap: () => showTrips(context, tripModel),
+        child: Row(
+          children: [
+            Icon(
+              size: 20.0,
+              Icons.route_rounded,
+              color: Theme.of(context).primaryColor,
             ),
-            child: const Text("Loading..."),
-          );
-        }
-
-        if (snapshot.data == null) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(RouteNames.createTrip);
-            },
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.route_rounded,
-                  size: 20.0,
-                ),
-                const SizedBox(width: 5.0),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 150.0),
-                  child: const Text(
-                    "Add New",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+            const SizedBox(width: 5.0),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 150.0),
+              child: Text(
+                tripModel.selectedTrip!.title!,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          );
-        }
-
-        if (snapshot.hasError) {
-          return const SizedBox.shrink();
-        }
-
-        if (snapshot.data!.isNotEmpty) {
-          return GestureDetector(
-            onTap: () => showTrips(context, tripModel),
-            child: Row(
-              children: [
-                Icon(
-                  size: 20.0,
-                  Icons.route_rounded,
-                  color: Theme.of(context).primaryColor,
-                ),
-                const SizedBox(width: 5.0),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 150.0),
-                  child: Text(
-                    tripModel.selectedTrip!.title!,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+          ],
+        ),
+      );
+    } else {
+      return GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushNamed(RouteNames.createTrip);
+        },
+        child: Row(
+          children: [
+            const Icon(
+              Icons.add_circle_rounded,
+              size: 20.0,
             ),
-          );
-        } else {
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(RouteNames.createTrip);
-            },
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.add_circle_rounded,
-                  size: 20.0,
-                ),
-                const SizedBox(width: 5.0),
-                Container(
-                  constraints: const BoxConstraints(maxWidth: 100.0),
-                  child: const Text(
-                    "New Trip",
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
+            const SizedBox(width: 5.0),
+            Container(
+              constraints: const BoxConstraints(maxWidth: 100.0),
+              child: const Text(
+                "New Trip",
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          );
-        }
-      },
-    );
+          ],
+        ),
+      );
+    }
   }
 
   @override
