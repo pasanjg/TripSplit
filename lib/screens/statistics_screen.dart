@@ -150,7 +150,8 @@ class _StatsScreenState extends State<StatsScreen> {
                     ],
                   ),
                   const SizedBox(height: 10.0),
-                  ExpenseDays(spendingType: spendingInsightType)
+                  ExpenseDays(spendingType: spendingInsightType),
+                  const SizedBox(height: 20.0),
                 ],
               );
             },
