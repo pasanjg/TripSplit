@@ -10,8 +10,6 @@ import 'package:tripsplit/widgets/trips/trip_selector.dart';
 
 import '../widgets/custom/index.dart';
 
-enum SampleItem { itemOne, itemTwo, itemThree }
-
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -20,8 +18,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  SampleItem? selectedItem;
-
   Future<void> onRefresh(TripModel tripModel) async {
     await tripModel.getUserTrips();
   }
@@ -48,6 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ],
             ),
             body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15.0),
                 child: Column(
@@ -82,36 +79,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ],
                           ),
                         ),
-                        // Align(
-                        //   alignment: Alignment.topRight,
-                        //   child: PopupMenuButton<SampleItem>(
-                        //     icon: Icon(
-                        //       Icons.more_vert_rounded,
-                        //       color: Theme.of(context).dividerColor,
-                        //     ),
-                        //     initialValue: selectedItem,
-                        //     onSelected: (SampleItem item) {
-                        //       setState(() {
-                        //         selectedItem = item;
-                        //       });
-                        //     },
-                        //     itemBuilder: (BuildContext context) =>
-                        //         <PopupMenuEntry<SampleItem>>[
-                        //       const PopupMenuItem<SampleItem>(
-                        //         value: SampleItem.itemOne,
-                        //         child: Text('Total Spent'),
-                        //       ),
-                        //       const PopupMenuItem<SampleItem>(
-                        //         value: SampleItem.itemTwo,
-                        //         child: Text('My Spending'),
-                        //       ),
-                        //       const PopupMenuItem<SampleItem>(
-                        //         value: SampleItem.itemThree,
-                        //         child: Text('Amounts Owed'),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                     const SizedBox(height: 20.0),

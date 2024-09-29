@@ -68,7 +68,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             return Skeletonizer(
               child: Column(
                 children: List.generate(
-                  3,
+                  5,
                   (index) => const CustomListItem(
                     leading: Icon(Icons.route_rounded),
                     content: Column(
@@ -156,7 +156,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             ),
             const SizedBox(width: 5.0),
             Container(
-              constraints: const BoxConstraints(maxWidth: 150.0),
+              constraints: const BoxConstraints(maxWidth: 100.0),
               child: Text(
                 tripModel.selectedTrip!.title!,
                 overflow: TextOverflow.ellipsis,

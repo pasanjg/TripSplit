@@ -16,12 +16,14 @@ class _SplashScreenState extends State<SplashScreen> {
   late UserModel userModel;
   late TripModel tripModel;
 
-  RiveAnimationController? _controller;
+  late RiveAnimationController _biteController;
+  late RiveAnimationController _earController;
 
   @override
   void initState() {
     super.initState();
-    _controller = OneShotAnimation('bite', autoplay: false);
+    _biteController = OneShotAnimation('bite', autoplay: false);
+    _earController = OneShotAnimation('ear', autoplay: false);
     _initializeApp();
   }
 
@@ -42,7 +44,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _navigateToNextScreen() async {
     if (userModel.user != null) {
       setState(() {
-        _controller?.isActive = true;
+        _earController.isActive = true;
+        _biteController.isActive = true;
       });
       Future.delayed(const Duration(milliseconds: 1500), () {
         Navigator.of(context).pushReplacementNamed(RouteNames.home);
@@ -64,10 +67,10 @@ class _SplashScreenState extends State<SplashScreen> {
           height: MediaQuery.of(context).size.width * 1.5,
           width: MediaQuery.of(context).size.width * 1.5,
           child: RiveAnimation.asset(
-            controllers: [_controller!],
+            controllers: [_biteController, _earController],
             'assets/rive/hippo.riv',
             fit: BoxFit.cover,
-            animations: const ['wave', 'eye'],
+            animations: const ['wave'],
           ),
         ),
       ),
