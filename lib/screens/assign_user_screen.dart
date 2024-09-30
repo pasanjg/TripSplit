@@ -98,7 +98,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
 
   void showRefreshInviteCode() {
     UIHelper.of(context).showCustomAlertDialog(
-      title: 'Refresh Invite Code',
+      title: 'Refresh invite code',
       content: const Text('Are you sure you want to refresh the invite code?'),
       actions: [
         TextButton(

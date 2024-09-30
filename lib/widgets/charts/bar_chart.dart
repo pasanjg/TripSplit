@@ -40,8 +40,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
     const double spacing = 50.0;
     final double totalWidth = widget.xValues.length * spacing;
 
-    if (totalWidth < (MediaQuery.of(context).size.width - 60.0)) {
-      return MediaQuery.of(context).size.width - 60.0;
+    if (totalWidth < (MediaQuery.of(context).size.width - 90.0)) {
+      return MediaQuery.of(context).size.width - 90.0;
     }
 
     return totalWidth;
