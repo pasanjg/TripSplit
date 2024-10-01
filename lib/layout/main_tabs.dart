@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tripsplit/common/helpers/ui_helper.dart';
+import 'package:tripsplit/widgets/connectivity_indicator.dart';
 
 import '../common/constants/constants.dart';
 import '../routes/route.dart';
@@ -133,8 +134,15 @@ class _MainTabsState extends State<MainTabs> {
             );
           }).toList(),
         ),
-        body: Center(
-          child: _tabView[currentTabIndex],
+        body: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: _tabView[currentTabIndex],
+              ),
+            ),
+            const ConnectivityIndicator(),
+          ],
         ),
       ),
     );

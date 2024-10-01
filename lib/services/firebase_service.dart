@@ -1,15 +1,16 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:image_picker/image_picker.dart';
 
-import '../entities/user.dart';
 
 class FirebaseService {
   FirebaseService._();
 
-  static final instance = FirebaseService._();
+  static final FirebaseService instance = FirebaseService._();
 
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -25,71 +26,20 @@ class FirebaseService {
 
   // Stream<auth.User?> get authStateChanges => auth.authStateChanges();
 
-  Future<firebase_auth.UserCredential> createUserWithEmailAndPassword({
-    required String email,
-    required String password,
-  }) async {
-    return await auth.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
+  Future<String> uploadFile(XFile xFile, Reference ref) async {
+    final String extension = xFile.path.split('.').last;
+    final File file = File(xFile.path);
+    final metadata = SettableMetadata(
+      contentType: 'image/$extension',
+      customMetadata: {
+        'picked-file-path': file.path,
+        'picked-file-user': auth.currentUser!.uid
+      },
     );
-  }
 
-  Future<firebase_auth.UserCredential> loginFirebaseEmail({
-    required String email,
-    required String password,
-  }) async {
-    return await auth.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-  }
+    final uploadTask = ref.putFile(file, metadata);
+    await uploadTask.whenComplete(() {});
 
-  Future<void> logout() async {
-    await auth.signOut();
-  }
-
-  Future<void> saveUserToFirestore(User user) async {
-    final token = await messaging.getToken();
-    user.deviceToken = token;
-    debugPrint('token: $token');
-    await firestore.collection(User.collection).doc(user.id).set(user.toMap());
-  }
-
-  Future<void> saveDeviceTokenToFirestore() async {
-    final token = await messaging.getToken();
-    await firestore
-        .collection(User.collection)
-        .doc(auth.currentUser!.uid)
-        .update({User.fieldDeviceToken: token});
-  }
-
-  Future<User?> getUserFromFirestore() async {
-    if (auth.currentUser == null) {
-      return null;
-    }
-
-    final userSnapshot = await firestore
-        .collection(User.collection)
-        .doc(auth.currentUser!.uid)
-        .get();
-
-    return User.fromMap(
-      userSnapshot.id,
-      userSnapshot.data() as Map<String, dynamic>,
-    );
-  }
-
-  Future<List<User>> getUserGuestsFromFirestore(DocumentReference tripRef) async {
-    final userSnapshot = await firestore
-        .collection(User.collection)
-        .where(User.fieldCreatedBy, isEqualTo: auth.currentUser!.uid)
-        .get();
-
-    final users = userSnapshot.docs.map((doc) {
-      return User.fromMap(doc.id, doc.data());
-    }).toList();
-
-    return users.where((user) => !user.tripRefs.contains(tripRef)).toList();
+    return await ref.getDownloadURL();
   }
 }

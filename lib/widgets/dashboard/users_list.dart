@@ -38,7 +38,7 @@ class UsersList extends StatelessWidget {
       }
 
       return StreamBuilder(
-        stream: tripModel.usersStream,
+        stream: tripModel.tripUsersStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return CustomCard(

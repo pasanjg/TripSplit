@@ -33,7 +33,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       minY = 0;
       maxY = getMaxY(offset: 1).toDouble();
     });
-    print("minY: $minY, maxY: $maxY");
+    debugPrint("minY: $minY, maxY: $maxY");
   }
 
   double getChartWidth() {

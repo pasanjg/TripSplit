@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/models/user_model.dart';
+import 'package:tripsplit/providers/connectivity_provider.dart';
 
 import './routes/route.dart';
 import './screens/splash_screen.dart';
@@ -13,6 +15,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  FirebaseFirestore.instance.settings = const Settings(
+    persistenceEnabled: true,
   );
   runApp(MyApp());
 }
@@ -32,6 +37,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserModel>.value(value: _userModel),
         ChangeNotifierProvider<TripModel>.value(value: _tripModel),
+        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

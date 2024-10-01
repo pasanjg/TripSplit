@@ -43,7 +43,7 @@ class _LineChartWidgetState extends State<LineChartWidget> {
       minY = 0;
       maxY = getMaxX(offset: 1).toDouble();
     });
-    print("minX: $minX, maxX: $maxX, minY: $minY, maxY: $maxY");
+    debugPrint("minX: $minX, maxX: $maxX, minY: $minY, maxY: $maxY");
   }
 
   num getMinX({int offset = 0}) {

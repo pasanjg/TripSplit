@@ -53,6 +53,7 @@ dependencies:
   skeletonizer: ^1.4.2
   cached_network_image: ^3.4.1
   permission_handler: ^11.3.1
+  connectivity_plus: ^6.0.5
 
 dev_dependencies:
   flutter_test:
@@ -83,8 +84,6 @@ flutter:
   assets:
     - assets/images/
     - assets/rive/
-    - assets/fonts/NewAmsterdam/
-    - assets/fonts/Teko/
     - assets/fonts/Rubik/
     - assets/fonts/Inter/
 
@@ -111,10 +110,6 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   fonts:
-    - family: NewAmsterdam
-      fonts:
-        - asset: assets/fonts/NewAmsterdam/NewAmsterdam-Regular.ttf
-
     - family: Rubik
       fonts:
         - asset: assets/fonts/Rubik/Rubik-Light.ttf
@@ -127,18 +122,6 @@ flutter:
         - asset: assets/fonts/Rubik/Rubik-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/Rubik/Rubik-Bold.ttf
-          weight: 700
-
-    - family: Teko
-      fonts:
-        - asset: assets/fonts/Teko/Teko-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Teko/Teko-Regular.ttf
-        - asset: assets/fonts/Teko/Teko-Medium.ttf
-          weight: 500
-        - asset: assets/fonts/Teko/Teko-SemiBold.ttf
-          weight: 600
-        - asset: assets/fonts/Teko/Teko-Bold.ttf
           weight: 700
 
     - family: Inter

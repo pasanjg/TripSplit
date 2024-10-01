@@ -50,6 +50,7 @@ class Trip {
     this.endDate,
     this.userRefs = const [],
     this.inviteCode,
+    this.createdBy,
   });
 
   Trip.fromSnapshot(DocumentSnapshot snapshot)

@@ -1,13 +1,12 @@
-import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:tripsplit/common/helpers/helpers.dart';
 import 'package:tripsplit/entities/user.dart';
 import 'package:tripsplit/services/firebase_service.dart';
+import 'package:tripsplit/services/services.dart';
+import 'package:tripsplit/services/trip_service.dart';
+import 'package:tripsplit/services/user_service.dart';
 
 import '../entities/expense.dart';
 import '../entities/trip.dart';
@@ -17,7 +16,9 @@ class TripModel with ChangeNotifier {
   String? successMessage;
   String? errorMessage;
 
-  final FirebaseService _firebaseService = FirebaseService.instance;
+  final FirebaseService _firebaseService = Service.instance.firebase;
+  final TripService _tripService = Service.instance.trip;
+  final UserService _userService = Service.instance.user;
 
   bool get canAddUser =>
       selectedTrip != null &&
@@ -36,26 +37,7 @@ class TripModel with ChangeNotifier {
   Stream<List<Trip>> get userTripsStream {
     Stream<List<Trip>> stream;
     try {
-      stream = FirebaseFirestore.instance
-          .collection(User.collection)
-          .doc(_firebaseService.auth.currentUser!.uid)
-          .snapshots()
-          .asyncMap((snapshot) async {
-        final data = snapshot.data() as Map<String, dynamic>;
-        final tripRefs = (data[User.fieldTripRefs] as List<dynamic>)
-            .map((ref) => ref as DocumentReference)
-            .toList();
-
-        final trips = await Future.wait(tripRefs.map((tripRef) async {
-          final tripSnapshot = await tripRef.get();
-          return Trip.fromMap(
-            tripSnapshot.id,
-            tripSnapshot.data() as Map<String, dynamic>,
-          );
-        }));
-        trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
-        return trips;
-      });
+      stream = _tripService.getUserTripsStream();
     } catch (err) {
       debugPrint(err.toString());
       stream = const Stream.empty();
@@ -64,28 +46,10 @@ class TripModel with ChangeNotifier {
     return stream;
   }
 
-  Stream<List<User>> get usersStream {
+  Stream<List<User>> get tripUsersStream {
     Stream<List<User>> stream;
     try {
-      stream = FirebaseFirestore.instance
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id)
-          .snapshots()
-          .asyncMap((snapshot) async {
-        final data = snapshot.data() as Map<String, dynamic>;
-        final userRefs = (data[Trip.fieldUserRefs] as List<dynamic>)
-            .map((ref) => ref as DocumentReference)
-            .toList();
-
-        final users = await Future.wait(userRefs.map((userRef) async {
-          final userSnapshot = await userRef.get();
-          return User.fromMap(
-            userSnapshot.id,
-            userSnapshot.data() as Map<String, dynamic>,
-          );
-        }));
-        return users;
-      });
+      stream = _tripService.getTripUsersStream(selectedTrip!.id!);
     } catch (err) {
       debugPrint(err.toString());
       stream = const Stream.empty();
@@ -97,29 +61,7 @@ class TripModel with ChangeNotifier {
   Stream<Map<String, List<Expense>>> get tripExpensesStream {
     Stream<Map<String, List<Expense>>> stream;
     try {
-      stream = FirebaseFirestore.instance
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id)
-          .collection(Expense.collection)
-          .orderBy(Expense.fieldDate, descending: true)
-          .snapshots()
-          .asyncMap((snapshot) async {
-        final expenses = snapshot.docs.map((doc) {
-          return Expense.fromMap(doc.id, doc.data());
-        }).toList();
-
-        final groupedExpenses = <String, List<Expense>>{};
-        for (var expense in expenses) {
-          final dateKey = DateFormat.yMMMMd().format(expense.date!);
-          if (groupedExpenses.containsKey(dateKey)) {
-            groupedExpenses[dateKey]!.add(expense);
-          } else {
-            groupedExpenses[dateKey] = [expense];
-          }
-        }
-
-        return groupedExpenses;
-      });
+      stream = _tripService.getTripExpensesStream(selectedTrip!.id!);
     } catch (err) {
       debugPrint(err.toString());
       stream = const Stream.empty();
@@ -129,14 +71,20 @@ class TripModel with ChangeNotifier {
   }
 
   double getUserExpensesTotal(String userId) {
-    if (selectedTrip == null) return 0.0;
+    if (selectedTrip == null) {
+      return 0.0;
+    }
+
     return selectedTrip!.expenses
         .where((expense) => expense.userRef!.id == userId)
         .fold(0.0, (prev, expense) => prev + expense.amount!);
   }
 
   Map<String, List<Expense>> getUserExpenses(String userId) {
-    if (selectedTrip == null) return {};
+    if (selectedTrip == null) {
+      return {};
+    }
+
     return selectedTrip!.expenses
         .where((expense) => expense.userRef!.id == userId)
         .fold(<String, List<Expense>>{}, (prev, expense) {
@@ -162,18 +110,10 @@ class TripModel with ChangeNotifier {
         title: title,
         startDate: startDate,
         endDate: endDate,
+        createdBy: _firebaseService.auth.currentUser!.uid,
       );
 
-      trip.createdBy = _firebaseService.auth.currentUser!.uid;
-
-      DocumentReference tripRef = await _firebaseService.firestore
-          .collection(Trip.collection)
-          .add(trip.toMap());
-
-      await tripRef.update({Trip.fieldInviteCode: tripRef.id.substring(0, 6)});
-
-      String userId = _firebaseService.auth.currentUser!.uid;
-      await addUserToTripWithReference(tripRef.id, userId);
+      await _tripService.createTrip(trip);
       await getUserTrips();
 
       successMessage = 'Trip created successfully';
@@ -185,22 +125,7 @@ class TripModel with ChangeNotifier {
 
   Future<void> getUserTrips({Trip? selected}) async {
     try {
-      final user = await _firebaseService.firestore
-          .collection(User.collection)
-          .doc(_firebaseService.auth.currentUser!.uid)
-          .get();
-
-      final trips = await Future.wait(
-        user.get(User.fieldTripRefs).map<Future<Trip>>((tripRef) async {
-          DocumentSnapshot tripSnapshot = await tripRef.get();
-          return Trip.fromMap(
-            tripSnapshot.id,
-            tripSnapshot.data() as Map<String, dynamic>,
-          );
-        }),
-      );
-
-      trips.sort((a, b) => a.startDate!.compareTo(b.startDate!));
+      final List<Trip> trips = await _tripService.getUserTrips();
 
       if (selected != null) {
         await selectTrip(selected);
@@ -216,19 +141,179 @@ class TripModel with ChangeNotifier {
 
   Future<void> getTrip(String tripId) async {
     try {
-      final tripSnapshot = await _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(tripId)
-          .get();
+      selectedTrip = await _tripService.getTrip(tripId);
 
-      selectedTrip = Trip.fromMap(
-        tripSnapshot.id,
-        tripSnapshot.data() as Map<String, dynamic>,
-      );
       await selectedTrip!.loadExpenses();
       await selectedTrip!.loadUsers();
     } catch (err) {
       debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshInviteCode() async {
+    try {
+      final String randomCode = await _tripService.refreshInviteCode(selectedTrip!.id!);
+
+      selectedTrip!.inviteCode = randomCode;
+      successMessage = 'Invite code refreshed successfully';
+    } catch (err) {
+      errorMessage = 'Error refreshing invite code';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> joinTrip(String inviteCode) async {
+    clearMessages();
+    try {
+      Map<String, dynamic> result = await _tripService.joinTrip(inviteCode);
+      bool success = result['success'];
+      String message = result['message'];
+      Trip? trip = result['trip'];
+
+      if (success == true && trip != null) {
+        // success - trip joined
+        await getUserTrips();
+        await selectTrip(trip);
+        successMessage = message;
+      } else if(success == false && trip == null) {
+        // error - user already a member of the trip
+        errorMessage = message;
+      } else {
+        // error - invalid invite code
+        errorMessage = result.values.first;
+      }
+    } catch (err) {
+      errorMessage = 'Error joining trip';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> assignGuestUserToTrip({
+    required String firstname,
+    required String lastname,
+  }) async {
+    clearMessages();
+    try {
+      final user = User(
+        firstname: firstname,
+        lastname: lastname,
+        createdBy: _firebaseService.auth.currentUser!.uid,
+      );
+
+      selectedTrip = await _tripService.assignGuestUserToTrip(
+        user,
+        selectedTrip!,
+      );
+
+      await selectedTrip!.loadUsers();
+      successMessage = "${user.fullName} added successfully";
+    } catch (err) {
+      errorMessage = 'Error adding user';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> assignMultipleGuests(List<String> guestIds) async {
+    clearMessages();
+    try {
+      selectedTrip = await _tripService.assignMultipleGuests(
+        guestIds,
+        selectedTrip!,
+      );
+
+      await selectedTrip!.loadUsers();
+      successMessage = '${guestIds.length} user(s) added successfully';
+    } catch (err) {
+      errorMessage = 'Error adding users';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<List<User>> getUserGuests() async {
+    try {
+      return await _userService.getUserGuestsFromFirestore(selectedTrip!.id!);
+    } catch (err) {
+      debugPrint(err.toString());
+    }
+
+    return [];
+  }
+
+  Future<void> addOrUpdateExpense({
+    String? id,
+    required String title,
+    required String category,
+    required DateTime date,
+    required double amount,
+    required String userId,
+    String? receiptUrl,
+  }) async {
+    clearMessages();
+    try {
+      final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
+
+      final expense = Expense(
+        id: id,
+        title: title,
+        category: category,
+        date: date,
+        amount: amount,
+        userRef: userRef,
+        receiptUrl: receiptUrl,
+      );
+
+      if (id != null) {
+        await _tripService.updateExpenseRecord(selectedTrip!.id!, expense);
+      } else {
+        await _tripService.addExpenseRecord(selectedTrip!.id!, expense);
+      }
+
+      await selectedTrip!.loadExpenses();
+      successMessage = 'Expense record ${id != null ? 'updated' : 'added'} successfully';
+    } catch (err) {
+      errorMessage = 'Error ${id != null ? 'updating' : 'adding'} expense record';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> deleteExpense(String expenseId) async {
+    clearMessages();
+    try {
+      await _tripService.deleteExpenseRecord(selectedTrip!.id!, expenseId);
+
+      await selectedTrip!.loadExpenses();
+      successMessage = 'Expense record deleted successfully';
+    } catch (err) {
+      errorMessage = 'Error deleting expense record';
+      debugPrint(err.toString());
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<String?> uploadImage(XFile image) async {
+    clearMessages();
+    try {
+      final downloadUrl = await _tripService.uploadReceipt(image, selectedTrip!.id!);
+      successMessage = 'Image uploaded successfully';
+
+      return downloadUrl;
+    } catch (err) {
+      errorMessage = 'Error uploading image';
+      debugPrint(err.toString());
+      return null;
     } finally {
       notifyListeners();
     }
@@ -246,273 +331,6 @@ class TripModel with ChangeNotifier {
     }
   }
 
-  Future<void> refreshInviteCode() async {
-    try {
-      final randomCode = generateRandomCode(6);
-      await _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id)
-          .update({Trip.fieldInviteCode: randomCode});
-
-      selectedTrip!.inviteCode = randomCode;
-      successMessage = 'Invite code refreshed successfully';
-    } catch (err) {
-      errorMessage = 'Error refreshing invite code';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> joinTrip(String inviteCode) async {
-    clearMessages();
-    try {
-      final tripQuerySnapshot = await _firebaseService.firestore
-          .collection(Trip.collection)
-          .where(Trip.fieldInviteCode, isEqualTo: inviteCode)
-          .get();
-
-      if (tripQuerySnapshot.docs.isNotEmpty) {
-        final tripSnapshot = await tripQuerySnapshot.docs.first.reference.get();
-        final trip = Trip.fromMap(
-          tripSnapshot.id,
-          tripSnapshot.data() as Map<String, dynamic>,
-        );
-
-        final userRef = _firebaseService.firestore
-            .collection(User.collection)
-            .doc(_firebaseService.auth.currentUser!.uid);
-
-        if (trip.userRefs.contains(userRef)) {
-          errorMessage = 'You are already a member of this trip';
-          notifyListeners();
-          return;
-        }
-
-        await addUserToTripWithReference(
-          trip.id!,
-          _firebaseService.auth.currentUser!.uid,
-        );
-        await getUserTrips();
-        await selectTrip(trip);
-        successMessage = 'Trip joined successfully';
-      } else {
-        errorMessage = 'The invite code is invalid or expired. Please try again with a valid code';
-      }
-    } catch (err) {
-      errorMessage = 'Error joining trip';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> assignGuestUser({
-    required String firstname,
-    required String lastname,
-  }) async {
-    clearMessages();
-    try {
-      final user = User(
-        firstname: firstname,
-        lastname: lastname,
-        createdBy: _firebaseService.auth.currentUser!.uid,
-      );
-
-      DocumentReference userRef = await _firebaseService.firestore
-          .collection(User.collection)
-          .add(user.toMap());
-
-      await addUserToTripWithReference(selectedTrip!.id!, userRef.id);
-      selectedTrip!.userRefs.add(userRef);
-      await selectedTrip!.loadUsers();
-
-      successMessage = "${user.fullName} added successfully";
-    } catch (err) {
-      errorMessage = 'Error adding user';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> assignMultipleGuests(List<String> guestIds) async {
-    clearMessages();
-    try {
-      final tripRef = _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id);
-
-      final userRefs = guestIds
-          .map((userId) => _firebaseService.firestore
-              .collection(User.collection)
-              .doc(userId))
-          .toList();
-
-      await _firebaseService.firestore.runTransaction((transaction) async {
-        for (var userRef in userRefs) {
-          // Add the trip reference to the user
-          transaction.update(userRef, {
-            User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
-          });
-
-          // Add the user reference to the trip
-          transaction.update(tripRef, {
-            Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
-          });
-        }
-      });
-
-      selectedTrip!.userRefs.addAll(userRefs);
-      await selectedTrip!.loadUsers();
-
-      successMessage = '${guestIds.length} user(s) added successfully';
-    } catch (err) {
-      errorMessage = 'Error adding users';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<List<User>> getUserGuests() async {
-    try {
-      final tripRef = _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id);
-
-      return await _firebaseService.getUserGuestsFromFirestore(tripRef);
-    } catch (err) {
-      debugPrint(err.toString());
-    }
-
-    return [];
-  }
-
-  Future<void> addUserToTripWithReference(String tripId, String userId) async {
-    try {
-      DocumentReference userRef =
-          _firebaseService.firestore.collection(User.collection).doc(userId);
-      DocumentReference tripRef =
-          _firebaseService.firestore.collection(Trip.collection).doc(tripId);
-
-      await _firebaseService.firestore.runTransaction((transaction) async {
-        // Add the trip reference to the user
-        transaction.update(userRef, {
-          User.fieldTripRefs: FieldValue.arrayUnion([tripRef])
-        });
-
-        // Add the user reference to the trip
-        transaction.update(tripRef, {
-          Trip.fieldUserRefs: FieldValue.arrayUnion([userRef])
-        });
-      });
-    } catch (err) {
-      debugPrint(err.toString());
-    }
-  }
-
-  Future<void> addOrUpdateExpense({
-    String? id,
-    required String title,
-    required String category,
-    required DateTime date,
-    required double amount,
-    required String userId,
-    String? receiptUrl,
-  }) async {
-    clearMessages();
-    try {
-      final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
-
-      final expense = Expense(
-        title: title,
-        category: category,
-        date: date,
-        amount: amount,
-        userRef: userRef,
-        receiptUrl: receiptUrl,
-      );
-
-      if (id != null) {
-        await _firebaseService.firestore
-            .collection(Trip.collection)
-            .doc(selectedTrip!.id)
-            .collection(Expense.collection)
-            .doc(id)
-            .update(expense.toMap());
-      } else {
-        await _firebaseService.firestore
-            .collection(Trip.collection)
-            .doc(selectedTrip!.id)
-            .collection(Expense.collection)
-            .add(expense.toMap());
-      }
-
-      await selectedTrip!.loadExpenses();
-      successMessage = 'Expense record ${id != null ? 'updated' : 'added'} successfully';
-    } catch (err) {
-      errorMessage = 'Error ${id != null ? 'updating' : 'adding'} expense record';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<void> deleteExpense(String expenseId) async {
-    clearMessages();
-    try {
-      await _firebaseService.firestore
-          .collection(Trip.collection)
-          .doc(selectedTrip!.id)
-          .collection(Expense.collection)
-          .doc(expenseId)
-          .delete();
-
-      await selectedTrip!.loadExpenses();
-      successMessage = 'Expense record deleted successfully';
-    } catch (err) {
-      errorMessage = 'Error deleting expense record';
-      debugPrint(err.toString());
-    } finally {
-      notifyListeners();
-    }
-  }
-
-  Future<String?> uploadImage(XFile image) async {
-    clearMessages();
-    try {
-      final String extension = image.path.split('.').last;
-      final ref = _firebaseService.storage
-          .ref()
-          .child(Trip.collection)
-          .child(selectedTrip!.id!)
-          .child('receipts')
-          .child('receipt_${DateTime.now().millisecondsSinceEpoch}.$extension');
-
-      final File file = File(image.path);
-      final metadata = SettableMetadata(
-        contentType: 'image/$extension',
-        customMetadata: {
-          'picked-file-path': file.path,
-          'picked-file-user': _firebaseService.auth.currentUser!.uid
-        },
-      );
-
-      final uploadTask = ref.putFile(file, metadata);
-      await uploadTask.whenComplete(() {});
-
-      successMessage = 'Image uploaded successfully';
-      return await ref.getDownloadURL();
-    } catch (err) {
-      errorMessage = 'Error uploading image';
-      debugPrint(err.toString());
-      return null;
-    } finally {
-      notifyListeners();
-    }
-  }
-
   void clearSelectedTrip() {
     selectedTrip = null;
     notifyListeners();
@@ -521,6 +339,5 @@ class TripModel with ChangeNotifier {
   void clearMessages() {
     successMessage = null;
     errorMessage = null;
-    // notifyListeners();
   }
 }

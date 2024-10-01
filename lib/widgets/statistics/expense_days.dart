@@ -80,12 +80,13 @@ class _ExpenseDaysState extends State<ExpenseDays> {
       },
     );
 
+    double total = 0.0;
     final dateRange = generateDateRange(dates).map((date) {
       return DateFormat(dateFormat).format(date);
     }).toList();
     final dateAmounts = dateRange.map((date) {
       final amount = dateSum[date] ?? 0.0;
-      totalExpenses += amount;
+      total += amount;
       return amount;
     }).toList();
 
@@ -106,6 +107,7 @@ class _ExpenseDaysState extends State<ExpenseDays> {
 
     setState(() {
       title = "Total Spending";
+      totalExpenses = total;
       this.barChartGroupData = barChartGroupData;
       this.xValues = xValues;
     });
@@ -146,6 +148,7 @@ class _ExpenseDaysState extends State<ExpenseDays> {
     final barChartGroupData = dateAmounts.asMap().entries.map((entry) {
       final index = entry.key;
       final amount = entry.value;
+
       return BarChartGroupData(
         x: index,
         barRods: [
@@ -185,6 +188,7 @@ class _ExpenseDaysState extends State<ExpenseDays> {
     final barChartGroupData = userExpenses.asMap().entries.map((entry) {
       final index = entry.key;
       final amount = entry.value;
+
       return BarChartGroupData(
         x: index,
         barRods: [

@@ -86,7 +86,7 @@ class _JoinTripScreenState extends State<JoinTripScreen> with ValidateMixin {
                 const SizedBox(height: 10.0),
                 Center(
                   child: Text(
-                    'Enter the code shared by the trip owner to join the trip',
+                    'Enter the case-sensitive code shared by the trip owner to join the trip.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14.0,

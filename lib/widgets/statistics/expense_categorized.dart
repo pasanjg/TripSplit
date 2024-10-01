@@ -75,12 +75,13 @@ class _ExpenseCategorizedState extends State<ExpenseCategorized> {
       );
     }).toList();
 
-    final chartData = expenses.map((expense) {
-      final category = Category.getCategory(expense.category!);
+    final chartData = categories.map((category) {
+      final categoryExpenses = expenses.where((expense) => expense.category == category).toList();
+      final totalCategoryExpenses = categoryExpenses.fold<double>(0, (prev, expense) => prev + expense.amount!);
       return PieChartSectionData(
-        color: category.color,
-        value: expense.amount! / total,
-        title: '${(expense.amount! / total * 100).toStringAsFixed(2)}%',
+        color: Category.getCategory(category).color,
+        value: totalCategoryExpenses / total,
+        title: '${(totalCategoryExpenses / total * 100).toStringAsFixed(2)}%',
         radius: 50.0,
         titleStyle: const TextStyle(
           fontSize: 16.0,
@@ -116,12 +117,13 @@ class _ExpenseCategorizedState extends State<ExpenseCategorized> {
       );
     }).toList();
 
-    final chartData = totalUserExpenses.map((expense) {
-      final category = Category.getCategory(expense.category!);
+    final chartData = categories.map((category) {
+      final categoryExpenses = totalUserExpenses.where((expense) => expense.category == category).toList();
+      final totalCategoryExpenses = categoryExpenses.fold<double>(0, (prev, expense) => prev + expense.amount!);
       return PieChartSectionData(
-        color: category.color,
-        value: expense.amount! / total,
-        title: '${(expense.amount! / total * 100).toStringAsFixed(2)}%',
+        color: Category.getCategory(category).color,
+        value: totalCategoryExpenses / total,
+        title: '${(totalCategoryExpenses / total * 100).toStringAsFixed(2)}%',
         radius: 50.0,
         titleStyle: const TextStyle(
           fontSize: 16.0,
@@ -157,6 +159,7 @@ class _ExpenseCategorizedState extends State<ExpenseCategorized> {
     final chartData = users.map((user) {
       final userExpenses = expenses.where((expense) => expense.userRef!.id == user.id).toList();
       final totalUserExpenses = userExpenses.fold<double>(0, (prev, expense) => prev + expense.amount!);
+
       return PieChartSectionData(
         color: generateColorFromString(user.id!),
         value: totalUserExpenses / total,

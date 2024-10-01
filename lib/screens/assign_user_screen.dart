@@ -60,7 +60,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
       Overlay.of(context).insert(loader!);
 
       final tripModel = Provider.of<TripModel>(context, listen: false);
-      await tripModel.assignGuestUser(
+      await tripModel.assignGuestUserToTrip(
         firstname: firstname!,
         lastname: lastname!,
       );
@@ -440,7 +440,7 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                                   tripModel.selectedTrip!.inviteCode![index],
                                   style: const TextStyle(
                                     fontFamily: 'Rubik',
-                                    fontSize: 24.0,
+                                    fontSize: 22.0,
                                     fontWeight: FontWeight.w800,
                                   ),
                                 ),
@@ -477,17 +477,11 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                     ),
                     trailing: Row(
                       children: [
-                        Icon(
-                          Icons.group_rounded,
-                          color: Theme.of(context).dividerColor,
-                        ),
+                        const Icon(Icons.group_rounded),
                         const SizedBox(width: 8.0),
                         Text(
                           '${tripModel.selectedTrip!.users.length}',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Theme.of(context).dividerColor,
-                          ),
+                          style: const TextStyle(fontSize: 16.0),
                         ),
                       ],
                     ),

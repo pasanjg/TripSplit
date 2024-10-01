@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:flutter/material.dart';
-import 'package:tripsplit/services/firebase_service.dart';
+import 'package:tripsplit/services/services.dart';
+import 'package:tripsplit/services/user_service.dart';
 
 import '../entities/user.dart';
 
@@ -9,9 +10,7 @@ class UserModel with ChangeNotifier {
   String? successMessage;
   String? errorMessage;
 
-  final FirebaseService _firebaseService = FirebaseService.instance;
-
-  // final authStateChanges = FirebaseService().authStateChanges;
+  final UserService _userService = Service.instance.user;
 
   bool get isLoggedIn => user != null;
 
@@ -23,7 +22,7 @@ class UserModel with ChangeNotifier {
   }) async {
     clearMessages();
     try {
-      final credential = await _firebaseService.createUserWithEmailAndPassword(
+      final credential = await _userService.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -55,7 +54,7 @@ class UserModel with ChangeNotifier {
   Future<void> login({required String email, required String password}) async {
     clearMessages();
     try {
-      await _firebaseService.loginFirebaseEmail(
+      await _userService.loginFirebaseEmail(
         email: email,
         password: password,
       );
@@ -80,7 +79,7 @@ class UserModel with ChangeNotifier {
 
   Future<void> logout() async {
     try {
-      await _firebaseService.logout();
+      await _userService.logout();
       user = null;
     } catch (err) {
       debugPrint(err.toString());
@@ -91,7 +90,7 @@ class UserModel with ChangeNotifier {
 
   Future<void> getUser() async {
     try {
-      final user = await _firebaseService.getUserFromFirestore();
+      final user = await _userService.getUserFromFirestore();
       setUser(user);
     } catch (err) {
       debugPrint(err.toString());
@@ -107,7 +106,7 @@ class UserModel with ChangeNotifier {
 
   Future<void> saveUser(User user) async {
     try {
-      await _firebaseService.saveUserToFirestore(user);
+      await _userService.saveUserToFirestore(user);
 
       // TODO: Save user to Box
     } catch (err) {
@@ -117,7 +116,7 @@ class UserModel with ChangeNotifier {
 
   Future<void> saveDeviceToken() async {
     try {
-      await _firebaseService.saveDeviceTokenToFirestore();
+      await _userService.saveDeviceTokenToFirestore();
     } catch (err) {
       debugPrint(err.toString());
     }
