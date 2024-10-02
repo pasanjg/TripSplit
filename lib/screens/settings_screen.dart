@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/constants/constants.dart';
 import 'package:tripsplit/widgets/custom/custom_card.dart';
@@ -14,6 +15,26 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  PackageInfo _packageInfo = PackageInfo(
+    appName: '',
+    packageName: '',
+    version: '',
+    buildNumber: '',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _initPackageInfo();
+  }
+
+  Future<void> _initPackageInfo() async {
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,26 +95,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               ),
-              CustomListItem(
-                onTap: () {},
-                leading: const Icon(Icons.auto_awesome),
-                content: const Text("Theme"),
-                trailing: CircleAvatar(
-                  radius: 12.0,
-                  backgroundColor: Theme.of(context).primaryColor,
-                ),
-              ),
-              CustomListItem(
-                onTap: () {},
-                leading: const Icon(Icons.money),
-                content: const Text("Currency"),
-                trailing: const Text(
-                  "LKR",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+              // CustomListItem(
+              //   onTap: () {},
+              //   leading: const Icon(Icons.auto_awesome),
+              //   content: const Text("Theme"),
+              //   trailing: CircleAvatar(
+              //     radius: 12.0,
+              //     backgroundColor: Theme.of(context).primaryColor,
+              //   ),
+              // ),
+              // CustomListItem(
+              //   onTap: () {},
+              //   leading: const Icon(Icons.money),
+              //   content: const Text("Currency"),
+              //   trailing: const Text(
+              //     "LKR",
+              //     style: TextStyle(
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
               Consumer<UserModel>(builder: (context, userModel, _) {
                 return CustomListItem(
                   onTap: () async {
@@ -116,14 +137,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   content: Text(userModel.isLoggedIn ? "Logout" : "Login"),
                 );
               }),
-              const Padding(
-                padding: EdgeInsets.only(top: 20.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Version 0.1.0",
-                      style: TextStyle(
+                      "Version ${_packageInfo.version}",
+                      style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 13.0,
                       ),
