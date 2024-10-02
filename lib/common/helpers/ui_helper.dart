@@ -165,13 +165,11 @@ class UIHelper {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       contentPadding: contentPadding,
-      title: Center(
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18.0,
-          ),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 18.0,
         ),
       ),
       content: SingleChildScrollView(

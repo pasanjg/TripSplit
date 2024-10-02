@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tripsplit/services/connectivity_service.dart';
 
@@ -5,6 +7,7 @@ class ConnectivityProvider extends ChangeNotifier {
   bool _isOnline = true;
   bool _isFirstTime = true;
   bool _showBackOnline = false;
+  StreamSubscription<bool>? _subscription;
 
   final ConnectivityService _connectivityService = ConnectivityService.instance;
 
@@ -13,7 +16,7 @@ class ConnectivityProvider extends ChangeNotifier {
   bool get showBackOnline => !_isFirstTime && _showBackOnline;
 
   ConnectivityProvider() {
-    _connectivityService.onConnectivityChanged.listen((bool result) {
+    _subscription = _connectivityService.onConnectivityChanged.listen((bool result) {
       _isOnline = result;
       notifyListeners();
 
@@ -28,6 +31,12 @@ class ConnectivityProvider extends ChangeNotifier {
         });
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   Future<void> checkConnectivity() async {

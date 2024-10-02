@@ -15,7 +15,7 @@ class TripService {
   final FirebaseService _firebaseService = FirebaseService.instance;
 
   Stream<List<User>> getTripUsersStream(String tripId) {
-    return FirebaseFirestore.instance
+    return _firebaseService.firestore
         .collection(Trip.collection)
         .doc(tripId)
         .snapshots()

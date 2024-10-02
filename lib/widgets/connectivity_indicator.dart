@@ -10,7 +10,7 @@ class ConnectivityIndicator extends StatelessWidget {
     UIHelper.of(context).showCustomAlertDialog(
       title: 'No internet connection',
       content: const Text(
-        'Please check your internet connection. You can still use the app in offline mode with limited features.'
+        'Please check your internet connection. You can still use the app in offline mode with limited features.\n\n'
         'Your data will be synced once you are back online.',
       ),
       actions: [

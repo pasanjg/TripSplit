@@ -105,8 +105,8 @@ class _ImageUploaderState extends State<ImageUploader> {
     if (imageUrl != null) {
       widget.onUpload(imageUrl!);
     } else {
-      if (imageUrl == null) {
-        UIHelper.of(context).showSnackBar('Failed to upload image', error: true);
+      if (imageUrl == null || tripModel.errorMessage == null) {
+        UIHelper.of(context).showSnackBar(tripModel.errorMessage ?? 'Failed to upload image', error: true);
       }
     }
 

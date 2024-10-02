@@ -6,6 +6,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tripsplit/models/trip_model.dart';
 import 'package:tripsplit/models/user_model.dart';
 import 'package:tripsplit/providers/connectivity_provider.dart';
+import 'package:tripsplit/services/services.dart';
 
 import './routes/route.dart';
 import './screens/splash_screen.dart';
@@ -16,8 +17,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseFirestore.instance.settings = const Settings(
+  Service.instance.firebase.firestore.settings = const Settings(
     persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
   runApp(MyApp());
 }

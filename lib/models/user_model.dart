@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 import 'package:flutter/material.dart';
+import 'package:tripsplit/services/connectivity_service.dart';
 import 'package:tripsplit/services/services.dart';
 import 'package:tripsplit/services/user_service.dart';
 
@@ -11,6 +12,7 @@ class UserModel with ChangeNotifier {
   String? errorMessage;
 
   final UserService _userService = Service.instance.user;
+  final ConnectivityService _connectivityService = Service.instance.connectivity;
 
   bool get isLoggedIn => user != null;
 
@@ -22,6 +24,14 @@ class UserModel with ChangeNotifier {
   }) async {
     clearMessages();
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to register';
+        notifyListeners();
+        return;
+      }
+
       final credential = await _userService.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -54,6 +64,14 @@ class UserModel with ChangeNotifier {
   Future<void> login({required String email, required String password}) async {
     clearMessages();
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to login';
+        notifyListeners();
+        return;
+      }
+
       await _userService.loginFirebaseEmail(
         email: email,
         password: password,
@@ -116,7 +134,13 @@ class UserModel with ChangeNotifier {
 
   Future<void> saveDeviceToken() async {
     try {
-      await _userService.saveDeviceTokenToFirestore();
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (isOnline) {
+        await _userService.saveDeviceTokenToFirestore();
+      } else {
+        _userService.saveDeviceTokenToFirestore();
+      }
     } catch (err) {
       debugPrint(err.toString());
     }

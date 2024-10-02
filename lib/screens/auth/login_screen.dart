@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tripsplit/common/extensions/extensions.dart';
 import 'package:tripsplit/mixins/validate_mixin.dart';
+import 'package:tripsplit/widgets/connectivity_indicator.dart';
 
 import '../../common/helpers/ui_helper.dart';
 import '../../common/constants/constants.dart';
@@ -195,6 +196,7 @@ class _LoginScreenState extends State<LoginScreen> with ValidateMixin {
               ),
             ),
           ),
+          const ConnectivityIndicator(),
         ],
       ),
     );

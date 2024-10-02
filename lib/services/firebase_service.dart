@@ -24,8 +24,6 @@ class FirebaseService {
 
   FirebaseStorage get storage => FirebaseStorage.instance;
 
-  // Stream<auth.User?> get authStateChanges => auth.authStateChanges();
-
   Future<String> uploadFile(XFile xFile, Reference ref) async {
     final String extension = xFile.path.split('.').last;
     final File file = File(xFile.path);

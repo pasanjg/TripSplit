@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:tripsplit/entities/user.dart';
+import 'package:tripsplit/services/connectivity_service.dart';
 import 'package:tripsplit/services/firebase_service.dart';
 import 'package:tripsplit/services/services.dart';
 import 'package:tripsplit/services/trip_service.dart';
@@ -19,6 +20,7 @@ class TripModel with ChangeNotifier {
   final FirebaseService _firebaseService = Service.instance.firebase;
   final TripService _tripService = Service.instance.trip;
   final UserService _userService = Service.instance.user;
+  final ConnectivityService _connectivityService = Service.instance.connectivity;
 
   bool get canAddUser =>
       selectedTrip != null &&
@@ -113,10 +115,17 @@ class TripModel with ChangeNotifier {
         createdBy: _firebaseService.auth.currentUser!.uid,
       );
 
-      await _tripService.createTrip(trip);
-      await getUserTrips();
+      bool isOnline = await _connectivityService.checkConnectivity();
 
-      successMessage = 'Trip created successfully';
+      if (isOnline) {
+        await _tripService.createTrip(trip);
+        successMessage = 'Trip created successfully';
+      } else {
+        _tripService.createTrip(trip);
+        successMessage = 'Trip created in offline mode';
+      }
+
+      await getUserTrips();
     } catch (err) {
       errorMessage = 'Error creating trip';
       debugPrint("Error creating trip: $err");
@@ -154,6 +163,14 @@ class TripModel with ChangeNotifier {
 
   Future<void> refreshInviteCode() async {
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to refresh the invite code';
+        notifyListeners();
+        return;
+      }
+
       final String randomCode = await _tripService.refreshInviteCode(selectedTrip!.id!);
 
       selectedTrip!.inviteCode = randomCode;
@@ -169,6 +186,14 @@ class TripModel with ChangeNotifier {
   Future<void> joinTrip(String inviteCode) async {
     clearMessages();
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to join a trip';
+        notifyListeners();
+        return;
+      }
+
       Map<String, dynamic> result = await _tripService.joinTrip(inviteCode);
       bool success = result['success'];
       String message = result['message'];
@@ -200,6 +225,14 @@ class TripModel with ChangeNotifier {
   }) async {
     clearMessages();
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to add a user';
+        notifyListeners();
+        return;
+      }
+
       final user = User(
         firstname: firstname,
         lastname: lastname,
@@ -224,6 +257,14 @@ class TripModel with ChangeNotifier {
   Future<void> assignMultipleGuests(List<String> guestIds) async {
     clearMessages();
     try {
+      final isOnline = await _connectivityService.checkConnectivity();
+
+      if (!isOnline) {
+        errorMessage = 'You need to be online to add users';
+        notifyListeners();
+        return;
+      }
+
       selectedTrip = await _tripService.assignMultipleGuests(
         guestIds,
         selectedTrip!,
@@ -261,6 +302,7 @@ class TripModel with ChangeNotifier {
     clearMessages();
     try {
       final userRef = _firebaseService.firestore.collection(User.collection).doc(userId);
+      bool isOnline = await _connectivityService.checkConnectivity();
 
       final expense = Expense(
         id: id,
@@ -272,14 +314,25 @@ class TripModel with ChangeNotifier {
         receiptUrl: receiptUrl,
       );
 
-      if (id != null) {
-        await _tripService.updateExpenseRecord(selectedTrip!.id!, expense);
+      final operation = id != null
+          ? _tripService.updateExpenseRecord(selectedTrip!.id!, expense)
+          : _tripService.addExpenseRecord(selectedTrip!.id!, expense);
+
+      if (isOnline) {
+        await operation;
       } else {
-        await _tripService.addExpenseRecord(selectedTrip!.id!, expense);
+        operation;
+
+        if (id == null) {
+          selectedTrip!.expenses.add(expense);
+        } else {
+          final index = selectedTrip!.expenses.indexWhere((e) => e.id == id);
+          selectedTrip!.expenses[index] = expense;
+        }
       }
 
       await selectedTrip!.loadExpenses();
-      successMessage = 'Expense record ${id != null ? 'updated' : 'added'} successfully';
+      successMessage = 'Expense record ${id != null ? 'updated' : 'added'} successfully ${isOnline ? '' : 'in offline mode'}';
     } catch (err) {
       errorMessage = 'Error ${id != null ? 'updating' : 'adding'} expense record';
       debugPrint(err.toString());
@@ -291,10 +344,17 @@ class TripModel with ChangeNotifier {
   Future<void> deleteExpense(String expenseId) async {
     clearMessages();
     try {
-      await _tripService.deleteExpenseRecord(selectedTrip!.id!, expenseId);
+      final isOnline = await _connectivityService.checkConnectivity();
 
-      await selectedTrip!.loadExpenses();
-      successMessage = 'Expense record deleted successfully';
+      if (isOnline) {
+        await _tripService.deleteExpenseRecord(selectedTrip!.id!, expenseId);
+        await selectedTrip!.loadExpenses();
+        successMessage = 'Expense record deleted successfully';
+      } else {
+        _tripService.deleteExpenseRecord(selectedTrip!.id!, expenseId);
+        await selectedTrip!.loadExpenses();
+        successMessage = 'Expense record deleted in offline mode';
+      }
     } catch (err) {
       errorMessage = 'Error deleting expense record';
       debugPrint(err.toString());
@@ -305,6 +365,14 @@ class TripModel with ChangeNotifier {
 
   Future<String?> uploadImage(XFile image) async {
     clearMessages();
+    final isOnline = await _connectivityService.checkConnectivity();
+
+    if (!isOnline) {
+      errorMessage = 'You need to be online to upload an image';
+      notifyListeners();
+      return null;
+    }
+
     try {
       final downloadUrl = await _tripService.uploadReceipt(image, selectedTrip!.id!);
       successMessage = 'Image uploaded successfully';
