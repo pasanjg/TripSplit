@@ -11,9 +11,11 @@ class Service {
   static final Service instance = Service._();
 
   final FirebaseService firebase = FirebaseService.instance;
+
   final ConnectivityService connectivity = ConnectivityService.instance;
-  final DataService data = DataService.instance;
   final LocalStorageService localStorage = LocalStorageService.instance;
+
+  final DataService data = DataService.instance;
   final UserService user = UserService.instance;
   final TripService trip = TripService.instance;
 }

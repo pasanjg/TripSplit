@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
@@ -15,6 +16,8 @@ class FirebaseService {
   final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseCrashlytics _crashlytics = FirebaseCrashlytics.instance;
 
   firebase_auth.FirebaseAuth get auth => _auth;
 
@@ -22,7 +25,9 @@ class FirebaseService {
 
   FirebaseMessaging get messaging => _messaging;
 
-  FirebaseStorage get storage => FirebaseStorage.instance;
+  FirebaseStorage get storage => _storage;
+
+  FirebaseCrashlytics get crashlytics => _crashlytics;
 
   Future<String> uploadFile(XFile xFile, Reference ref) async {
     final String extension = xFile.path.split('.').last;
