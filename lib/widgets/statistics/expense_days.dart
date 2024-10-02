@@ -29,6 +29,7 @@ class _ExpenseDaysState extends State<ExpenseDays> {
   double totalExpenses = 0.0;
   late String title = '';
   late SpendingType spendingType;
+  bool hideEmptyBars = false;
 
   final String dateFormat = 'MMM d';
 
@@ -90,6 +91,19 @@ class _ExpenseDaysState extends State<ExpenseDays> {
       return amount;
     }).toList();
 
+    if (hideEmptyBars) {
+      final filteredDateAmounts = dateAmounts.where((amount) => amount > 0).toList();
+      final filteredDateRange = dateRange.where((date) {
+        final index = dateRange.indexOf(date);
+        return filteredDateAmounts.contains(dateAmounts[index]);
+      }).toList();
+
+      dateAmounts.clear();
+      dateAmounts.addAll(filteredDateAmounts);
+      dateRange.clear();
+      dateRange.addAll(filteredDateRange);
+    }
+
     final barChartGroupData = dateAmounts.asMap().entries.map((entry) {
       final index = entry.key;
       final amount = entry.value;
@@ -145,6 +159,19 @@ class _ExpenseDaysState extends State<ExpenseDays> {
       return amount;
     }).toList();
 
+    if (hideEmptyBars) {
+      final filteredDateAmounts = dateAmounts.where((amount) => amount > 0).toList();
+      final filteredDateRange = dateRange.where((date) {
+        final index = dateRange.indexOf(date);
+        return filteredDateAmounts.contains(dateAmounts[index]);
+      }).toList();
+
+      dateAmounts.clear();
+      dateAmounts.addAll(filteredDateAmounts);
+      dateRange.clear();
+      dateRange.addAll(filteredDateRange);
+    }
+
     final barChartGroupData = dateAmounts.asMap().entries.map((entry) {
       final index = entry.key;
       final amount = entry.value;
@@ -185,6 +212,17 @@ class _ExpenseDaysState extends State<ExpenseDays> {
       total += amount;
     }
 
+    if (hideEmptyBars) {
+      final filteredUserExpenses = userExpenses.where((amount) => amount > 0).toList();
+      final filteredUsers = users.where((user) {
+        final index = users.indexOf(user);
+        return filteredUserExpenses.contains(userExpenses[index]);
+      }).toList();
+
+      userExpenses.clear();
+      userExpenses.addAll(filteredUserExpenses);
+    }
+
     final barChartGroupData = userExpenses.asMap().entries.map((entry) {
       final index = entry.key;
       final amount = entry.value;
@@ -200,7 +238,7 @@ class _ExpenseDaysState extends State<ExpenseDays> {
     }).toList();
 
     final xValues = users.map((user) {
-      return "${user.firstname} ${user.lastname![0]}.";
+      return user.shortName;
     }).toList();
 
     setState(() {
@@ -230,9 +268,37 @@ class _ExpenseDaysState extends State<ExpenseDays> {
           ),
         ],
       ),
-      child: BarChartWidget(
-        barChartGroupData: barChartGroupData,
-        xValues: xValues,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'Hide empty bars',
+                style: TextStyle(
+                  fontSize: 13.0,
+                ),
+              ),
+              Transform.scale(
+                scale: 0.6,
+                child: Switch(
+                  value: hideEmptyBars,
+                  onChanged: (value) {
+                    setState(() {
+                      hideEmptyBars = value;
+                    });
+                    loadSpending();
+                  },
+                ),
+              ),
+            ],
+          ),
+          BarChartWidget(
+            barChartGroupData: barChartGroupData,
+            xValues: xValues,
+          ),
+        ],
       ),
     );
   }

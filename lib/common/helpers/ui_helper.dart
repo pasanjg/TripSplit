@@ -51,7 +51,7 @@ class UIHelper {
     ScaffoldMessenger.of(_context).showSnackBar(
       SnackBar(
         content: Text(message),
-        duration: duration ?? const Duration(seconds: 5),
+        duration: duration ?? Duration(seconds: error ? 5 : 3),
         backgroundColor: error ? Theme.of(_context).colorScheme.error : Colors.black,
         action: action,
       ),

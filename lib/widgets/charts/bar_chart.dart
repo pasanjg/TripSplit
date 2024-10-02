@@ -103,7 +103,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         ),
       );
 
-  Widget bottomTitleWidets(double value, TitleMeta meta) {
+  Widget bottomTitleWidgets(double value, TitleMeta meta) {
     String text;
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -147,7 +147,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: bottomTitleWidets,
+            getTitlesWidget: bottomTitleWidgets,
           ),
         ),
         leftTitles: AxisTitles(

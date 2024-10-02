@@ -24,6 +24,8 @@ class User {
 
   String get fullName => '$firstname $lastname';
 
+  String get shortName => '$firstname ${lastname![0]}.';
+
   String get initials => '${firstname![0]}${lastname![0]}'.toUpperCase();
 
   bool get mySelf => id == FirebaseService.instance.auth.currentUser!.uid;

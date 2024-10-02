@@ -151,7 +151,7 @@ class _ExpenseCategorizedState extends State<ExpenseCategorized> {
     final indicators = users.map((user) {
       return Indicator(
         color: generateColorFromString(user.id!),
-        text: "${user.firstname} ${user.lastname![0]}.",
+        text: user.shortName,
         isSquare: true,
       );
     }).toList();
