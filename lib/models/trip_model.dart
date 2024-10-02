@@ -117,14 +117,14 @@ class TripModel with ChangeNotifier {
 
       bool isOnline = await _connectivityService.checkConnectivity();
 
-      if (isOnline) {
-        await _tripService.createTrip(trip);
-        successMessage = 'Trip created successfully';
-      } else {
-        _tripService.createTrip(trip);
-        successMessage = 'Trip created in offline mode';
+      if (!isOnline) {
+        errorMessage = 'You need to be online to create a trip';
+        notifyListeners();
+        return;
       }
 
+      await _tripService.createTrip(trip);
+      successMessage = 'Trip created successfully';
       await getUserTrips();
     } catch (err) {
       errorMessage = 'Error creating trip';

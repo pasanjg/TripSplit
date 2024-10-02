@@ -160,6 +160,9 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
               child: Text(
                 tripModel.selectedTrip!.title!,
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
             ),
           ],

@@ -33,15 +33,15 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       minY = 0;
       maxY = getMaxY(offset: 1).toDouble();
     });
-    debugPrint("minY: $minY, maxY: $maxY");
   }
 
   double getChartWidth() {
     const double spacing = 50.0;
+    const double innerPadding = 90.0;
     final double totalWidth = widget.xValues.length * spacing;
 
-    if (totalWidth < (MediaQuery.of(context).size.width - 90.0)) {
-      return MediaQuery.of(context).size.width - 90.0;
+    if (totalWidth < (MediaQuery.of(context).size.width - innerPadding)) {
+      return MediaQuery.of(context).size.width - innerPadding;
     }
 
     return totalWidth;
@@ -54,8 +54,6 @@ class _BarChartWidgetState extends State<BarChartWidget> {
       child: Padding(
         padding: const EdgeInsets.only(
           top: 25.0,
-          bottom: 0,
-          left: 0,
           right: 25.0,
         ),
         child: SizedBox(
@@ -105,7 +103,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         ),
       );
 
-  Widget getTitles(double value, TitleMeta meta) {
+  Widget bottomTitleWidets(double value, TitleMeta meta) {
     String text;
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -149,7 +147,7 @@ class _BarChartWidgetState extends State<BarChartWidget> {
           sideTitles: SideTitles(
             showTitles: true,
             reservedSize: 30,
-            getTitlesWidget: getTitles,
+            getTitlesWidget: bottomTitleWidets,
           ),
         ),
         leftTitles: AxisTitles(

@@ -67,7 +67,7 @@ class _PieChartWidgetState extends State<PieChartWidget> {
   List<PieChartSectionData> showingSections() {
     return List.generate(widget.chartData.length, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 12.0 : 12.0;
+      final fontSize = isTouched ? 14.0 : 12.0;
       final radius = isTouched ? 60.0 : 50.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 2)];
 

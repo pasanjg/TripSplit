@@ -1,6 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:tripsplit/common/constants/constants.dart';
+import 'package:tripsplit/common/extensions/extensions.dart';
+
 String generateRandomCode(int length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   final random = Random();
@@ -15,7 +18,7 @@ Color generateColorFromString(String input) {
   final r = (hash & 0xFF0000) >> 16;
   final g = (hash & 0x00FF00) >> 8;
   final b = (hash & 0x0000FF);
-  return Color.fromARGB(255, r, g, b);
+  return Color.fromARGB(255, r, g, b).darken(0.1);
 }
 
 List<DateTime> generateDateRange(List<DateTime> dates) {
