@@ -5,13 +5,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/models/user_model.dart';
-import 'package:tripsplit/providers/connectivity_provider.dart';
-import 'package:tripsplit/services/services.dart';
 
+import './common/extensions/extensions.dart';
+import './models/trip_model.dart';
+import './models/user_model.dart';
+import './providers/connectivity_provider.dart';
+import './services/services.dart';
 import './routes/route.dart';
 import './screens/splash_screen.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
@@ -73,11 +75,12 @@ class MyApp extends StatelessWidget {
           appBarTheme: AppBarTheme(
             backgroundColor: Theme.of(context).primaryColor,
             centerTitle: false,
-            titleTextStyle: const TextStyle(
-              color: Colors.black,
+            titleTextStyle: TextStyle(
+              color: Theme.of(context).primaryColor.contrastColor(),
               fontSize: 24.0,
               fontWeight: FontWeight.w800,
             ),
+            iconTheme: IconThemeData(color: Theme.of(context).primaryColor.contrastColor()),
           ),
         ),
         darkTheme: ThemeData.dark(),

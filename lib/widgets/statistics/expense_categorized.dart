@@ -2,9 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/helpers/helpers.dart';
-import 'package:tripsplit/screens/statistics_screen.dart';
 
+import '../../common/helpers/helpers.dart';
+import '../../screens/statistics_screen.dart';
 import '../../common/constants/constants.dart';
 import '../../models/trip_model.dart';
 import '../../models/user_model.dart';

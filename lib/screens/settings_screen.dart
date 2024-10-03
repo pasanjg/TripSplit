@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/widgets/custom/custom_card.dart';
+
+import '../common/constants/constants.dart';
+import '../widgets/custom/custom_card.dart';
 import '../models/trip_model.dart';
 import '../models/user_model.dart';
 import '../widgets/custom/custom_list_item.dart';
@@ -39,8 +40,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: const Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.black,
+          ),
+        ),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(color: Colors.black.withOpacity(0.75)),
       ),
       body: SingleChildScrollView(
         child: Padding(

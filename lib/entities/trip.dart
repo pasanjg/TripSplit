@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tripsplit/entities/expense.dart';
-import 'package:tripsplit/entities/user.dart';
-import 'package:tripsplit/services/firebase_service.dart';
+
+import '../services/firebase_service.dart';
+import 'expense.dart';
+import 'user.dart';
+
 
 class Trip {
   String? id;

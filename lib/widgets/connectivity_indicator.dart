@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/helpers/ui_helper.dart';
-import 'package:tripsplit/providers/connectivity_provider.dart';
+
+import '../common/helpers/ui_helper.dart';
+import '../providers/connectivity_provider.dart';
 
 class ConnectivityIndicator extends StatelessWidget {
   const ConnectivityIndicator({super.key});

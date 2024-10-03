@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
-import 'package:tripsplit/models/trip_model.dart';
 
+import '../../common/constants/constants.dart';
+import '../../common/extensions/extensions.dart';
+import '../../mixins/validate_mixin.dart';
+import '../../models/trip_model.dart';
 import '../../common/helpers/ui_helper.dart';
 import '../../entities/trip.dart';
 import '../custom/custom_button.dart';
@@ -92,9 +92,12 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             );
           }
 
-          if (snapshot.data == null) {
-            return const Center(
-              child: Text('No trips found'),
+          if (snapshot.data != null) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 30.0),
+              child: Center(
+                child: Text('No trips found. '),
+              ),
             );
           }
 
@@ -132,12 +135,32 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
       footer: Container(
         padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
         width: double.infinity,
-        child: CustomButton(
-          onTap: () {
-            Navigator.of(context).pop();
-            Navigator.of(context).pushNamed(RouteNames.createTrip);
-          },
-          text: 'Add New Trip',
+        child: Row(
+          children: [
+            Expanded(
+              child: CustomButton(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(RouteNames.createTrip);
+                },
+                text: 'Add New Trip',
+              ),
+            ),
+            const SizedBox(width: 10.0),
+            CustomButton(
+              padding: const EdgeInsets.all(14.0),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pushNamed(RouteNames.createTrip);
+              },
+              child: Center(
+                child: Icon(
+                  Icons.manage_search_rounded,
+                  color: Theme.of(context).primaryColor.contrastColor(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -162,6 +185,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -175,16 +199,21 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
         },
         child: Row(
           children: [
-            const Icon(
-              Icons.add_circle_rounded,
+            Icon(
+              Icons.add_location_alt_rounded,
+              color: Theme.of(context).primaryColor,
               size: 20.0,
             ),
             const SizedBox(width: 5.0),
             Container(
               constraints: const BoxConstraints(maxWidth: 100.0),
-              child: const Text(
+              child: Text(
                 "New Trip",
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],

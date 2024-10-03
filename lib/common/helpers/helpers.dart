@@ -1,8 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
+import '../extensions/extensions.dart';
 
 String generateRandomCode(int length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

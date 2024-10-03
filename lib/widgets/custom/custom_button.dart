@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
+
+import '../../common/extensions/extensions.dart';
 
 class CustomButton extends StatelessWidget {
   final double? width;

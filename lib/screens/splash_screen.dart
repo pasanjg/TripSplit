@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import 'package:tripsplit/models/trip_model.dart';
+
+import '../models/trip_model.dart';
+import '../models/user_model.dart';
 import '../common/constants/constants.dart';
-import 'package:tripsplit/models/user_model.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

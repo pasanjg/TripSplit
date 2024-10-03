@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/custom/custom_card.dart';
-import 'package:tripsplit/widgets/custom/custom_list_item.dart';
-import 'package:tripsplit/widgets/custom/custom_text_form_field.dart';
 
+import '../common/extensions/extensions.dart';
+import '../mixins/validate_mixin.dart';
+import '../models/trip_model.dart';
+import '../widgets/custom/custom_card.dart';
+import '../widgets/custom/custom_list_item.dart';
+import '../widgets/custom/custom_text_form_field.dart';
 import '../common/helpers/ui_helper.dart';
 import '../entities/user.dart';
 import '../widgets/custom/custom_button.dart';
@@ -368,12 +368,6 @@ class _AssignUserScreenState extends State<AssignUserScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Assign User'),
-        titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.contrastColor(),
-          fontSize: 24.0,
-          fontWeight: FontWeight.w800,
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
             onPressed: () {

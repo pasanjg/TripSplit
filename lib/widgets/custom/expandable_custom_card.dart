@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
+
+import '../../common/extensions/extensions.dart';
+
 import 'index.dart';
 
 class ExpandableCustomCard extends StatefulWidget {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
-import 'package:tripsplit/models/user_model.dart';
-import 'package:tripsplit/widgets/connectivity_indicator.dart';
 
+import '../../common/constants/constants.dart';
+import '../../common/extensions/extensions.dart';
+import '../../mixins/validate_mixin.dart';
+import '../../models/user_model.dart';
+import '../../widgets/connectivity_indicator.dart';
 import '../../common/helpers/ui_helper.dart';
 import '../../widgets/custom/index.dart';
 

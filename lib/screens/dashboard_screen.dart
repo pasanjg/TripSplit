@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/dashboard/expenses_list.dart';
-import 'package:tripsplit/widgets/dashboard/users_list.dart';
-import 'package:tripsplit/widgets/trips/trip_selector.dart';
+
+import '../common/constants/constants.dart';
+import '../common/extensions/extensions.dart';
+import '../models/trip_model.dart';
+import '../widgets/dashboard/expenses_list.dart';
+import '../widgets/dashboard/users_list.dart';
+import '../widgets/trips/trip_selector.dart';
 
 import '../widgets/custom/index.dart';
 
@@ -30,17 +31,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
           onRefresh: () => onRefresh(tripModel),
           child: Scaffold(
             appBar: AppBar(
-              title: const Text('Dashboard'),
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              actions: [
-                const TripSelector(),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(RouteNames.joinTrip);
-                  },
-                  icon: const Icon(Icons.add_circle),
+              title: const Text(
+                'Dashboard',
+                style: TextStyle(
+                  color: Colors.black,
                 ),
-                const SizedBox(width: 15.0),
+              ),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              iconTheme: IconThemeData(color: Colors.black.withOpacity(0.75)),
+              actions: const [
+                TripSelector(),
+                SizedBox(width: 15.0),
               ],
             ),
             body: SingleChildScrollView(

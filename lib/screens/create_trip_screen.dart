@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
 
-import '../common/helpers/ui_helper.dart';
 import '../models/trip_model.dart';
+import '../common/extensions/extensions.dart';
+import '../common/helpers/ui_helper.dart';
+import '../mixins/validate_mixin.dart';
 import '../widgets/custom/custom_button.dart';
 import '../widgets/custom/custom_datepicker.dart';
 import '../widgets/custom/custom_text_form_field.dart';
@@ -64,12 +64,6 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create a new trip'),
-        titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.contrastColor(),
-          fontSize: 24.0,
-          fontWeight: FontWeight.w800,
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Consumer<TripModel>(
         builder: (context, tripModel, _) {

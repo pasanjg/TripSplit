@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
-import 'package:tripsplit/widgets/connectivity_indicator.dart';
 
+import '../../common/extensions/extensions.dart';
+import '../../mixins/validate_mixin.dart';
+import '../../widgets/connectivity_indicator.dart';
 import '../../common/helpers/ui_helper.dart';
 import '../../common/constants/constants.dart';
 import '../../models/trip_model.dart';

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tripsplit/entities/trip.dart';
 
 import '../services/firebase_service.dart';
+import 'trip.dart';
 
 class User {
   String? id;

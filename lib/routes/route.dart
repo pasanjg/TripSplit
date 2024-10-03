@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tripsplit/entities/expense.dart';
-import 'package:tripsplit/screens/assign_user_screen.dart';
-import 'package:tripsplit/screens/join_trip_screen.dart';
 
+import '../entities/expense.dart';
+import '../screens/assign_user_screen.dart';
+import '../screens/join_trip_screen.dart';
 import '../common/constants/constants.dart';
 import '../layout/main_tabs.dart';
 import '../screens/add_update_expense_screen.dart';

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/custom/custom_card.dart';
-import 'package:tripsplit/widgets/dashboard/users_list_item.dart';
+
+import '../../models/trip_model.dart';
+import '../../widgets/custom/custom_card.dart';
+import '../../widgets/dashboard/users_list_item.dart';
 
 import '../custom/expandable_custom_card.dart';
 

@@ -2,10 +2,10 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/helpers/helpers.dart';
-import 'package:tripsplit/widgets/charts/bar_chart.dart';
-import 'package:tripsplit/widgets/custom/custom_card.dart';
 
+import '../../common/helpers/helpers.dart';
+import '../../widgets/charts/bar_chart.dart';
+import '../../widgets/custom/custom_card.dart';
 import '../../models/trip_model.dart';
 import '../../models/user_model.dart';
 import '../../screens/statistics_screen.dart';
@@ -214,10 +214,6 @@ class _ExpenseDaysState extends State<ExpenseDays> {
 
     if (hideEmptyBars) {
       final filteredUserExpenses = userExpenses.where((amount) => amount > 0).toList();
-      final filteredUsers = users.where((user) {
-        final index = users.indexOf(user);
-        return filteredUserExpenses.contains(userExpenses[index]);
-      }).toList();
 
       userExpenses.clear();
       userExpenses.addAll(filteredUserExpenses);

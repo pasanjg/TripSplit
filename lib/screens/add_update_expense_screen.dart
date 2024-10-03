@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/constants/constants.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/mixins/validate_mixin.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/custom/custom_button.dart';
-import 'package:tripsplit/widgets/custom/custom_datepicker.dart';
-import 'package:tripsplit/widgets/custom/custom_text_form_field.dart';
-import 'package:tripsplit/widgets/image_uploader.dart';
 
+import '../common/constants/constants.dart';
+import '../common/extensions/extensions.dart';
+import '../mixins/validate_mixin.dart';
+import '../models/trip_model.dart';
+import '../widgets/custom/custom_button.dart';
+import '../widgets/custom/custom_datepicker.dart';
+import '../widgets/custom/custom_text_form_field.dart';
+import '../widgets/image_uploader.dart';
 import '../common/helpers/ui_helper.dart';
 import '../entities/expense.dart';
 import '../entities/user.dart';
@@ -169,12 +169,7 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
             color: Theme.of(context).primaryColor.contrastColor(),
           ),
         ),
-        titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.contrastColor(),
-          fontSize: 24.0,
-          fontWeight: FontWeight.w800,
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor.contrastColor()),
         actions: [
           if (widget.expense != null)
             IconButton(

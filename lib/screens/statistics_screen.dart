@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/entities/trip.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/statistics/expense_categorized.dart';
-import 'package:tripsplit/widgets/statistics/expense_days.dart';
-import 'package:tripsplit/widgets/trips/trip_selector.dart';
 
+import '../entities/trip.dart';
+import '../models/trip_model.dart';
+import '../widgets/statistics/expense_categorized.dart';
+import '../widgets/statistics/expense_days.dart';
+import '../widgets/trips/trip_selector.dart';
 import '../widgets/custom/custom_card.dart';
 
 enum SpendingType { totalSpending, mySpending, spendingByUsers }
@@ -32,8 +32,14 @@ class _StatsScreenState extends State<StatsScreen> {
       onRefresh: onRefresh,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Statistics'),
+          title: const Text(
+            'Statistics',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: IconThemeData(color: Colors.black.withOpacity(0.75)),
           actions: const [
             TripSelector(),
             SizedBox(width: 15.0),

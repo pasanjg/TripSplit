@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/entities/user.dart';
-import 'package:tripsplit/models/trip_model.dart';
+
+import '../../entities/user.dart';
+import '../../models/trip_model.dart';
 
 import '../../common/constants/constants.dart';
 

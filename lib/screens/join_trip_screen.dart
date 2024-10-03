@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
 
+import '../common/extensions/extensions.dart';
 import '../common/helpers/ui_helper.dart';
 import '../mixins/validate_mixin.dart';
 import '../models/trip_model.dart';
@@ -56,12 +56,6 @@ class _JoinTripScreenState extends State<JoinTripScreen> with ValidateMixin {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text('Join Trip'),
-        titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.contrastColor(),
-          fontSize: 24.0,
-          fontWeight: FontWeight.w800,
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15.0),

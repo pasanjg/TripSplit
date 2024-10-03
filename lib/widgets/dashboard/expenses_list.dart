@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:tripsplit/models/trip_model.dart';
 
+import '../../models/trip_model.dart';
 import '../../entities/expense.dart';
 import '../custom/custom_card.dart';
 import 'expense_record.dart';

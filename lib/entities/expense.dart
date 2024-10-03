@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:tripsplit/entities/user.dart';
+
+import 'user.dart';
 
 class Expense {
   String? id;

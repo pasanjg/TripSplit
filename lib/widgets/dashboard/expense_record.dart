@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tripsplit/common/constants/constants.dart';
 
+import '../../common/constants/constants.dart';
 import '../../entities/expense.dart';
 import '../custom/custom_card.dart';
 

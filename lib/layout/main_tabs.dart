@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:tripsplit/common/helpers/ui_helper.dart';
-import 'package:tripsplit/widgets/connectivity_indicator.dart';
 
+import '../common/helpers/ui_helper.dart';
+import '../widgets/connectivity_indicator.dart';
 import '../common/constants/constants.dart';
 import '../routes/route.dart';
 import '../widgets/pop_scope.dart';

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/entities/user.dart';
-import 'package:tripsplit/models/trip_model.dart';
-import 'package:tripsplit/widgets/dashboard/expense_record.dart';
+
+import '../common/extensions/extensions.dart';
+import '../entities/user.dart';
+import '../models/trip_model.dart';
+import '../widgets/dashboard/expense_record.dart';
 
 import '../entities/expense.dart';
 
@@ -67,12 +68,6 @@ class _UserExpensesState extends State<UserExpenses> {
         title: Text(
           "${user.fullName} ${user.mySelf ? '(You)' : ''}",
         ),
-        titleTextStyle: TextStyle(
-          color: Theme.of(context).primaryColor.contrastColor(),
-          fontSize: 24.0,
-          fontWeight: FontWeight.w800,
-        ),
-        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: isLoading
           ? const Center(

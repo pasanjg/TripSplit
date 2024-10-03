@@ -1,10 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:tripsplit/common/extensions/extensions.dart';
-import 'package:tripsplit/common/helpers/ui_helper.dart';
+
+import '../common/extensions/extensions.dart';
+import '../common/helpers/ui_helper.dart';
 
 import '../models/trip_model.dart';
 import 'image_preview.dart';

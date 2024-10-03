@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:tripsplit/services/connectivity_service.dart';
+
+import '../services/connectivity_service.dart';
 
 class ConnectivityProvider extends ChangeNotifier {
   bool _isOnline = true;

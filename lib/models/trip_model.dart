@@ -2,13 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:tripsplit/entities/user.dart';
-import 'package:tripsplit/services/connectivity_service.dart';
-import 'package:tripsplit/services/firebase_service.dart';
-import 'package:tripsplit/services/services.dart';
-import 'package:tripsplit/services/trip_service.dart';
-import 'package:tripsplit/services/user_service.dart';
 
+import '../entities/user.dart';
+import '../services/connectivity_service.dart';
+import '../services/firebase_service.dart';
+import '../services/services.dart';
+import '../services/trip_service.dart';
+import '../services/user_service.dart';
 import '../entities/expense.dart';
 import '../entities/trip.dart';
 

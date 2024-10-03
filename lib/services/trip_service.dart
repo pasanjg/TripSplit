@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:tripsplit/entities/user.dart';
-import 'package:tripsplit/services/firebase_service.dart';
 
+import '../entities/user.dart';
 import '../common/helpers/helpers.dart';
 import '../entities/expense.dart';
 import '../entities/trip.dart';
+
+import 'firebase_service.dart';
 
 class TripService {
   TripService._();
