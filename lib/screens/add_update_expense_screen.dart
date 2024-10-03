@@ -328,6 +328,9 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
+                          selectableDayPredicate: (DateTime day) {
+                            return day.isBefore(DateTime.now().add(const Duration(days: 1)));
+                          },
                           onDateSelected: (DateTime? value) {
                             setState(() {
                               setState(() {

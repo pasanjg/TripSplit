@@ -39,9 +39,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               iconTheme: IconThemeData(color: Colors.black.withOpacity(0.75)),
-              actions: const [
-                TripSelector(),
-                SizedBox(width: 15.0),
+              actions: [
+                const TripSelector(),
+                const SizedBox(width: 5.0),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(RouteNames.joinTrip);
+                  },
+                  icon: const Icon(Icons.add_location_rounded),
+                ),
+                const SizedBox(width: 15.0),
               ],
             ),
             body: SingleChildScrollView(

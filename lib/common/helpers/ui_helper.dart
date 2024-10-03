@@ -52,7 +52,7 @@ class UIHelper {
       SnackBar(
         content: Text(message),
         duration: duration ?? Duration(milliseconds: error ? 5000 : 4000),
-        backgroundColor: error ? Theme.of(_context).colorScheme.error : Colors.black,
+        backgroundColor: error ? Colors.red : Colors.black,
         action: action,
       ),
     );

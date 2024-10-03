@@ -101,7 +101,6 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-
                         CustomTextFormField(
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.name,
@@ -119,11 +118,11 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
+                          initialDate: startDate,
                           onDateSelected: (DateTime? date) {
                             setState(() {
                               startDate = date;
-                              _startDateController.text =
-                                  DateFormat('yyyy-MM-dd').format(startDate!);
+                              _startDateController.text = DateFormat('yyyy-MM-dd').format(startDate!);
                             });
                           },
                           child: CustomTextFormField(
@@ -144,12 +143,14 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
-                          initialDate: startDate,
+                          initialDate: endDate ?? startDate,
+                          selectableDayPredicate: (DateTime day) {
+                            return day.isAfter(startDate!.subtract(const Duration(days: 1)));
+                          },
                           onDateSelected: (DateTime? date) {
                             setState(() {
                               endDate = date;
-                              _endDateController.text =
-                                  DateFormat('yyyy-MM-dd').format(endDate!);
+                              _endDateController.text = DateFormat('yyyy-MM-dd').format(endDate!);
                             });
                           },
                           child: CustomTextFormField(

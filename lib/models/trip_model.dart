@@ -166,6 +166,7 @@ class TripModel with ChangeNotifier {
   }
 
   Future<void> refreshInviteCode() async {
+    clearMessages();
     try {
       final isOnline = await _connectivityService.checkConnectivity();
 

@@ -49,10 +49,36 @@ class _StatsScreenState extends State<StatsScreen> {
           physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Selector<TripModel, Trip>(
-              selector: (context, tripModel) => tripModel.selectedTrip!,
-              builder: (context, selectedTrip, _) {
-                if (selectedTrip.expenses.isEmpty) {
+            child: Consumer<TripModel>(
+              builder: (context, tripModel, _) {
+                if (tripModel.selectedTrip == null) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 30.0),
+                    child: CustomCard(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15.0,
+                        vertical: 20.0,
+                      ),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'No trip selected',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
+                            Text('Please select a trip to view statistics'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                if (tripModel.selectedTrip!.expenses.isEmpty) {
                   return const Padding(
                     padding: EdgeInsets.only(top: 30.0),
                     child: CustomCard(

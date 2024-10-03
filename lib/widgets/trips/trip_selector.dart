@@ -92,7 +92,7 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
             );
           }
 
-          if (snapshot.data != null) {
+          if (snapshot.data == null) {
             return const Padding(
               padding: EdgeInsets.only(top: 30.0),
               child: Center(
@@ -135,32 +135,12 @@ class _TripSelectorState extends State<TripSelector> with ValidateMixin {
       footer: Container(
         padding: const EdgeInsets.only(top: 10.0, right: 15.0, left: 15.0),
         width: double.infinity,
-        child: Row(
-          children: [
-            Expanded(
-              child: CustomButton(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pushNamed(RouteNames.createTrip);
-                },
-                text: 'Add New Trip',
-              ),
-            ),
-            const SizedBox(width: 10.0),
-            CustomButton(
-              padding: const EdgeInsets.all(14.0),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamed(RouteNames.createTrip);
-              },
-              child: Center(
-                child: Icon(
-                  Icons.manage_search_rounded,
-                  color: Theme.of(context).primaryColor.contrastColor(),
-                ),
-              ),
-            ),
-          ],
+        child: CustomButton(
+          onTap: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).pushNamed(RouteNames.createTrip);
+          },
+          text: 'Add New Trip',
         ),
       ),
     );

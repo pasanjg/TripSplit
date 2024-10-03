@@ -189,6 +189,8 @@ class TripService {
         _firebaseService.auth.currentUser!.uid,
       );
 
+      trip.userRefs.add(userRef);
+
       return {
         "success": true,
         "message": 'You have successfully joined the trip',
