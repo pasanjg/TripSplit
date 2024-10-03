@@ -123,21 +123,25 @@ class TripModel with ChangeNotifier {
         return;
       }
 
-      await _tripService.createTrip(trip);
+      String tripId = await _tripService.createTrip(trip);
+      await getUserTrips(selectId: tripId);
       successMessage = 'Trip created successfully';
-      await getUserTrips();
     } catch (err) {
       errorMessage = 'Error creating trip';
       debugPrint("Error creating trip: $err");
     }
   }
 
-  Future<void> getUserTrips({Trip? selected}) async {
+  Future<void> getUserTrips({Trip? trip, String? selectId}) async {
     try {
       final List<Trip> trips = await _tripService.getUserTrips();
 
-      if (selected != null) {
-        await selectTrip(selected);
+      if (selectId != null) {
+        trip = trips.firstWhere((trip) => trip.id == selectId, orElse: () => trips.first);
+      }
+
+      if (trip != null) {
+        await selectTrip(trip);
       } else {
         await selectTrip(trips.first);
       }

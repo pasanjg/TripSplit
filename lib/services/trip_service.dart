@@ -85,7 +85,7 @@ class TripService {
     });
   }
 
-  Future<void> createTrip(Trip trip) async {
+  Future<String> createTrip(Trip trip) async {
     DocumentReference tripRef = await _firebaseService.firestore
         .collection(Trip.collection)
         .add(trip.toMap());
@@ -93,6 +93,8 @@ class TripService {
 
     await tripRef.update({Trip.fieldInviteCode: tripRef.id.substring(0, 6)});
     await addUserToTripWithReference(tripRef.id, userId);
+
+    return tripRef.id;
   }
 
   Future<void> addUserToTripWithReference(String tripId, String userId) async {

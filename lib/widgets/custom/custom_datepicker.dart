@@ -25,6 +25,9 @@ class CustomDatePickerState extends State<CustomDatePicker> {
       initialDate: DateTime.now(),
       firstDate: DateTime(DateTime.now().year - 100),
       lastDate: DateTime(DateTime.now().year + 100),
+      selectableDayPredicate: (DateTime day) {
+        return day.isBefore(DateTime.now());
+      },
     );
 
     if (pickedDate != null) {
