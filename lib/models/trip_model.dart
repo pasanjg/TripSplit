@@ -6,9 +6,7 @@ import 'package:intl/intl.dart';
 import '../entities/user.dart';
 import '../services/connectivity_service.dart';
 import '../services/firebase_service.dart';
-import '../services/services.dart';
 import '../services/trip_service.dart';
-import '../services/user_service.dart';
 import '../entities/expense.dart';
 import '../entities/trip.dart';
 
@@ -17,10 +15,15 @@ class TripModel with ChangeNotifier {
   String? successMessage;
   String? errorMessage;
 
-  final FirebaseService _firebaseService = Service.instance.firebase;
-  final TripService _tripService = Service.instance.trip;
-  final UserService _userService = Service.instance.user;
-  final ConnectivityService _connectivityService = Service.instance.connectivity;
+  final TripService _tripService;
+  final FirebaseService _firebaseService;
+  final ConnectivityService _connectivityService;
+
+  TripModel(
+    this._tripService,
+    this._firebaseService,
+    this._connectivityService,
+  );
 
   bool get canAddUser =>
       selectedTrip != null &&
@@ -283,16 +286,6 @@ class TripModel with ChangeNotifier {
     } finally {
       notifyListeners();
     }
-  }
-
-  Future<List<User>> getUserGuests() async {
-    try {
-      return await _userService.getUserGuestsFromFirestore(selectedTrip!.id!);
-    } catch (err) {
-      debugPrint(err.toString());
-    }
-
-    return [];
   }
 
   Future<void> addOrUpdateExpense({

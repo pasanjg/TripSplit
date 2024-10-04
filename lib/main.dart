@@ -24,7 +24,6 @@ void main() async {
 
   Service.instance.firebase.firestore.settings = const Settings(
     persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
 
   FlutterError.onError = (errorDetails) {
@@ -37,40 +36,39 @@ void main() async {
     return true;
   };
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
-  final _userModel = UserModel();
-  final _tripModel = TripModel();
+  const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // final materialTheme = MaterialTheme(ThemeData.light().textTheme);
-
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserModel>.value(value: _userModel),
-        ChangeNotifierProvider<TripModel>.value(value: _tripModel),
-        ChangeNotifierProvider(create: (_) => ConnectivityProvider()),
+        ChangeNotifierProvider(
+          create: (_) => UserModel(
+            Service.instance.user,
+            Service.instance.connectivity,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => TripModel(
+            Service.instance.trip,
+            Service.instance.firebase,
+            Service.instance.connectivity,
+          ),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ConnectivityProvider(Service.instance.connectivity),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TripSplit',
         theme: ThemeData(
           fontFamily: 'Inter',
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
-          // colorScheme: ColorScheme.fromSwatch(
-          //   primarySwatch: const Color(0xff0041d3).toMaterialColor(),
-          //   accentColor: const Color(0xffe9f1fd).withOpacity(0.5),
-          //   brightness: Brightness.light,
-          //   backgroundColor: Colors.red,
-          //   cardColor: const Color(0xFFF0F0F6),
-          //   errorColor: Colors.redAccent,
-          // ),
           useMaterial3: true,
           appBarTheme: AppBarTheme(
             backgroundColor: Theme.of(context).primaryColor,

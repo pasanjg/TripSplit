@@ -10,13 +10,13 @@ class ConnectivityProvider extends ChangeNotifier {
   bool _showBackOnline = false;
   StreamSubscription<bool>? _subscription;
 
-  final ConnectivityService _connectivityService = ConnectivityService.instance;
+  final ConnectivityService _connectivityService;
 
   bool get isOnline => _isOnline;
 
   bool get showBackOnline => !_isFirstTime && _showBackOnline;
 
-  ConnectivityProvider() {
+  ConnectivityProvider(this._connectivityService) {
     _subscription = _connectivityService.onConnectivityChanged.listen((bool result) {
       _isOnline = result;
       notifyListeners();

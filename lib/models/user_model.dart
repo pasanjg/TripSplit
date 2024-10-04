@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuthException;
 
 import '../services/connectivity_service.dart';
-import '../services/services.dart';
 import '../services/user_service.dart';
 
 import '../entities/user.dart';
@@ -12,8 +11,13 @@ class UserModel with ChangeNotifier {
   String? successMessage;
   String? errorMessage;
 
-  final UserService _userService = Service.instance.user;
-  final ConnectivityService _connectivityService = Service.instance.connectivity;
+  final UserService _userService;
+  final ConnectivityService _connectivityService;
+
+  UserModel(
+    this._userService,
+    this._connectivityService,
+  );
 
   bool get isLoggedIn => user != null;
 
@@ -114,6 +118,16 @@ class UserModel with ChangeNotifier {
     } catch (err) {
       debugPrint(err.toString());
     }
+  }
+
+  Future<List<User>> getUserGuests(String tripId) async {
+    try {
+      return await _userService.getUserGuestsFromFirestore(tripId);
+    } catch (err) {
+      debugPrint(err.toString());
+    }
+
+    return [];
   }
 
   Future<void> setUser(User? user) async {

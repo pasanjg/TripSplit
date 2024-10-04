@@ -16,7 +16,7 @@ class Category {
   }
 
   static List<Category> categories = [
-    Category(name: 'food', icon: Icons.fastfood_rounded, color: const Color(0xFFFF5D37)),
+    Category(name: 'food', icon: Icons.fastfood_rounded, color: const Color(0xFF00B801)),
     Category(name: 'drinks', icon: Icons.wine_bar_rounded, color: const Color(0xFF730643)),
     Category(name: 'transport', icon: Icons.directions_bus_rounded, color: const Color(0xFF079383)),
     Category(name: 'fuel', icon: Icons.local_gas_station_rounded, color: const Color(0xFFFFA000)),

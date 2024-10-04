@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../common/extensions/extensions.dart';
 import '../mixins/validate_mixin.dart';
 import '../models/trip_model.dart';
+import '../models/user_model.dart';
 import '../widgets/custom/custom_card.dart';
 import '../widgets/custom/custom_list_item.dart';
 import '../widgets/custom/custom_text_form_field.dart';
@@ -47,7 +48,9 @@ class _AssignUserScreenState extends State<AssignUserScreen>
     Overlay.of(context).insert(loader!);
 
     final tripModel = Provider.of<TripModel>(context, listen: false);
-    guests = await tripModel.getUserGuests();
+    final userModel = Provider.of<UserModel>(context, listen: false);
+
+    guests = await userModel.getUserGuests(tripModel.selectedTrip!.id!);
     setState(() { });
 
     loader!.remove();
@@ -308,7 +311,10 @@ class _AssignUserScreenState extends State<AssignUserScreen>
                         radius: 18.0,
                         child: Text(
                           guest.initials,
-                          style: const TextStyle(fontSize: 12.0),
+                          style: const TextStyle(
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       content: Column(

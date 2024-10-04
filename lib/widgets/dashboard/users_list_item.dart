@@ -35,6 +35,9 @@ class UsersListItem extends StatelessWidget {
               radius: 20.0,
               child: Text(
                 user.initials,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 10.0),
