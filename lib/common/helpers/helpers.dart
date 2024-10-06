@@ -6,10 +6,13 @@ import '../extensions/extensions.dart';
 String generateRandomCode(int length) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   final random = Random();
-  return String.fromCharCodes(Iterable.generate(
-    length,
-        (_) => characters.codeUnitAt(random.nextInt(characters.length)),
-  ));
+
+  return String.fromCharCodes(
+    Iterable.generate(
+      length,
+      (_) => characters.codeUnitAt(random.nextInt(characters.length)),
+    ),
+  );
 }
 
 Color generateColorFromString(String input) {
@@ -17,6 +20,7 @@ Color generateColorFromString(String input) {
   final r = (hash & 0xFF0000) >> 16;
   final g = (hash & 0x00FF00) >> 8;
   final b = (hash & 0x0000FF);
+
   return Color.fromARGB(255, r, g, b).darken(0.1);
 }
 

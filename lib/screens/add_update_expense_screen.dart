@@ -259,13 +259,23 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                           controller: _amountController,
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.number,
-                          validator: validateText,
+                          validator: (input) => validateNumber(
+                            input,
+                            minValue: 1,
+                          ),
                           onChanged: (input) {
+                            final validNumber = double.tryParse(input!);
+
                             setState(() {
-                              if (input == null || input.isEmpty) {
+                              if (validNumber == null) {
+                                amount = 0.0;
+                                return;
+                              }
+
+                              if (input.isEmpty || input == " " || input == ".") {
                                 amount = 0.0;
                               } else {
-                                amount = double.parse(input);
+                                amount = double.tryParse(input) ?? 0.0;
                               }
                             });
                           },
@@ -328,15 +338,16 @@ class _AddUpdateExpenseScreenState extends State<AddUpdateExpenseScreen> with Va
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
+                          initial: date,
                           selectableDayPredicate: (DateTime day) {
                             return day.isBefore(DateTime.now().add(const Duration(days: 1)));
                           },
-                          onDateSelected: (DateTime? value) {
+                          onDateSelected: (dynamic value) {
                             setState(() {
-                              setState(() {
-                                date = value!;
+                              if (value is DateTime) {
+                                date = value;
                                 _dateController.text = DateFormat('yyyy-MM-dd').format(date);
-                              });
+                              }
                             });
                           },
                           child: CustomTextFormField(

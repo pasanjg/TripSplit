@@ -46,6 +46,7 @@ class _MainTabsState extends State<MainTabs> {
 
   void _initTabData() {
     var tabView = <Widget>[];
+
     for (var i = 0; i < tabData.length; i++) {
       final initialRoute = tabData[i]['route'];
       navigators[i] = GlobalKey<NavigatorState>();
@@ -72,6 +73,7 @@ class _MainTabsState extends State<MainTabs> {
 
   Future<bool> _handlePopScopeRoot() async {
     final currentNavigator = navigators[currentTabIndex]!;
+
     if (currentNavigator.currentState!.canPop()) {
       currentNavigator.currentState!.pop();
       return false;
@@ -86,6 +88,7 @@ class _MainTabsState extends State<MainTabs> {
       setState(() {
         currentTabIndex = defaultTabIndex;
       });
+
       return false;
     } else {
       bool? isAllowExit = await UIHelper.of(context).showCustomAlertDialog(

@@ -11,34 +11,40 @@ class UIHelper {
   static UIHelper of(BuildContext context) => UIHelper._(context);
 
   static OverlayEntry overlayLoader(context) {
-    OverlayEntry loader = OverlayEntry(builder: (context) {
-      final size = MediaQuery.of(context).size;
-      return Positioned(
-        height: size.height,
-        width: size.width,
-        top: 0,
-        left: 0,
-        child: Material(
-          color: Colors.white.withOpacity(0.85),
-          child: Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
+    OverlayEntry loader = OverlayEntry(
+      builder: (context) {
+        final size = MediaQuery.of(context).size;
+        return Positioned(
+          height: size.height,
+          width: size.width,
+          top: 0,
+          left: 0,
+          child: Material(
+            color: Colors.white.withOpacity(0.85),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
             ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
+
     return loader;
   }
 
   static hideLoader(OverlayEntry? loader) {
-    Timer(const Duration(milliseconds: 500), () {
-      try {
-        loader?.remove();
-      } catch (e) {
-        //
-      }
-    });
+    Timer(
+      const Duration(milliseconds: 500),
+      () {
+        try {
+          loader?.remove();
+        } catch (e) {
+          //
+        }
+      },
+    );
   }
 
   showSnackBar(
@@ -90,10 +96,7 @@ class UIHelper {
                         },
                         icon: Icon(
                           Icons.close_rounded,
-                          color: Theme.of(_context)
-                              .colorScheme
-                              .secondary
-                              .darken(0.1),
+                          color: Theme.of(_context).colorScheme.secondary.darken(0.1),
                           size: 20.0,
                         ),
                       ),

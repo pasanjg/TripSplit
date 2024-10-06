@@ -39,9 +39,4 @@ class ConnectivityProvider extends ChangeNotifier {
     _subscription?.cancel();
     super.dispose();
   }
-
-  Future<void> checkConnectivity() async {
-    _isOnline = await _connectivityService.checkConnectivity();
-    notifyListeners();
-  }
 }

@@ -70,13 +70,6 @@ class Expense {
     return data;
   }
 
-  Future<void> loadUser() async {
-    if (userRef != null) {
-      final userSnapshot = await userRef!.get();
-      user = User.fromMap(userSnapshot.id, userSnapshot.data() as Map<String, dynamic>);
-    }
-  }
-
   @override
   String toString() {
     return toJson().toString();

@@ -23,6 +23,30 @@ mixin ValidateMixin {
     return null;
   }
 
+  String? validateNumber(String? number, {
+    double? minValue,
+    double? maxValue,
+  }) {
+    if (number == null || number.isEmpty) {
+      return 'This field is required';
+    }
+
+    final numberRegExp = RegExp(r'^\d+(\.\d+)?$');
+    if (!numberRegExp.hasMatch(number)) {
+      return 'Please enter a valid number';
+    }
+
+    if (minValue != null && double.parse(number) < minValue) {
+      return 'Please enter a value greater than $minValue';
+    }
+
+    if (maxValue != null && double.parse(number) > maxValue) {
+      return 'Please enter a value less than $maxValue';
+    }
+
+    return null;
+  }
+
   String? validateConfirmPassword(String? password, String? confirmPassword) {
     if (password == null || confirmPassword == null || confirmPassword.isEmpty) {
       return 'Please confirm your password';

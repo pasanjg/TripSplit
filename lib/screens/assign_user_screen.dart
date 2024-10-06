@@ -23,8 +23,7 @@ class AssignUserScreen extends StatefulWidget {
   State<AssignUserScreen> createState() => _AssignUserScreenState();
 }
 
-class _AssignUserScreenState extends State<AssignUserScreen>
-    with ValidateMixin {
+class _AssignUserScreenState extends State<AssignUserScreen> with ValidateMixin {
   String? firstname, lastname;
   List<User> guests = [];
   List<String> selectedGuestIds = [];

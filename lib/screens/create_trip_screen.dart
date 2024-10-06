@@ -20,6 +20,7 @@ class CreateTripScreen extends StatefulWidget {
 class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin {
   String? title;
   DateTime? startDate = DateTime.now(), endDate;
+  DateTimeRange? dateRange;
 
   GlobalKey<FormState>? tripFormKey;
   OverlayEntry? loader;
@@ -56,6 +57,18 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
       }
 
       loader!.remove();
+    }
+  }
+
+  void onDateSelected(dynamic value) {
+    if (value is DateTimeRange) {
+      setState(() {
+        dateRange = value;
+        startDate = dateRange!.start;
+        endDate = dateRange!.end;
+        _startDateController.text = DateFormat('yyyy-MM-dd').format(startDate!);
+        _endDateController.text = DateFormat('yyyy-MM-dd').format(endDate!);
+      });
     }
   }
 
@@ -118,21 +131,16 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
-                          initialDate: startDate,
-                          onDateSelected: (DateTime? date) {
-                            setState(() {
-                              startDate = date;
-                              _startDateController.text = DateFormat('yyyy-MM-dd').format(startDate!);
-                            });
-                          },
+                          dateRange: true,
+                          initial: dateRange,
+                          onDateSelected: onDateSelected,
                           child: CustomTextFormField(
                             enabled: false,
                             controller: _startDateController,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.datetime,
                             validator: validateText,
-                            decoration:
-                            CustomTextFormField.buildDecoration(context).copyWith(
+                            decoration: CustomTextFormField.buildDecoration(context).copyWith(
                               labelText: "Start Date",
                               prefixIcon: Icon(
                                 Icons.calendar_today_rounded,
@@ -143,23 +151,19 @@ class _CreateTripScreenState extends State<CreateTripScreen> with ValidateMixin 
                         ),
                         const SizedBox(height: 15.0),
                         CustomDatePicker(
-                          initialDate: endDate ?? startDate,
+                          dateRange: true,
+                          initial: dateRange,
                           selectableDayPredicate: (DateTime day) {
                             return day.isAfter(startDate!.subtract(const Duration(days: 1)));
                           },
-                          onDateSelected: (DateTime? date) {
-                            setState(() {
-                              endDate = date;
-                              _endDateController.text = DateFormat('yyyy-MM-dd').format(endDate!);
-                            });
-                          },
+                          onDateSelected: onDateSelected,
                           child: CustomTextFormField(
                             enabled: false,
                             controller: _endDateController,
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.datetime,
-                            decoration:
-                            CustomTextFormField.buildDecoration(context).copyWith(
+                            validator: validateText,
+                            decoration: CustomTextFormField.buildDecoration(context).copyWith(
                               labelText: "End Date",
                               prefixIcon: Icon(
                                 Icons.calendar_today_rounded,

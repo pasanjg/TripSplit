@@ -57,6 +57,7 @@ class Routes {
       settings: settings,
       fullscreenDialog: fullscreenDialog,
       pageBuilder: (context, animation, secondaryAnimation) => builder(context),
+      transitionDuration: const Duration(milliseconds: 250),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const curve = Curves.ease;
         Offset startOffset = const Offset(1.0, 0.0); // Default slide from right
@@ -70,7 +71,6 @@ class Routes {
           child: child,
         );
       },
-      transitionDuration: const Duration(milliseconds: 250),
     );
   }
 

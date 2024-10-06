@@ -154,7 +154,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
   }
 
   Widget bottomTitleWidgets(double value, TitleMeta meta) {
-    bool hide = false;
     String text;
     const style = TextStyle(
       fontWeight: FontWeight.bold,
@@ -166,9 +165,6 @@ class _LineChartWidgetState extends State<LineChartWidget> {
     } else if (value == maxX) {
       text = '';
     } else {
-      if (value.toInt() % 2 != 0) {
-        hide = true;
-      }
       text = widget.xValues[value.toInt()].toString();
     }
 
